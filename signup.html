@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - Criar Conta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Cores Base - Esquema Futurista */
+            --deep-space: #1A1B2E;
+            --neon-blue: #00F5FF;
+            --neon-purple: #B15EFF;
+            --cyber-green: #00FFB2;
+            --soft-white: #F4F7FF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
+            
+            /* Efeitos */
+            --glass-blur: blur(10px);
+            --neon-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            
+            /* Dimensões */
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(177, 94, 255, 0.1) 0%, transparent 20%);
+            background-attachment: fixed;
+        }
+
+        .signup-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .signup-content {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            height: 700px;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--glass-border);
+        }
+
+        .signup-showcase {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1588497859490-85d1c17db96d?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+        }
+
+        .signup-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(26, 27, 46, 0.3), rgba(26, 27, 46, 0.9));
+            z-index: 1;
+        }
+
+        .showcase-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .showcase-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .showcase-description {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 80%;
+        }
+
+        .showcase-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .feature-badge {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .feature-badge i {
+            color: var(--neon-blue);
+        }
+
+        .signup-form-container {
+            width: 450px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .form-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--neon-blue);
+        }
+
+        .signup-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .signup-subtitle {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            padding: 12px 15px;
+            padding-left: 40px;
+            border-radius: var(--border-radius);
+            outline: none;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 0 3px rgba(0, 245, 255, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 38px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .form-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .form-check input {
+            margin-top: 3px;
+            accent-color: var(--neon-blue);
+        }
+
+        .password-strength {
+            height: 5px;
+            background: rgba(244, 247, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .password-feedback {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .password-criteria {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .criteria-met {
+            color: var(--cyber-green);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--soft-white);
+            margin-bottom: 15px;
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--neon-shadow);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(244, 247, 255, 0.2);
+            color: var(--soft-white);
+            margin-bottom: 10px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .signup-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: rgba(244, 247, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .signup-divider::before,
+        .signup-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid rgba(244, 247, 255, 0.2);
+        }
+
+        .signup-divider::before {
+            margin-right: 10px;
+        }
+
+        .signup-divider::after {
+            margin-left: 10px;
+        }
+
+        .login-link {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            color: var(--neon-blue);
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid var(--soft-white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .alert.show {
+            opacity: 1;
+            height: auto;
+            padding: 10px 15px;
+        }
+
+        .alert-danger {
+            background: rgba(255, 87, 87, 0.1);
+            border: 1px solid rgba(255, 87, 87, 0.3);
+            color: #ff5757;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 178, 0.1);
+            border: 1px solid rgba(0, 255, 178, 0.3);
+            color: var(--cyber-green);
+        }
+
+        /* Responsividade */
+        @media (max-width: 992px) {
+            .signup-content {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .signup-showcase {
+                display: none;
+            }
+
+            .signup-form-container {
+                width: 100%;
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signup-form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-content">
+            <div class="signup-showcase">
+                <div class="showcase-content">
+                    <h1 class="showcase-title">Potencialize sua produção</h1>
+                    <p class="showcase-description">Junte-se a milhares de produtores que estão transformando a maneira de gerenciar seus projetos audiovisuais.</p>
+                    
+                    <div class="showcase-features">
+                        <div class="feature-badge">
+                            <i class="ri-movie-line"></i>
+                            <span>Gestão de Projetos</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="ri-team-line"></i>
+                            <span>Controle de Equipe</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="ri-camera-line"></i>
+                            <span>Inventário</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="ri-calendar-line"></i>
+                            <span>Agenda</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="ri-robot-line"></i>
+                            <span>AI Assist</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="signup-form-container">
+                <div class="form-logo">
+                    <div class="logo-icon">F</div>
+                    <div class="logo-text">film<span>ORG</span></div>
+                </div>
+                
+                <h2 class="signup-title">Crie sua conta</h2>
+                <p class="signup-subtitle">Preencha os dados abaixo para começar</p>
+                
+                <div id="alert" class="alert"></div>
+                
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nome completo</label>
+                        <i class="ri-user-line input-icon"></i>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="name" 
+                            placeholder="Seu nome completo" 
+                            required
+                            minlength="3"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <i class="ri-mail-line input-icon"></i>
+                        <input 
+                            type="email" 
+                            class="form-control" 
+                            id="email" 
+                            placeholder="seu@email.com" 
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Senha</label>
+                        <i class="ri-lock-line input-icon"></i>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            id="password" 
+                            placeholder="Crie uma senha forte" 
+                            required
+                        >
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="strength-bar"></div>
+                        </div>
+                        <div class="password-feedback">
+                            <div class="password-criteria" id="length-criteria">
+                                <i class="ri-checkbox-blank-circle-line"></i> 
+                                <span>8+ caracteres</span>
+                            </div>
+                            <div class="password-criteria" id="uppercase-criteria">
+                                <i class="ri-checkbox-blank-circle-line"></i> 
+                                <span>Maiúscula</span>
+                            </div>
+                            <div class="password-criteria" id="lowercase-criteria">
+                                <i class="ri-checkbox-blank-circle-line"></i> 
+                                <span>Minúscula</span>
+                            </div>
+                            <div class="password-criteria" id="number-criteria">
+                                <i class="ri-checkbox-blank-circle-line"></i> 
+                                <span>Número</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">Confirmar senha</label>
+                        <i class="ri-lock-line input-icon"></i>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            id="confirm-password" 
+                            placeholder="Confirme sua senha" 
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-check">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            Concordo com os <a href="#" style="color: var(--neon-blue);">Termos de Serviço</a> e <a href="#" style="color: var(--neon-blue);">Política de Privacidade</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="signup-btn">
+                        <span>Criar Conta</span>
+                        <div class="loading-spinner"></div>
+                    </button>
+                    
+                    <div class="signup-divider">ou</div>
+                    
+                    <button type="button" class="btn btn-outline" id="google-signup">
+                        <i class="ri-google-fill"></i>
+                        <span>Continuar com Google</span>
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline" id="apple-signup">
+                        <i class="ri-apple-fill"></i>
+                        <span>Continuar com Apple</span>
+                    </button>
+                    
+                    <div class="login-link">
+                        Já tem uma conta? <a href="index.html">Fazer login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.getElementById('signupForm');
+            const signupBtn = document.getElementById('signup-btn');
+            const spinner = document.querySelector('.loading-spinner');
+            const alertBox = document.getElementById('alert');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            const termsCheckbox = document.getElementById('terms');
+            const googleSignupBtn = document.getElementById('google-signup');
+            const appleSignupBtn = document.getElementById('apple-signup');
+            
+            // Password strength elements
+            const strengthBar = document.getElementById('strength-bar');
+            const lengthCriteria = document.getElementById('length-criteria');
+            const uppercaseCriteria = document.getElementById('uppercase-criteria');
+            const lowercaseCriteria = document.getElementById('lowercase-criteria');
+            const numberCriteria = document.getElementById('number-criteria');
+            
+            // Função para mostrar alertas
+            function showAlert(message, type) {
+                alertBox.className = `alert alert-${type}`;
+                alertBox.innerHTML = `
+                    <i class="${type === 'danger' ? 'ri-error-warning-line' : 'ri-checkbox-circle-line'}"></i>
+                    <span>${message}</span>
+                `;
+                alertBox.classList.add('show');
+                
+                setTimeout(() => {
+                    alertBox.classList.remove('show');
+                }, 5000);
+            }
+            
+            // Gerenciar loading
+            function setLoading(loading) {
+                signupBtn.disabled = loading;
+                spinner.style.display = loading ? 'block' : 'none';
+                signupBtn.querySelector('span').style.display = loading ? 'none' : 'block';
+            }
+            
+            // Validar força da senha
+            function checkPasswordStrength(password) {
+                // Critérios
+                const hasLength = password.length >= 8;
+                const hasUppercase = /[A-Z]/.test(password);
+                const hasLowercase = /[a-z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                
+                // Atualizar indicadores visuais
+                updateCriteria(lengthCriteria, hasLength);
+                updateCriteria(uppercaseCriteria, hasUppercase);
+                updateCriteria(lowercaseCriteria, hasLowercase);
+                updateCriteria(numberCriteria, hasNumber);
+                
+                // Calcular pontuação (0-4)
+                const score = [hasLength, hasUppercase, hasLowercase, hasNumber].filter(Boolean).length;
+                
+                // Atualizar barra de força
+                const percentage = (score / 4) * 100;
+                strengthBar.style.width = `${percentage}%`;
+                
+                if (percentage <= 25) {
+                    strengthBar.style.backgroundColor = '#ff5757'; // Vermelho
+                } else if (percentage <= 50) {
+                    strengthBar.style.backgroundColor = '#ffbd45'; // Laranja
+                } else if (percentage <= 75) {
+                    strengthBar.style.backgroundColor = '#ffd700'; // Amarelo
+                } else {
+                    strengthBar.style.backgroundColor = '#00ffb2'; // Verde
+                }
+                
+                return score >= 3; // Senha é forte se atende a pelo menos 3 critérios
+            }
+            
+            // Atualizar indicador visual de critério
+            function updateCriteria(element, isMet) {
+                const icon = element.querySelector('i');
+                
+                if (isMet) {
+                    icon.className = 'ri-checkbox-circle-fill';
+                    element.classList.add('criteria-met');
+                } else {
+                    icon.className = 'ri-checkbox-blank-circle-line';
+                    element.classList.remove('criteria-met');
+                }
+            }
+            
+            // Validar confirmação de senha
+            function validateConfirmPassword() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                
+                if (confirmPassword && password !== confirmPassword) {
+                    confirmPasswordInput.style.borderColor = '#ff5757';
+                    return false;
+                } else {
+                    confirmPasswordInput.style.borderColor = '';
+                    return true;
+                }
+            }
+            
+            // Evento para verificar força da senha
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                validateConfirmPassword();
+            });
+            
+            // Evento para verificar confirmação de senha
+            confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+            
+            // Signup com Google (simulado)
+            googleSignupBtn.addEventListener('click', function() {
+                setLoading(true);
+                
+                setTimeout(() => {
+                    showAlert('Função em desenvolvimento. Por favor, use o cadastro tradicional.', 'danger');
+                    setLoading(false);
+                }, 1500);
+            });
+            
+            // Signup com Apple (simulado)
+            appleSignupBtn.addEventListener('click', function() {
+                setLoading(true);
+                
+                setTimeout(() => {
+                    showAlert('Função em desenvolvimento. Por favor, use o cadastro tradicional.', 'danger');
+                    setLoading(false);
+                }, 1500);
+            });
+            
+            // Validação e envio do formulário
+            signupForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = nameInput.value.trim();
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                const agreeTerms = termsCheckbox.checked;
+                
+                // Validação básica
+                if (!name || !email || !password || !confirmPassword) {
+                    showAlert('Por favor, preencha todos os campos', 'danger');
+                    return;
+                }
+                
+                if (name.length < 3) {
+                    showAlert('Nome deve ter pelo menos 3 caracteres', 'danger');
+                    return;
+                }
+                
+                // Validar email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showAlert('Por favor, informe um email válido', 'danger');
+                    return;
+                }
+                
+                // Validar força da senha
+                if (!checkPasswordStrength(password)) {
+                    showAlert('Sua senha não atende aos requisitos mínimos de segurança', 'danger');
+                    return;
+                }
+                
+                // Validar confirmação de senha
+                if (password !== confirmPassword) {
+                    showAlert('As senhas não coincidem', 'danger');
+                    return;
+                }
+                
+                // Validar aceitação dos termos
+                if (!agreeTerms) {
+                    showAlert('Você precisa aceitar os termos de serviço', 'danger');
+                    return;
+                }
+                
+                setLoading(true);
+                
+                try {
+                    // Simular delay de rede
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Buscar usuários existentes
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    
+                    // Verificar se email já existe
+                    if (users.some(user => user.email === email)) {
+                        showAlert('Este email já está cadastrado', 'danger');
+                        setLoading(false);
+                        return;
+                    }
+                    
+                    // Adicionar novo usuário
+                    users.push({
+                        id: Date.now().toString(),
+                        name,
+                        email,
+                        password, // Em uma aplicação real, deve-se fazer hash da senha
+                        createdAt: new Date().toISOString()
+                    });
+                    
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    showAlert('Conta criada com sucesso!', 'success');
+                    
+                    // Redirecionar após mostrar mensagem de sucesso
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } catch (error) {
+                    showAlert('Erro ao criar conta. Tente novamente.', 'danger');
+                    setLoading(false);
+                    console.error(error);
+                }
+            });
+            
+            // Verificar se usuário já está logado
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

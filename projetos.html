@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - Projetos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ícones modernos -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Cores Base - Esquema Futurista */
+            --deep-space: #1A1B2E;
+            --neon-blue: #00F5FF;
+            --neon-purple: #B15EFF;
+            --cyber-green: #00FFB2;
+            --soft-white: #F4F7FF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
+            
+            /* Efeitos */
+            --glass-blur: blur(10px);
+            --neon-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            
+            /* Dimensões */
+            --sidebar-width: 80px;
+            --sidebar-width-expanded: 240px;
+            --header-height: 70px;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(177, 94, 255, 0.1) 0%, transparent 20%);
+            background-attachment: fixed;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--glass-border);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-width-expanded);
+        }
+
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--header-height);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .logo-text {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--soft-white);
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: var(--glass-bg);
+        }
+
+        .menu-item.active {
+            background: var(--gradient-primary);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .menu-icon {
+            font-size: 20px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-text {
+            margin-left: 15px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            margin-left: 10px;
+            flex: 1;
+            outline: none;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(244, 247, 255, 0.5);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-select {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filter-select option {
+            background: var(--deep-space);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--soft-white);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        /* Project Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .project-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(0, 255, 178, 0.2);
+            color: var(--cyber-green);
+        }
+
+        .status-planning {
+            background: rgba(0, 245, 255, 0.2);
+            color: var(--neon-blue);
+        }
+
+        .status-completed {
+            background: rgba(177, 94, 255, 0.2);
+            color: var(--neon-purple);
+        }
+
+        .project-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .project-description {
+            color: rgba(244, 247, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .project-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(244, 247, 255, 0.1);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-value {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Team members */
+        .team-members {
+            display: flex;
+            align-items: center;
+        }
+
+        .member-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: -8px;
+            border: 2px solid var(--deep-space);
+        }
+
+        .member-avatar:first-child {
+            margin-left: 0;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--deep-space);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px; /* Aumentando para acomodar o formulário expandido */
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
+            padding: 0;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            background: var(--deep-space);
+            z-index: 10;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            position: sticky;
+            bottom: 0;
+            background: var(--deep-space);
+            z-index: 10;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--neon-blue);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Estilos Adicionais para o Formulário Expandido */
+        /* Abas do formulário */
+        .form-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 5px;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 60px;
+            background: var(--deep-space);
+            z-index: 5;
+        }
+        
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            white-space: nowrap;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            opacity: 1;
+            background: var(--glass-bg);
+        }
+        
+        .tab-btn.active {
+            background: var(--gradient-primary);
+            opacity: 1;
+        }
+        
+        /* Seções do formulário */
+        .form-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .subsection-title {
+            margin: 20px 0 15px;
+            font-size: 16px;
+            color: var(--neon-blue);
+        }
+        
+        /* Layout em colunas */
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .col-3 {
+            flex: 0 0 calc(25% - 10px);
+        }
+        
+        .col-4 {
+            flex: 0 0 calc(33.333% - 10px);
+        }
+        
+        .col-6 {
+            flex: 0 0 calc(50% - 8px);
+        }
+        
+        .col-8 {
+            flex: 0 0 calc(66.666% - 5px);
+        }
+        
+        /* Range com valor */
+        .range-with-value {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .form-range {
+            flex: 1;
+            height: 6px;
+            background: rgba(244, 247, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .form-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .range-value {
+            min-width: 40px;
+        }
+        
+        /* Listas de itens */
+        .location-list,
+        .team-list,
+        .equipment-list,
+        .schedule-days-list,
+        .budget-items-list {
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .item-card {
+            background: rgba(26, 27, 46, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 12px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .item-card .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .item-card .item-title {
+            font-weight: 600;
+        }
+        
+        .item-card .item-badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(0, 245, 255, 0.2);
+        }
+        
+        .item-card .item-content {
+            color: rgba(244, 247, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .item-card .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.5);
+        }
+        
+        .item-card .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: rgba(244, 247, 255, 0.5);
+            cursor: pointer;
+        }
+        
+        .item-card .remove-btn:hover {
+            color: #ff6b6b;
+        }
+        
+        /* Estatísticas de orçamento */
+        .budget-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(26, 27, 46, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--neon-blue);
+        }
+        
+        /* Botões */
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        /* Radio buttons */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .radio-label input {
+            margin-right: 8px;
+        }
+        
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsividade para formulário expandido */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+            }
+
+            .sidebar.show {
+                width: var(--sidebar-width-expanded);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .col-3, .col-4, .col-6, .col-8 {
+                flex: 0 0 100%;
+            }
+            
+            .budget-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-tabs {
+                padding-bottom: 10px;
+            }
+            
+            .tab-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">F</div>
+            <div class="logo-text">filmORG</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="menu-icon ri-dashboard-line"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="projetos.html" class="menu-item active">
+                <i class="menu-icon ri-movie-line"></i>
+                <span class="menu-text">Projetos</span>
+            </a>
+            <a href="equipe.html" class="menu-item">
+                <i class="menu-icon ri-team-line"></i>
+                <span class="menu-text">Equipe</span>
+            </a>
+            <a href="equipamentos.html" class="menu-item">
+                <i class="menu-icon ri-camera-line"></i>
+                <span class="menu-text">Equipamentos</span>
+            </a>
+            <a href="ai-assist.html" class="menu-item">
+                <i class="menu-icon ri-robot-line"></i>
+                <span class="menu-text">AI Assist</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="menu-icon ri-bar-chart-line"></i>
+                <span class="menu-text">Analytics</span>
+            </a>
+            <a href="agenda.html" class="menu-item">
+                <i class="menu-icon ri-calendar-line"></i>
+                <span class="menu-text">Agenda</span>
+            </a>
+            <a href="orcamento.html" class="menu-item">
+                <i class="menu-icon ri-money-dollar-circle-line"></i>
+                <span class="menu-text">Orçamento</span>
+            </a>
+            <a href="configuracoes.html" class="menu-item" style="margin-top: auto;">
+                <i class="menu-icon ri-settings-line"></i>
+                <span class="menu-text">Configurações</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">Projetos</h1>
+            
+            <div class="search-bar">
+                <i class="ri-search-line"></i>
+                <input type="text" placeholder="Buscar projetos..." id="search-input">
+            </div>
+            
+            <div class="header-actions">
+                <div class="notification-btn">
+                    <i class="ri-notification-3-line"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">U</div>
+                    <span class="user-name">Usuário</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-bar">
+            <div class="filters">
+                <select class="filter-select" id="status-filter">
+                    <option value="all">Todos os Status</option>
+                    <option value="pitch">Proposta/Pitch</option>
+                    <option value="planning">Em Planejamento</option>
+                    <option value="preproduction">Pré-Produção</option>
+                    <option value="production">Em Produção</option>
+                    <option value="postproduction">Pós-Produção</option>
+                    <option value="completed">Concluídos</option>
+                    <option value="archived">Arquivados</option>
+                </select>
+                
+                <select class="filter-select" id="type-filter">
+                    <option value="all">Todos os Tipos</option>
+                    <option value="photography">Sessão Fotográfica</option>
+                    <option value="videoclip">Videoclipe</option>
+                    <option value="commercial">Comercial</option>
+                    <option value="documentary">Documentário</option>
+                    <option value="shortfilm">Curta-Metragem</option>
+                    <option value="corporate">Vídeo Institucional</option>
+                    <option value="event">Cobertura de Evento</option>
+                </select>
+                
+                <select class="filter-select" id="sort-filter">
+                    <option value="date-desc">Mais Recentes</option>
+                    <option value="date-asc">Mais Antigos</option>
+                    <option value="name-asc">Nome (A-Z)</option>
+                    <option value="name-desc">Nome (Z-A)</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" id="new-project-btn">
+                <i class="ri-add-line"></i> Novo Projeto
+            </button>
+        </div>
+        
+        <div class="project-grid" id="project-grid">
+            <!-- Projetos serão carregados aqui dinamicamente via JS -->
+        </div>
+    </div>
+    
+    <!-- Modal de Novo Projeto Expandido -->
+    <div class="modal-overlay" id="project-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Novo Projeto</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-tabs">
+                    <button class="tab-btn active" data-tab="basic-info">Informações Básicas</button>
+                    <button class="tab-btn" data-tab="locations">Locações</button>
+                    <button class="tab-btn" data-tab="team">Equipe</button>
+                    <button class="tab-btn" data-tab="equipment">Equipamentos</button>
+                    <button class="tab-btn" data-tab="schedule">Cronograma</button>
+                    <button class="tab-btn" data-tab="budget">Orçamento</button>
+                    <button class="tab-btn" data-tab="details">Detalhes</button>
+                </div>
+                
+                <form id="project-form">
+                    <!-- Seção 1: Informações Básicas -->
+                    <div class="form-section active" id="basic-info">
+                        <h4 class="section-title">Informações Básicas</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Título do Projeto *</label>
+                            <input type="text" class="form-control" id="project-title" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label class="form-label">Tipo de Projeto *</label>
+                                <select class="form-control" id="project-type" required>
+                                    <option value="">Selecione o tipo...</option>
+                                    <option value="photography">Sessão Fotográfica</option>
+                                    <option value="videoclip">Videoclipe</option>
+                                    <option value="commercial">Comercial</option>
+                                    <option value="documentary">Documentário</option>
+                                    <option value="shortfilm">Curta-Metragem</option>
+                                    <option value="corporate">Vídeo Institucional</option>
+                                    <option value="event">Cobertura de Evento</option>
+                                    <option value="other">Outro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label class="form-label">Status</label>
+                                <select class="form-control" id="project-status" required>
+                                    <option value="pitch">Proposta/Pitch</option>
+                                    <option value="planning">Em Planejamento</option>
+                                    <option value="preproduction">Pré-Produção</option>
+                                    <option value="production">Em Produção</option>
+                                    <option value="postproduction">Pós-Produção</option>
+                                    <option value="completed">Concluído</option>
+                                    <option value="archived">Arquivado</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Descrição *</label>
+                            <textarea class="form-control" id="project-description" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Cliente/Contratante</label>
+                            <input type="text" class="form-control" id="project-client">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label class="form-label">Data de Início *</label>
+                                <input type="date" class="form-control" id="project-start-date" required>
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label class="form-label">Data de Término</label>
+                                <input type="date" class="form-control" id="project-end-date">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Progresso (%)</label>
+                            <div class="range-with-value">
+                                <input type="range" class="form-range" id="project-progress" min="0" max="100" value="0">
+                                <span class="range-value">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção 2: Locações -->
+                    <div class="form-section" id="locations">
+                        <h4 class="section-title">Locações</h4>
+                        
+                        <div class="location-list" id="location-list">
+                            <!-- As locações serão adicionadas aqui dinamicamente -->
+                        </div>
+                        
+                        <div class="location-form">
+                            <div class="form-row">
+                                <div class="form-group col-8">
+                                    <label class="form-label">Nome da Locação</label>
+                                    <input type="text" class="form-control" id="location-name">
+                                </div>
+                                
+                                <div class="form-group col-4">
+                                    <label class="form-label">Tipo</label>
+                                    <select class="form-control" id="location-type">
+                                        <option value="studio">Estúdio</option>
+                                        <option value="external">Externa</option>
+                                        <option value="indoor">Interna</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Endereço Completo</label>
+                                <input type="text" class="form-control" id="location-address">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label class="form-label">Data</label>
+                                    <input type="date" class="form-control" id="location-date">
+                                </div>
+                                
+                                <div class="form-group col-3">
+                                    <label class="form-label">Hora Início</label>
+                                    <input type="time" class="form-control" id="location-start-time">
+                                </div>
+                                
+                                <div class="form-group col-3">
+                                    <label class="form-label">Hora Fim</label>
+                                    <input type="time" class="form-control" id="location-end-time">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="location-notes" rows="2"></textarea>
+                            </div>
+                            
+                            <button type="button" class="btn btn-outline btn-sm" id="add-location-btn">
+                                <i class="ri-add-line"></i> Adicionar Locação
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção 3: Equipe -->
+                    <div class="form-section" id="team">
+                        <h4 class="section-title">Equipe</h4>
+                        
+                        <div class="team-list" id="team-list">
+                            <!-- Os membros da equipe serão adicionados aqui dinamicamente -->
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label class="form-label">Membro da Equipe</label>
+                                <select class="form-control" id="team-member">
+                                    <option value="">Selecione um membro...</option>
+                                    <!-- Os membros disponíveis serão carregados aqui dinamicamente -->
+                                    <option value="temp1">João Silva (Temporário)</option>
+                                    <option value="temp2">Maria Souza (Temporário)</option>
+                                    <option value="temp3">Pedro Santos (Temporário)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label class="form-label">Função</label>
+                                <select class="form-control" id="team-role">
+                                    <option value="director">Diretor</option>
+                                    <option value="photographer">Fotógrafo</option>
+                                    <option value="assistant">Assistente</option>
+                                    <option value="makeup">Maquiador</option>
+                                    <option value="stylist">Figurinista</option>
+                                    <option value="lighting">Iluminador</option>
+                                    <option value="sound">Técnico de Som</option>
+                                    <option value="editor">Editor</option>
+                                    <option value="producer">Produtor</option>
+                                    <option value="other">Outro</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-4">
+                                <label class="form-label">Diárias</label>
+                                <input type="number" class="form-control" id="team-days" min="1" value="1">
+                            </div>
+                            
+                            <div class="form-group col-4">
+                                <label class="form-label">Valor por Diária (R$)</label>
+                                <input type="number" class="form-control" id="team-daily-rate" min="0" step="10">
+                            </div>
+                            
+                            <div class="form-group col-4">
+                                <label class="form-label">Total (R$)</label>
+                                <input type="text" class="form-control" id="team-total" disabled>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Observações</label>
+                            <textarea class="form-control" id="team-notes" rows="2"></textarea>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline btn-sm" id="add-team-btn">
+                            <i class="ri-add-line"></i> Adicionar à Equipe
+                        </button>
+                    </div>
+                    
+                    <!-- Seção 4: Equipamentos -->
+                    <div class="form-section" id="equipment">
+                        <h4 class="section-title">Equipamentos</h4>
+                        
+                        <div class="equipment-list" id="equipment-list">
+                            <!-- Os equipamentos serão adicionados aqui dinamicamente -->
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label class="form-label">Equipamento</label>
+                                <select class="form-control" id="equipment-item">
+                                    <option value="">Selecione um equipamento...</option>
+                                    <!-- Os equipamentos disponíveis serão carregados aqui dinamicamente -->
+                                    <option value="temp1">Canon EOS R5 (Temporário)</option>
+                                    <option value="temp2">Sony A7S III (Temporário)</option>
+                                    <option value="temp3">DJI Ronin-S (Temporário)</option>
+                                    <option value="temp4">Godox AD600 (Temporário)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group col-3">
+                                <label class="form-label">Quantidade</label>
+                                <input type="number" class="form-control" id="equipment-quantity" min="1" value="1">
+                            </div>
+                            
+                            <div class="form-group col-3">
+                                <label class="form-label">Diárias</label>
+                                <input type="number" class="form-control" id="equipment-days" min="1" value="1">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label class="form-label">Disponibilidade</label>
+                                <select class="form-control" id="equipment-source">
+                                    <option value="own">Próprio</option>
+                                    <option value="rental">Aluguel</option>
+                                    <option value="partner">Parceiro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label class="form-label">Custo Total (R$)</label>
+                                <input type="number" class="form-control" id="equipment-cost" min="0" step="10">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Observações</label>
+                            <textarea class="form-control" id="equipment-notes" rows="2"></textarea>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline btn-sm" id="add-equipment-btn">
+                            <i class="ri-add-line"></i> Adicionar Equipamento
+                        </button>
+                    </div>
+                    
+                    <!-- Seção 5: Cronograma -->
+                    <div class="form-section" id="schedule">
+                        <h4 class="section-title">Cronograma</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Número Total de Diárias</label>
+                            <input type="number" class="form-control" id="schedule-days" min="1" value="1">
+                        </div>
+                        
+                        <div class="schedule-days-list" id="schedule-days-list">
+                            <!-- As diárias serão adicionadas aqui dinamicamente -->
+                        </div>
+                        
+                        <div class="schedule-day-form">
+                            <div class="form-row">
+                                <div class="form-group col-4">
+                                    <label class="form-label">Data</label>
+                                    <input type="date" class="form-control" id="schedule-date">
+                                </div>
+                                
+                                <div class="form-group col-4">
+                                    <label class="form-label">Hora Início</label>
+                                    <input type="time" class="form-control" id="schedule-start-time">
+                                </div>
+                                
+                                <div class="form-group col-4">
+                                    <label class="form-label">Hora Fim</label>
+                                    <input type="time" class="form-control" id="schedule-end-time">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label class="form-label">Locação</label>
+                                    <select class="form-control" id="schedule-location">
+                                        <option value="">Selecione a locação...</option>
+                                        <!-- As locações serão carregadas dinamicamente -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group col-6">
+                                    <label class="form-label">Descrição</label>
+                                    <input type="text" class="form-control" id="schedule-description" placeholder="Ex: Gravação Cena 1">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Detalhamento/Observações</label>
+                                <textarea class="form-control" id="schedule-notes" rows="2"></textarea>
+                            </div>
+                            
+                            <button type="button" class="btn btn-outline btn-sm" id="add-schedule-btn">
+                                <i class="ri-add-line"></i> Adicionar ao Cronograma
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção 6: Orçamento -->
+                    <div class="form-section" id="budget">
+                        <h4 class="section-title">Orçamento</h4>
+                        
+                        <div class="budget-summary">
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label class="form-label">Valor Total do Projeto (R$)</label>
+                                    <input type="number" class="form-control" id="budget-total" min="0" step="100">
+                                </div>
+                                
+                                <div class="form-group col-6">
+                                    <label class="form-label">Status do Pagamento</label>
+                                    <select class="form-control" id="budget-payment-status">
+                                        <option value="pending">Pendente</option>
+                                        <option value="partial">Parcial</option>
+                                        <option value="complete">Completo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="budget-stats">
+                                <div class="stat-card">
+                                    <div class="stat-label">Equipe</div>
+                                    <div class="stat-value" id="budget-team-total">R$ 0,00</div>
+                                </div>
+                                
+                                <div class="stat-card">
+                                    <div class="stat-label">Equipamentos</div>
+                                    <div class="stat-value" id="budget-equipment-total">R$ 0,00</div>
+                                </div>
+                                
+                                <div class="stat-card">
+                                    <div class="stat-label">Locações</div>
+                                    <div class="stat-value" id="budget-location-total">R$ 0,00</div>
+                                </div>
+                                
+                                <div class="stat-card">
+                                    <div class="stat-label">Outros</div>
+                                    <div class="stat-value" id="budget-other-total">R$ 0,00</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="subsection-title">Custos Adicionais</h5>
+                        
+                        <div class="budget-items-list" id="budget-items-list">
+                            <!-- Os itens de orçamento serão adicionados aqui dinamicamente -->
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <label class="form-label">Descrição</label>
+                                <input type="text" class="form-control" id="budget-item-description">
+                            </div>
+                            
+                            <div class="form-group col-3">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-control" id="budget-item-category">
+                                    <option value="transport">Transporte</option>
+                                    <option value="food">Alimentação</option>
+                                    <option value="props">Props/Objetos</option>
+                                    <option value="post">Pós-Produção</option>
+                                    <option value="other">Outro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group col-3">
+                                <label class="form-label">Valor (R$)</label>
+                                <input type="number" class="form-control" id="budget-item-value" min="0" step="10">
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline btn-sm" id="add-budget-item-btn">
+                            <i class="ri-add-line"></i> Adicionar Item ao Orçamento
+                        </button>
+                    </div>
+                    
+                    <!-- Seção 7: Detalhes Específicos -->
+                    <div class="form-section" id="details">
+                        <h4 class="section-title">Detalhes Específicos</h4>
+                        
+                        <!-- Esta seção muda dinamicamente com base no tipo de projeto -->
+                        <div class="project-type-details" id="photography-details" style="display: none;">
+                            <h5 class="subsection-title">Detalhes da Sessão Fotográfica</h5>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-4">
+                                    <label class="form-label">Estilo/Conceito</label>
+                                    <input type="text" class="form-control" id="photo-concept">
+                                </div>
+                                
+                                <div class="form-group col-4">
+                                    <label class="form-label">Número de Looks</label>
+                                    <input type="number" class="form-control" id="photo-looks" min="1" value="1">
+                                </div>
+                                
+                                <div class="form-group col-4">
+                                    <label class="form-label">Fotos Finais</label>
+                                    <input type="number" class="form-control" id="photo-final-images" min="1">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Referências Visuais (URLs)</label>
+                                <textarea class="form-control" id="photo-references" rows="2" placeholder="Cole URLs separadas por linha"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="project-type-details" id="video-details" style="display: none;">
+                            <h5 class="subsection-title">Detalhes da Produção de Vídeo</h5>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-4">
+                                    <label class="form-label">Duração Final</label>
+                                    <input type="text" class="form-control" id="video-duration" placeholder="Ex: 3min30s">
+                                </div>
+                                
+                                <div class="form-group col-4">
+                                    <label class="form-label">Formato de Entrega</label>
+                                    <select class="form-control" id="video-format">
+                                        <option value="4k">4K</option>
+                                        <option value="1080p">Full HD (1080p)</option>
+                                        <option value="720p">HD (720p)</option>
+                                        <option value="vertical">Vertical (9:16)</option>
+                                        <option value="square">Quadrado (1:1)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group col-4">
+                                    <label class="form-label">Uso Final</label>
+                                    <select class="form-control" id="video-usage">
+                                        <option value="social">Redes Sociais</option>
+                                        <option value="tv">TV</option>
+                                        <option value="cinema">Cinema</option>
+                                        <option value="web">Website</option>
+                                        <option value="event">Eventos</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Precisa de Roteiro?</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="video-script" value="yes"> Sim
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="video-script" value="no" checked> Não
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Observações de Pós-Produção</label>
+                                <textarea class="form-control" id="video-post-notes" rows="2"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Notas Adicionais</label>
+                            <textarea class="form-control" id="project-additional-notes" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-project">Cancelar</button>
+                <button class="btn btn-primary" id="save-project">Salvar Projeto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para a funcionalidade da página -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== ELEMENTOS DOM =====
+            // Elementos principais
+            const projectGrid = document.getElementById('project-grid');
+            const newProjectBtn = document.getElementById('new-project-btn');
+            const projectModal = document.getElementById('project-modal');
+            const modalClose = document.getElementById('modal-close');
+            const cancelProject = document.getElementById('cancel-project');
+            const saveProject = document.getElementById('save-project');
+            const projectForm = document.getElementById('project-form');
+            
+            // Elementos de filtro e busca
+            const searchInput = document.getElementById('search-input');
+            const statusFilter = document.getElementById('status-filter');
+            const typeFilter = document.getElementById('type-filter');
+            const sortFilter = document.getElementById('sort-filter');
+            
+            // Elementos do formulário expandido
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const formSections = document.querySelectorAll('.form-section');
+            const projectTypeSelect = document.getElementById('project-type');
+            const progressRange = document.getElementById('project-progress');
+            const progressValue = document.querySelector('.range-value');
+            
+            // Botões de adição de itens
+            const addLocationBtn = document.getElementById('add-location-btn');
+            const addTeamBtn = document.getElementById('add-team-btn');
+            const addEquipmentBtn = document.getElementById('add-equipment-btn');
+            const addScheduleBtn = document.getElementById('add-schedule-btn');
+            const addBudgetItemBtn = document.getElementById('add-budget-item-btn');
+            
+            // Listas de itens
+            const locationList = document.getElementById('location-list');
+            const teamList = document.getElementById('team-list');
+            const equipmentList = document.getElementById('equipment-list');
+            const scheduleDaysList = document.getElementById('schedule-days-list');
+            const budgetItemsList = document.getElementById('budget-items-list');
+            
+            // Detalhes específicos por tipo de projeto
+            const photographyDetails = document.getElementById('photography-details');
+            const videoDetails = document.getElementById('video-details');
+            
+            // Cálculos de orçamento
+            const teamDailyRate = document.getElementById('team-daily-rate');
+            const teamDays = document.getElementById('team-days');
+            const teamTotal = document.getElementById('team-total');
+            
+            // ===== ESTADO DA APLICAÇÃO =====
+            // Projetos do sistema
+            let projects = JSON.parse(localStorage.getItem('projects')) || [
+                // Projetos de exemplo pré-carregados
+                {
+                    id: 'proj1',
+                    basicInfo: {
+                        title: 'Documentário Amazônia',
+                        type: 'documentary',
+                        status: 'production',
+                        description: 'Documentário sobre biodiversidade e conservação na Floresta Amazônica.',
+                        client: 'Canal Natureza',
+                        startDate: '2025-01-15',
+                        endDate: '2025-05-30',
+                        progress: 65
+                    },
+                    createdAt: '2025-01-10T10:00:00.000Z',
+                    updatedAt: '2025-02-25T14:30:00.000Z',
+                    locations: [
+                        {
+                            id: 'loc_123',
+                            name: 'Manaus - AM',
+                            type: 'external',
+                            address: 'Reserva Florestal, Manaus, AM'
+                        }
+                    ],
+                    team: [
+                        {
+                            id: 'team_123',
+                            name: 'João Silva',
+                            role: 'director',
+                            roleText: 'Diretor'
+                        }
+                    ]
+                },
+                {
+                    id: 'proj2',
+                    basicInfo: {
+                        title: 'Curta-metragem "Reflexos"',
+                        type: 'shortfilm',
+                        status: 'planning',
+                        description: 'Um curta-metragem experimental explorando a percepção humana através de reflexos e espelhos.',
+                        client: 'Produção Independente',
+                        startDate: '2025-04-10',
+                        endDate: '2025-06-20',
+                        progress: 20
+                    },
+                    createdAt: '2025-02-05T09:15:00.000Z',
+                    updatedAt: '2025-02-20T11:45:00.000Z'
+                },
+                {
+                    id: 'proj3',
+                    basicInfo: {
+                        title: 'Ensaio Fotográfico Urbano',
+                        type: 'photography',
+                        status: 'completed',
+                        description: 'Ensaio fotográfico de moda urbana nas ruas do centro histórico.',
+                        client: 'Revista Estilo',
+                        startDate: '2024-11-01',
+                        endDate: '2024-11-15',
+                        progress: 100
+                    },
+                    createdAt: '2024-10-25T08:30:00.000Z',
+                    updatedAt: '2024-11-16T16:20:00.000Z',
+                    details: {
+                        concept: 'Moda Urbana',
+                        looks: 5,
+                        finalImages: 20
+                    }
+                }
+            ];
+            
+            // Projeto atual em edição
+            let currentProjectId = null;
+            
+            // Dados do projeto em edição
+            let projectData = {
+                basicInfo: {},
+                locations: [],
+                team: [],
+                equipment: [],
+                schedule: [],
+                budget: {
+                    total: 0,
+                    paymentStatus: 'pending',
+                    items: []
+                },
+                details: {}
+            };
+            
+            // ===== FUNÇÕES AUXILIARES =====
+            // Gerar ID único
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+            }
+            
+            // Formatação de data para exibição
+            function formatDate(dateString) {
+                if (!dateString) return 'N/A';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('pt-BR');
+            }
+            
+            // Obter label para status
+            function getStatusLabel(status) {
+                const labels = {
+                    'pitch': 'Proposta/Pitch',
+                    'planning': 'Em Planejamento',
+                    'preproduction': 'Pré-Produção',
+                    'production': 'Em Produção',
+                    'postproduction': 'Pós-Produção',
+                    'completed': 'Concluído',
+                    'archived': 'Arquivado'
+                };
+                return labels[status] || 'Desconhecido';
+            }
+            
+            // Obter classe CSS para status
+            function getStatusClass(status) {
+                const classes = {
+                    'pitch': 'status-planning',
+                    'planning': 'status-planning',
+                    'preproduction': 'status-planning',
+                    'production': 'status-active',
+                    'postproduction': 'status-active',
+                    'completed': 'status-completed',
+                    'archived': 'status-completed'
+                };
+                return classes[status] || '';
+            }
+            
+            // Obter tipo de projeto formatado
+            function getProjectTypeLabel(type) {
+                const types = {
+                    'photography': 'Sessão Fotográfica',
+                    'videoclip': 'Videoclipe',
+                    'commercial': 'Comercial',
+                    'documentary': 'Documentário',
+                    'shortfilm': 'Curta-Metragem',
+                    'corporate': 'Vídeo Institucional',
+                    'event': 'Cobertura de Evento',
+                    'other': 'Outro'
+                };
+                return types[type] || type;
+            }
+            
+            // ===== MANIPULAÇÃO DE PROJETOS =====
+            // Renderiza os projetos na grid
+            function renderProjects() {
+                // Filtrar projetos de acordo com os critérios
+                let filteredProjects = [...projects];
+                
+                // Aplicar filtro de busca
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                if (searchTerm) {
+                    filteredProjects = filteredProjects.filter(project => 
+                        project.basicInfo.title.toLowerCase().includes(searchTerm) || 
+                        project.basicInfo.description.toLowerCase().includes(searchTerm) ||
+                        (project.basicInfo.client && project.basicInfo.client.toLowerCase().includes(searchTerm))
+                    );
+                }
+                
+                // Aplicar filtro de status
+                const statusValue = statusFilter.value;
+                if (statusValue !== 'all') {
+                    filteredProjects = filteredProjects.filter(project => project.basicInfo.status === statusValue);
+                }
+                
+                // Aplicar filtro de tipo
+                const typeValue = typeFilter.value;
+                if (typeValue !== 'all') {
+                    filteredProjects = filteredProjects.filter(project => project.basicInfo.type === typeValue);
+                }
+                
+                // Aplicar ordenação
+                const sortValue = sortFilter.value;
+                switch (sortValue) {
+                    case 'date-desc':
+                        filteredProjects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        break;
+                    case 'date-asc':
+                        filteredProjects.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                        break;
+                    case 'name-asc':
+                        filteredProjects.sort((a, b) => a.basicInfo.title.localeCompare(b.basicInfo.title));
+                        break;
+                    case 'name-desc':
+                        filteredProjects.sort((a, b) => b.basicInfo.title.localeCompare(a.basicInfo.title));
+                        break;
+                }
+                
+                // Limpar a grid antes de renderizar
+                projectGrid.innerHTML = '';
+                
+                // Se não houver projetos, mostrar mensagem
+                if (filteredProjects.length === 0) {
+                    projectGrid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                            <i class="ri-file-list-3-line" style="font-size: 48px; color: var(--neon-blue);"></i>
+                            <h3 style="margin: 20px 0;">Nenhum projeto encontrado</h3>
+                            <p>Crie um novo projeto ou ajuste seus filtros de busca.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Renderizar cada projeto
+                filteredProjects.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'project-card';
+                    projectCard.dataset.id = project.id;
+                    
+                    // Determinar quantidade de membros da equipe para exibir
+                    const teamCount = project.team ? project.team.length : 0;
+                    let teamHtml = '';
+                    
+                    if (teamCount > 0) {
+                        teamHtml = `
+                            <div class="team-members">
+                                ${project.team.slice(0, 3).map((member, index) => `
+                                    <div class="member-avatar" title="${member.name || 'Membro'}">${(member.name || 'M').charAt(0)}</div>
+                                `).join('')}
+                                ${teamCount > 3 ? `<div class="member-avatar" title="+ ${teamCount - 3} membros">+${teamCount - 3}</div>` : ''}
+                            </div>
+                        `;
+                    } else {
+                        teamHtml = `
+                            <div class="team-members">
+                                <div class="member-avatar" title="Equipe não definida">?</div>
+                            </div>
+                        `;
+                    }
+                    
+                    projectCard.innerHTML = `
+                        <div class="project-header">
+                            <span class="project-status ${getStatusClass(project.basicInfo.status)}">${getStatusLabel(project.basicInfo.status)}</span>
+                            <span style="font-size: 12px; opacity: 0.7;">${getProjectTypeLabel(project.basicInfo.type)}</span>
+                        </div>
+                        <h3 class="project-title">${project.basicInfo.title}</h3>
+                        <p class="project-description">${project.basicInfo.description}</p>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: ${project.basicInfo.progress}%"></div>
+                        </div>
+                        <div class="project-meta">
+                            <div class="project-date">
+                                <i class="ri-calendar-line"></i>
+                                <span>${formatDate(project.basicInfo.startDate)} - ${formatDate(project.basicInfo.endDate)}</span>
+                            </div>
+                            ${teamHtml}
+                        </div>
+                    `;
+                    
+                    // Adicionar evento de clique para editar
+                    projectCard.addEventListener('click', () => editProject(project.id));
+                    projectGrid.appendChild(projectCard);
+                });
+            }
+            
+            // ===== MANIPULAÇÃO DO MODAL =====
+            // Abre o modal
+            function openModal() {
+                projectModal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Impede rolagem do body
+            }
+            
+            // Fecha o modal e reseta
+            function closeModal() {
+                projectModal.classList.remove('show');
+                document.body.style.overflow = ''; // Restaura rolagem do body
+                currentProjectId = null;
+                
+                // Limpar formulário
+                projectForm.reset();
+                
+                // Restaurar valores padrão
+                progressValue.textContent = '0%';
+                
+                // Limpar listas
+                locationList.innerHTML = '';
+                teamList.innerHTML = '';
+                equipmentList.innerHTML = '';
+                scheduleDaysList.innerHTML = '';
+                budgetItemsList.innerHTML = '';
+                
+                // Esconder seções específicas
+                photographyDetails.style.display = 'none';
+                videoDetails.style.display = 'none';
+                
+                // Restaurar o título do modal
+                document.querySelector('.modal-title').textContent = 'Novo Projeto';
+                
+                // Voltar para a primeira aba
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                formSections.forEach(section => section.classList.remove('active'));
+                tabButtons[0].classList.add('active');
+                formSections[0].classList.add('active');
+                
+                // Redefinir o objeto de dados do projeto
+                projectData = {
+                    basicInfo: {},
+                    locations: [],
+                    team: [],
+                    equipment: [],
+                    schedule: [],
+                    budget: {
+                        total: 0,
+                        paymentStatus: 'pending',
+                        items: []
+                    },
+                    details: {}
+                };
+            }
+            
+            // Edita um projeto existente
+            function editProject(id) {
+                const project = projects.find(p => p.id === id);
+                if (!project) return;
+                
+                // Definir o ID do projeto em edição
+                currentProjectId = id;
+                
+                // Copiar os dados do projeto para o objeto de dados
+                projectData = JSON.parse(JSON.stringify(project)); // Deep copy
+                
+                // Carregar os dados no formulário
+                loadProjectData(project);
+                
+                // Alterar o título do modal
+                document.querySelector('.modal-title').textContent = 'Editar Projeto';
+                
+                // Abrir o modal
+                openModal();
+            }
+            
+            // Carrega os dados de um projeto no formulário
+            function loadProjectData(project) {
+                // Carregar informações básicas
+                if (project.basicInfo) {
+                    document.getElementById('project-title').value = project.basicInfo.title || '';
+                    document.getElementById('project-type').value = project.basicInfo.type || '';
+                    document.getElementById('project-status').value = project.basicInfo.status || 'planning';
+                    document.getElementById('project-description').value = project.basicInfo.description || '';
+                    document.getElementById('project-client').value = project.basicInfo.client || '';
+                    document.getElementById('project-start-date').value = project.basicInfo.startDate || '';
+                    document.getElementById('project-end-date').value = project.basicInfo.endDate || '';
+                    document.getElementById('project-progress').value = project.basicInfo.progress || 0;
+                    progressValue.textContent = (project.basicInfo.progress || 0) + '%';
+                    
+                    // Atualizar detalhes específicos com base no tipo
+                    updateProjectTypeDetails(project.basicInfo.type);
+                }
+                
+                // Carregar locações
+                if (project.locations && project.locations.length) {
+                    locationList.innerHTML = '';
+                    
+                    project.locations.forEach(location => {
+                        const locationEl = document.createElement('div');
+                        locationEl.className = 'item-card';
+                        locationEl.dataset.id = location.id;
+                        
+                        const typeLabels = { 
+                            'studio': 'Estúdio', 
+                            'external': 'Externa', 
+                            'indoor': 'Interna' 
+                        };
+                        
+                        locationEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${location.name}</div>
+                                <div class="item-badge">${typeLabels[location.type]}</div>
+                            </div>
+                            <div class="item-content">${location.address || 'Sem endereço'}</div>
+                            <div class="item-footer">
+                                <div>${location.date ? formatDate(location.date) : 'Data não definida'}</div>
+                                <div>${location.startTime ? location.startTime : '--'} - ${location.endTime ? location.endTime : '--'}</div>
+                            </div>
+                            <button class="remove-btn" data-id="${location.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        locationList.appendChild(locationEl);
+                    });
+                    
+                    updateScheduleLocationOptions();
+                }
+                
+                // Carregar equipe
+                if (project.team && project.team.length) {
+                    teamList.innerHTML = '';
+                    
+                    project.team.forEach(member => {
+                        const memberEl = document.createElement('div');
+                        memberEl.className = 'item-card';
+                        memberEl.dataset.id = member.id;
+                        
+                        memberEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${member.name}</div>
+                                <div class="item-badge">${member.roleText}</div>
+                            </div>
+                            <div class="item-content">${member.days ? member.days + ' diária(s)' : ''} ${member.dailyRate ? ' a R$ ' + member.dailyRate.toFixed(2) : ''}</div>
+                            <div class="item-footer">
+                                <div>${member.total ? 'Total: R$ ' + member.total.toFixed(2) : ''}</div>
+                            </div>
+                            <button class="remove-btn" data-id="${member.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        teamList.appendChild(memberEl);
+                    });
+                }
+                
+                // Carregar equipamentos
+                if (project.equipment && project.equipment.length) {
+                    equipmentList.innerHTML = '';
+                    
+                    project.equipment.forEach(equipment => {
+                        const equipmentEl = document.createElement('div');
+                        equipmentEl.className = 'item-card';
+                        equipmentEl.dataset.id = equipment.id;
+                        
+                        const sourceLabels = { 
+                            'own': 'Próprio', 
+                            'rental': 'Aluguel', 
+                            'partner': 'Parceiro' 
+                        };
+                        
+                        equipmentEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${equipment.name}</div>
+                                <div class="item-badge">${sourceLabels[equipment.source] || equipment.source}</div>
+                            </div>
+                            <div class="item-content">${equipment.quantity || 1} unidade(s) por ${equipment.days || 1} dia(s)</div>
+                            <div class="item-footer">
+                                <div>Custo: R$ ${equipment.cost ? equipment.cost.toFixed(2) : '0.00'}</div>
+                            </div>
+                            <button class="remove-btn" data-id="${equipment.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        equipmentList.appendChild(equipmentEl);
+                    });
+                }
+                
+                // Carregar cronograma
+                if (project.schedule && project.schedule.length) {
+                    scheduleDaysList.innerHTML = '';
+                    
+                    project.schedule.forEach(day => {
+                        const dayEl = document.createElement('div');
+                        dayEl.className = 'item-card';
+                        dayEl.dataset.id = day.id;
+                        
+                        dayEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${day.description}</div>
+                                <div class="item-badge">${day.date ? formatDate(day.date) : 'Data não definida'}</div>
+                            </div>
+                            <div class="item-content">
+                                ${day.locationName || 'Locação não especificada'}
+                            </div>
+                            <div class="item-footer">
+                                <div>${day.startTime || '--'} - ${day.endTime || '--'}</div>
+                            </div>
+                            <button class="remove-btn" data-id="${day.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        scheduleDaysList.appendChild(dayEl);
+                    });
+                }
+                
+                // Carregar orçamento
+                if (project.budget) {
+                    document.getElementById('budget-total').value = project.budget.total || '';
+                    document.getElementById('budget-payment-status').value = project.budget.paymentStatus || 'pending';
+                    
+                    if (project.budget.items && project.budget.items.length) {
+                        budgetItemsList.innerHTML = '';
+                        
+                        project.budget.items.forEach(item => {
+                            const itemEl = document.createElement('div');
+                            itemEl.className = 'item-card';
+                            itemEl.dataset.id = item.id;
+                            
+                            itemEl.innerHTML = `
+                                <div class="item-header">
+                                    <div class="item-title">${item.description}</div>
+                                    <div class="item-badge">${item.categoryText}</div>
+                                </div>
+                                <div class="item-footer">
+                                    <div>Valor: R$ ${item.value ? item.value.toFixed(2) : '0.00'}</div>
+                                </div>
+                                <button class="remove-btn" data-id="${item.id}"><i class="ri-delete-bin-line"></i></button>
+                            `;
+                            
+                            budgetItemsList.appendChild(itemEl);
+                        });
+                    }
+                }
+                
+                // Carregar detalhes específicos
+                if (project.details) {
+                    if (project.basicInfo.type === 'photography') {
+                        document.getElementById('photo-concept').value = project.details.concept || '';
+                        document.getElementById('photo-looks').value = project.details.looks || 1;
+                        document.getElementById('photo-final-images').value = project.details.finalImages || '';
+                        document.getElementById('photo-references').value = project.details.references || '';
+                    } else if (['videoclip', 'commercial', 'documentary', 'shortfilm', 'corporate'].includes(project.basicInfo.type)) {
+                        document.getElementById('video-duration').value = project.details.duration || '';
+                        document.getElementById('video-format').value = project.details.format || '1080p';
+                        document.getElementById('video-usage').value = project.details.usage || 'web';
+                        
+                        const scriptRadios = document.querySelectorAll('input[name="video-script"]');
+                        scriptRadios.forEach(radio => {
+                            if (radio.value === project.details.needsScript) {
+                                radio.checked = true;
+                            }
+                        });
+                        
+                        document.getElementById('video-post-notes').value = project.details.postNotes || '';
+                    }
+                    
+                    document.getElementById('project-additional-notes').value = project.details.additionalNotes || '';
+                }
+                
+                // Atualizar totais do orçamento
+                updateBudgetTotals();
+            }
+            
+            // Coleta todos os dados do formulário
+            function collectFormData() {
+                // Informações básicas
+                projectData.basicInfo = {
+                    title: document.getElementById('project-title').value,
+                    type: document.getElementById('project-type').value,
+                    status: document.getElementById('project-status').value,
+                    description: document.getElementById('project-description').value,
+                    client: document.getElementById('project-client').value,
+                    startDate: document.getElementById('project-start-date').value,
+                    endDate: document.getElementById('project-end-date').value,
+                    progress: parseInt(document.getElementById('project-progress').value) || 0
+                };
+                
+                // Orçamento
+                projectData.budget.total = parseFloat(document.getElementById('budget-total').value) || 0;
+                projectData.budget.paymentStatus = document.getElementById('budget-payment-status').value;
+                
+                // Detalhes específicos por tipo
+                const projectType = document.getElementById('project-type').value;
+                
+                if (projectType === 'photography') {
+                    projectData.details = {
+                        concept: document.getElementById('photo-concept').value,
+                        looks: parseInt(document.getElementById('photo-looks').value) || 1,
+                        finalImages: parseInt(document.getElementById('photo-final-images').value) || 0,
+                        references: document.getElementById('photo-references').value,
+                        additionalNotes: document.getElementById('project-additional-notes').value
+                    };
+                } else if (['videoclip', 'commercial', 'documentary', 'shortfilm', 'corporate'].includes(projectType)) {
+                    projectData.details = {
+                        duration: document.getElementById('video-duration').value,
+                        format: document.getElementById('video-format').value,
+                        usage: document.getElementById('video-usage').value,
+                        needsScript: document.querySelector('input[name="video-script"]:checked')?.value || 'no',
+                        postNotes: document.getElementById('video-post-notes').value,
+                        additionalNotes: document.getElementById('project-additional-notes').value
+                    };
+                } else {
+                    projectData.details = {
+                        additionalNotes: document.getElementById('project-additional-notes').value
+                    };
+                }
+                
+                return projectData;
+            }
+            
+            // Salva o projeto (novo ou editado)
+            function saveProjectData() {
+                // Validar campos obrigatórios
+                const title = document.getElementById('project-title').value;
+                const projectType = document.getElementById('project-type').value;
+                const description = document.getElementById('project-description').value;
+                const startDate = document.getElementById('project-start-date').value;
+                
+                if (!title || !projectType || !description || !startDate) {
+                    alert('Por favor, preencha todos os campos obrigatórios na aba de Informações Básicas.');
+                    
+                    // Voltar para a primeira aba
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    formSections.forEach(section => section.classList.remove('active'));
+                    tabButtons[0].classList.add('active');
+                    formSections[0].classList.add('active');
+                    
+                    return;
+                }
+                
+                // Coletar todos os dados do formulário
+                const formData = collectFormData();
+                
+                if (currentProjectId) {
+                    // Editando projeto existente
+                    const index = projects.findIndex(p => p.id === currentProjectId);
+                    if (index > -1) {
+                        formData.updatedAt = new Date().toISOString();
+                        projects[index] = formData;
+                    }
+                } else {
+                    // Criando um novo projeto
+                    formData.id = generateId();
+                    formData.createdAt = new Date().toISOString();
+                    formData.updatedAt = new Date().toISOString();
+                    projects.push(formData);
+                }
+                
+                // Salvar no localStorage e atualizar a UI
+                localStorage.setItem('projects', JSON.stringify(projects));
+                closeModal();
+                renderProjects();
+            }
+            
+            // ===== ABAS DO FORMULÁRIO =====
+            // Alternar entre as abas do formulário
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    // Desativar todas as abas
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    formSections.forEach(s => s.classList.remove('active'));
+                    
+                    // Ativar a aba clicada
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // ===== ATUALIZAÇÃO DE DETALHES ESPECÍFICOS =====
+            // Atualizar detalhes específicos com base no tipo de projeto
+            function updateProjectTypeDetails(projectType) {
+                // Esconder todos os detalhes específicos
+                photographyDetails.style.display = 'none';
+                videoDetails.style.display = 'none';
+                
+                // Mostrar apenas os detalhes relevantes
+                if (projectType === 'photography') {
+                    photographyDetails.style.display = 'block';
+                } else if (['videoclip', 'commercial', 'documentary', 'shortfilm', 'corporate'].includes(projectType)) {
+                    videoDetails.style.display = 'block';
+                }
+            }
+            
+            // ===== ATUALIZAÇÃO DO PROGRESSO =====
+            // Atualizar valor do progresso
+            progressRange.addEventListener('input', function() {
+                progressValue.textContent = this.value + '%';
+            });
+            
+            // ===== TIPO DE PROJETO =====
+            // Atualizar detalhes específicos quando o tipo de projeto muda
+            projectTypeSelect.addEventListener('change', function() {
+                updateProjectTypeDetails(this.value);
+            });
+            
+            // ===== CÁLCULOS AUTOMÁTICOS =====
+            // Calcular valor total da equipe
+            function calculateTeamTotal() {
+                const rate = parseFloat(teamDailyRate.value) || 0;
+                const days = parseInt(teamDays.value) || 0;
+                const total = rate * days;
+                teamTotal.value = total.toFixed(2);
+            }
+            
+            teamDailyRate.addEventListener('input', calculateTeamTotal);
+            teamDays.addEventListener('input', calculateTeamTotal);
+            
+            // ===== ADIÇÃO DE ITENS =====
+            // Adicionar locação
+            addLocationBtn.addEventListener('click', function() {
+                const locationName = document.getElementById('location-name').value;
+                const locationType = document.getElementById('location-type').value;
+                const locationAddress = document.getElementById('location-address').value;
+                const locationDate = document.getElementById('location-date').value;
+                
+                if (!locationName) {
+                    alert('Por favor, informe o nome da locação.');
+                    return;
+                }
+                
+                // Criar objeto de locação
+                const location = {
+                    id: 'loc_' + Date.now(),
+                    name: locationName,
+                    type: locationType,
+                    address: locationAddress,
+                    date: locationDate,
+                    startTime: document.getElementById('location-start-time').value,
+                    endTime: document.getElementById('location-end-time').value,
+                    notes: document.getElementById('location-notes').value
+                };
+                
+                // Adicionar à lista de locações
+                projectData.locations.push(location);
+                
+                // Criar e adicionar elemento visual
+                const locationEl = document.createElement('div');
+                locationEl.className = 'item-card';
+                locationEl.dataset.id = location.id;
+                
+                const typeLabels = { 
+                    'studio': 'Estúdio', 
+                    'external': 'Externa', 
+                    'indoor': 'Interna' 
+                };
+                
+                locationEl.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">${location.name}</div>
+                        <div class="item-badge">${typeLabels[location.type]}</div>
+                    </div>
+                    <div class="item-content">${location.address || 'Sem endereço'}</div>
+                    <div class="item-footer">
+                        <div>${location.date ? formatDate(location.date) : 'Data não definida'}</div>
+                        <div>${location.startTime ? location.startTime : '--'} - ${location.endTime ? location.endTime : '--'}</div>
+                    </div>
+                    <button class="remove-btn" data-id="${location.id}"><i class="ri-delete-bin-line"></i></button>
+                `;
+                
+                locationList.appendChild(locationEl);
+                
+                // Limpar campos
+                document.getElementById('location-name').value = '';
+                document.getElementById('location-address').value = '';
+                document.getElementById('location-notes').value = '';
+                
+                // Atualizar opções de locação no cronograma
+                updateScheduleLocationOptions();
+            });
+            
+            // Adicionar membro da equipe
+            addTeamBtn.addEventListener('click', function() {
+                const teamMember = document.getElementById('team-member').value;
+                const teamMemberName = document.getElementById('team-member').options[document.getElementById('team-member').selectedIndex]?.text || 'Membro não especificado';
+                const teamRole = document.getElementById('team-role').value;
+                const teamRoleText = document.getElementById('team-role').options[document.getElementById('team-role').selectedIndex].text;
+                
+                if (!teamMember) {
+                    alert('Por favor, selecione um membro da equipe.');
+                    return;
+                }
+                
+                // Criar objeto do membro da equipe
+                const member = {
+                    id: 'team_' + Date.now(),
+                    memberId: teamMember,
+                    name: teamMemberName,
+                    role: teamRole,
+                    roleText: teamRoleText,
+                    days: parseInt(document.getElementById('team-days').value) || 1,
+                    dailyRate: parseFloat(document.getElementById('team-daily-rate').value) || 0,
+                    total: parseFloat(document.getElementById('team-total').value) || 0,
+                    notes: document.getElementById('team-notes').value
+                };
+                
+                // Adicionar à lista de equipe
+                projectData.team.push(member);
+                
+                // Criar e adicionar elemento visual
+                const memberEl = document.createElement('div');
+                memberEl.className = 'item-card';
+                memberEl.dataset.id = member.id;
+                
+                memberEl.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">${member.name}</div>
+                        <div class="item-badge">${member.roleText}</div>
+                    </div>
+                    <div class="item-content">${member.days} diária(s) a R$ ${member.dailyRate.toFixed(2)}</div>
+                    <div class="item-footer">
+                        <div>Total: R$ ${member.total.toFixed(2)}</div>
+                    </div>
+                    <button class="remove-btn" data-id="${member.id}"><i class="ri-delete-bin-line"></i></button>
+                `;
+                
+                teamList.appendChild(memberEl);
+                
+                // Limpar campos
+                document.getElementById('team-notes').value = '';
+                
+                // Atualizar total do orçamento
+                updateBudgetTotals();
+            });
+            
+            // Adicionar equipamento
+            addEquipmentBtn.addEventListener('click', function() {
+                const equipmentItem = document.getElementById('equipment-item').value;
+                const equipmentName = document.getElementById('equipment-item').options[document.getElementById('equipment-item').selectedIndex]?.text || 'Equipamento não especificado';
+                
+                if (!equipmentItem) {
+                    alert('Por favor, selecione um equipamento.');
+                    return;
+                }
+                
+                // Criar objeto do equipamento
+                const equipment = {
+                    id: 'equip_' + Date.now(),
+                    equipmentId: equipmentItem,
+                    name: equipmentName,
+                    quantity: parseInt(document.getElementById('equipment-quantity').value) || 1,
+                    days: parseInt(document.getElementById('equipment-days').value) || 1,
+                    source: document.getElementById('equipment-source').value,
+                    cost: parseFloat(document.getElementById('equipment-cost').value) || 0,
+                    notes: document.getElementById('equipment-notes').value
+                };
+                
+                // Adicionar à lista de equipamentos
+                projectData.equipment.push(equipment);
+                
+                // Criar e adicionar elemento visual
+                const equipmentEl = document.createElement('div');
+                equipmentEl.className = 'item-card';
+                equipmentEl.dataset.id = equipment.id;
+                
+                const sourceLabels = { 
+                    'own': 'Próprio', 
+                    'rental': 'Aluguel', 
+                    'partner': 'Parceiro' 
+                };
+                
+                equipmentEl.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">${equipment.name}</div>
+                        <div class="item-badge">${sourceLabels[equipment.source]}</div>
+                    </div>
+                    <div class="item-content">${equipment.quantity} unidade(s) por ${equipment.days} dia(s)</div>
+                    <div class="item-footer">
+                        <div>Custo: R$ ${equipment.cost.toFixed(2)}</div>
+                    </div>
+                    <button class="remove-btn" data-id="${equipment.id}"><i class="ri-delete-bin-line"></i></button>
+                `;
+                
+                equipmentList.appendChild(equipmentEl);
+                
+                // Limpar campos
+                document.getElementById('equipment-notes').value = '';
+                
+                // Atualizar total do orçamento
+                updateBudgetTotals();
+            });
+            
+            // Adicionar dia ao cronograma
+            addScheduleBtn.addEventListener('click', function() {
+                const scheduleDate = document.getElementById('schedule-date').value;
+                const scheduleDescription = document.getElementById('schedule-description').value;
+                
+                if (!scheduleDate) {
+                    alert('Por favor, informe a data.');
+                    return;
+                }
+                
+                if (!scheduleDescription) {
+                    alert('Por favor, informe uma descrição para esta diária.');
+                    return;
+                }
+                
+                // Criar objeto do dia de cronograma
+                const scheduleDay = {
+                    id: 'sched_' + Date.now(),
+                    date: scheduleDate,
+                    startTime: document.getElementById('schedule-start-time').value,
+                    endTime: document.getElementById('schedule-end-time').value,
+                    location: document.getElementById('schedule-location').value,
+                    locationName: document.getElementById('schedule-location').options[document.getElementById('schedule-location').selectedIndex]?.text || 'Não especificada',
+                    description: scheduleDescription,
+                    notes: document.getElementById('schedule-notes').value
+                };
+                
+                // Adicionar à lista de dias de cronograma
+                projectData.schedule.push(scheduleDay);
+                
+                // Criar e adicionar elemento visual
+                const dayEl = document.createElement('div');
+                dayEl.className = 'item-card';
+                dayEl.dataset.id = scheduleDay.id;
+                
+                dayEl.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">${scheduleDay.description}</div>
+                        <div class="item-badge">${formatDate(scheduleDay.date)}</div>
+                    </div>
+                    <div class="item-content">
+                        ${scheduleDay.locationName}
+                    </div>
+                    <div class="item-footer">
+                        <div>${scheduleDay.startTime || '--'} - ${scheduleDay.endTime || '--'}</div>
+                    </div>
+                    <button class="remove-btn" data-id="${scheduleDay.id}"><i class="ri-delete-bin-line"></i></button>
+                `;
+                
+                scheduleDaysList.appendChild(dayEl);
+                
+                // Limpar campos
+                document.getElementById('schedule-description').value = '';
+                document.getElementById('schedule-notes').value = '';
+            });
+            
+            // Adicionar item ao orçamento
+            addBudgetItemBtn.addEventListener('click', function() {
+                const budgetItemDescription = document.getElementById('budget-item-description').value;
+                const budgetItemValue = parseFloat(document.getElementById('budget-item-value').value) || 0;
+                
+                if (!budgetItemDescription) {
+                    alert('Por favor, informe a descrição do item.');
+                    return;
+                }
+                
+                // Criar objeto do item de orçamento
+                const budgetItem = {
+                    id: 'budget_' + Date.now(),
+                    description: budgetItemDescription,
+                    category: document.getElementById('budget-item-category').value,
+                    categoryText: document.getElementById('budget-item-category').options[document.getElementById('budget-item-category').selectedIndex].text,
+                    value: budgetItemValue
+                };
+                
+                // Adicionar à lista de itens de orçamento
+                projectData.budget.items.push(budgetItem);
+                
+                // Criar e adicionar elemento visual
+                const itemEl = document.createElement('div');
+                itemEl.className = 'item-card';
+                itemEl.dataset.id = budgetItem.id;
+                
+                itemEl.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-title">${budgetItem.description}</div>
+                        <div class="item-badge">${budgetItem.categoryText}</div>
+                    </div>
+                    <div class="item-footer">
+                        <div>Valor: R$ ${budgetItem.value.toFixed(2)}</div>
+                    </div>
+                    <button class="remove-btn" data-id="${budgetItem.id}"><i class="ri-delete-bin-line"></i></button>
+                `;
+                
+                budgetItemsList.appendChild(itemEl);
+                
+                // Limpar campos
+                document.getElementById('budget-item-description').value = '';
+                document.getElementById('budget-item-value').value = '';
+                
+                // Atualizar total do orçamento
+                updateBudgetTotals();
+            });
+            
+            // ===== REMOÇÃO DE ITENS =====
+            // Delegação de eventos para remover itens
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-btn')) {
+                    const removeBtn = e.target.closest('.remove-btn');
+                    const itemId = removeBtn.dataset.id;
+                    const itemCard = removeBtn.closest('.item-card');
+                    
+                    // Remover do array de dados apropriado
+                    if (itemId.startsWith('loc_')) {
+                        projectData.locations = projectData.locations.filter(l => l.id !== itemId);
+                        updateScheduleLocationOptions();
+                    } else if (itemId.startsWith('team_')) {
+                        projectData.team = projectData.team.filter(m => m.id !== itemId);
+                    } else if (itemId.startsWith('equip_')) {
+                        projectData.equipment = projectData.equipment.filter(e => e.id !== itemId);
+                    } else if (itemId.startsWith('sched_')) {
+                        projectData.schedule = projectData.schedule.filter(d => d.id !== itemId);
+                    } else if (itemId.startsWith('budget_')) {
+                        projectData.budget.items = projectData.budget.items.filter(i => i.id !== itemId);
+                    }
+                    
+                    // Remover o elemento visual
+                    itemCard.remove();
+                    
+                    // Atualizar totais do orçamento, se necessário
+                    updateBudgetTotals();
+                }
+            });
+            
+            // ===== FUNÇÕES AUXILIARES =====
+            // Atualizar opções de locação no cronograma
+            function updateScheduleLocationOptions() {
+                const locationSelect = document.getElementById('schedule-location');
+                
+                // Limpar opções existentes (manter apenas a primeira)
+                while (locationSelect.options.length > 1) {
+                    locationSelect.remove(1);
+                }
+                
+                // Adicionar locações como opções
+                projectData.locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location.id;
+                    option.textContent = location.name;
+                    locationSelect.appendChild(option);
+                });
+            }
+            
+            // Atualizar totais do orçamento
+            function updateBudgetTotals() {
+                // Calcular total da equipe
+                const teamTotal = projectData.team.reduce((sum, member) => sum + (member.total || 0), 0);
+                document.getElementById('budget-team-total').textContent = 'R$ ' + teamTotal.toFixed(2);
+                
+                // Calcular total de equipamentos
+                const equipmentTotal = projectData.equipment.reduce((sum, equip) => sum + (equip.cost || 0), 0);
+                document.getElementById('budget-equipment-total').textContent = 'R$ ' + equipmentTotal.toFixed(2);
+                
+                // Calcular total de locações (placeholder - futuramente pode ter custos de locação)
+                const locationTotal = 0; // Por enquanto, não estamos calculando custos de locação
+                document.getElementById('budget-location-total').textContent = 'R$ ' + locationTotal.toFixed(2);
+                
+                // Calcular total de outros itens
+                const otherTotal = projectData.budget.items.reduce((sum, item) => sum + (item.value || 0), 0);
+                document.getElementById('budget-other-total').textContent = 'R$ ' + otherTotal.toFixed(2);
+                
+                // Calcular total geral
+                const grandTotal = teamTotal + equipmentTotal + locationTotal + otherTotal;
+                if (!document.getElementById('budget-total').value) {
+                    document.getElementById('budget-total').value = grandTotal.toFixed(2);
+                }
+            }
+            
+            // ===== EVENT LISTENERS =====
+            // Botão para criar novo projeto
+            newProjectBtn.addEventListener('click', function() {
+                currentProjectId = null;
+                projectForm.reset();
+                
+                // Define a data de hoje como padrão para novos projetos
+                document.getElementById('project-start-date').valueAsDate = new Date();
+                
+                document.querySelector('.modal-title').textContent = 'Novo Projeto';
+                
+                // Voltar para a primeira aba
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                formSections.forEach(section => section.classList.remove('active'));
+                tabButtons[0].classList.add('active');
+                formSections[0].classList.add('active');
+                
+                // Reiniciar o objeto de dados do projeto
+                projectData = {
+                    basicInfo: {},
+                    locations: [],
+                    team: [],
+                    equipment: [],
+                    schedule: [],
+                    budget: {
+                        total: 0,
+                        paymentStatus: 'pending',
+                        items: []
+                    },
+                    details: {}
+                };
+                
+                openModal();
+            });
+            
+            // Botões para fechar o modal
+            modalClose.addEventListener('click', closeModal);
+            cancelProject.addEventListener('click', closeModal);
+            
+            // Botão para salvar o projeto
+            saveProject.addEventListener('click', function(e) {
+                e.preventDefault();
+                saveProjectData();
+            });
+            
+            // Filtragem e ordenação
+            searchInput.addEventListener('input', renderProjects);
+            statusFilter.addEventListener('change', renderProjects);
+            typeFilter.addEventListener('change', renderProjects);
+            sortFilter.addEventListener('change', renderProjects);
+            
+            // Fechar o modal ao clicar fora dele
+            projectModal.addEventListener('click', function(e) {
+                if (e.target === projectModal) {
+                    closeModal();
+                }
+            });
+            
+            // Atalhos de teclado
+            document.addEventListener('keydown', function(e) {
+                if (projectModal.classList.contains('show')) {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                    } else if (e.key === 'Enter' && e.ctrlKey) {
+                        saveProjectData();
+                    }
+                }
+            });
+            
+            // ===== INICIALIZAÇÃO =====
+            // Renderizar projetos ao carregar a página
+            renderProjects();
+        });
+    </script>
+</body>
+</html>

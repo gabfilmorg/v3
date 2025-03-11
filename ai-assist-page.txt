@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - AI Assist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ícones modernos -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Cores Base - Esquema Futurista */
+            --deep-space: #1A1B2E;
+            --neon-blue: #00F5FF;
+            --neon-purple: #B15EFF;
+            --cyber-green: #00FFB2;
+            --soft-white: #F4F7FF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
+            
+            /* Efeitos */
+            --glass-blur: blur(10px);
+            --neon-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            
+            /* Dimensões */
+            --sidebar-width: 80px;
+            --sidebar-width-expanded: 240px;
+            --header-height: 70px;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(177, 94, 255, 0.1) 0%, transparent 20%);
+            background-attachment: fixed;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .ai-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .ai-info p {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.ai {
+            background: rgba(0, 245, 255, 0.1);
+            border-top-left-radius: 0;
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background: rgba(177, 94, 255, 0.1);
+            border-top-right-radius: 0;
+            align-self: flex-end;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: rgba(244, 247, 255, 0.5);
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            align-self: flex-start;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: typing-animation 1s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing-animation {
+            0%, 100% { opacity: 0.6; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-5px); }
+        }
+
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-field {
+            flex: 1;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 12px 15px;
+            color: var(--soft-white);
+            outline: none;
+            resize: none;
+            min-height: 50px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .chat-input-field:focus {
+            border-color: var(--neon-blue);
+        }
+
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+            }
+
+            .sidebar.show {
+                width: var(--sidebar-width-expanded);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .ai-container {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-features {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">F</div>
+            <div class="logo-text">filmORG</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="menu-icon ri-dashboard-line"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="projetos.html" class="menu-item">
+                <i class="menu-icon ri-movie-line"></i>
+                <span class="menu-text">Projetos</span>
+            </a>
+            <a href="equipe.html" class="menu-item">
+                <i class="menu-icon ri-team-line"></i>
+                <span class="menu-text">Equipe</span>
+            </a>
+            <a href="equipamentos.html" class="menu-item">
+                <i class="menu-icon ri-camera-line"></i>
+                <span class="menu-text">Equipamentos</span>
+            </a>
+            <a href="ai-assist.html" class="menu-item active">
+                <i class="menu-icon ri-robot-line"></i>
+                <span class="menu-text">AI Assist</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="menu-icon ri-bar-chart-line"></i>
+                <span class="menu-text">Analytics</span>
+            </a>
+            <a href="agenda.html" class="menu-item">
+                <i class="menu-icon ri-calendar-line"></i>
+                <span class="menu-text">Agenda</span>
+            </a>
+            <a href="orcamento.html" class="menu-item">
+                <i class="menu-icon ri-money-dollar-circle-line"></i>
+                <span class="menu-text">Orçamento</span>
+            </a>
+            <a href="configuracoes.html" class="menu-item" style="margin-top: auto;">
+                <i class="menu-icon ri-settings-line"></i>
+                <span class="menu-text">Configurações</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">AI Assist</h1>
+            
+            <div class="header-actions">
+                <div class="notification-btn">
+                    <i class="ri-notification-3-line"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">U</div>
+                    <span class="user-name">Usuário</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ai-container">
+            <div class="ai-features">
+                <h2 class="feature-title">Assistente IA</h2>
+                <ul class="feature-list">
+                    <li class="feature-item active" data-feature="creative">
+                        <i class="feature-icon ri-lightbulb-line"></i>
+                        <span>Ideias Criativas</span>
+                    </li>
+                    <li class="feature-item" data-feature="budget">
+                        <i class="feature-icon ri-money-dollar-circle-line"></i>
+                        <span>Análise de Orçamento</span>
+                    </li>
+                    <li class="feature-item" data-feature="schedule">
+                        <i class="feature-icon ri-calendar-line"></i>
+                        <span>Otimização de Agenda</span>
+                    </li>
+                    <li class="feature-item" data-feature="equipment">
+                        <i class="feature-icon ri-camera-line"></i>
+                        <span>Sugestões de Equipamentos</span>
+                    </li>
+                    <li class="feature-item" data-feature="shot">
+                        <i class="feature-icon ri-movie-line"></i>
+                        <span>Lista de Planos</span>
+                    </li>
+                    <li class="feature-item" data-feature="location">
+                        <i class="feature-icon ri-map-pin-line"></i>
+                        <span>Análise de Locação</span>
+                    </li>
+                    <li class="feature-item" data-feature="script">
+                        <i class="feature-icon ri-file-text-line"></i>
+                        <span>Assistente de Roteiro</span>
+                    </li>
+                </ul>
+                
+                <h2 class="feature-title" style="margin-top: 30px;">Projetos</h2>
+                <ul class="feature-list" id="project-list">
+                    <!-- Lista de projetos será carregada dinamicamente -->
+                </ul>
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="ai-avatar">
+                        <i class="ri-robot-line"></i>
+                    </div>
+                    <div class="ai-info">
+                        <h3>Assistente de Produção</h3>
+                        <p>Online e pronto para ajudar</p>
+                    </div>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Mensagens serão carregadas dinamicamente -->
+                </div>
+                
+                <div class="chat-input">
+                    <textarea 
+                        class="chat-input-field" 
+                        id="chat-input-field" 
+                        placeholder="Digite sua pergunta..."
+                        rows="1"></textarea>
+                    <button class="send-btn" id="send-btn">
+                        <i class="ri-send-plane-fill"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInputField = document.getElementById('chat-input-field');
+            const sendBtn = document.getElementById('send-btn');
+            const featureItems = document.querySelectorAll('.feature-item');
+            const projectList = document.getElementById('project-list');
+            
+            // Estado da aplicação
+            let currentFeature = 'creative';
+            let projects = JSON.parse(localStorage.getItem('projects')) || [];
+            let messages = JSON.parse(localStorage.getItem('ai_messages')) || [];
+            let isTyping = false;
+            
+            // Carregar projetos na sidebar
+            function loadProjects() {
+                projectList.innerHTML = '';
+                
+                if (projects.length === 0) {
+                    const emptyItem = document.createElement('li');
+                    emptyItem.className = 'feature-item';
+                    emptyItem.innerHTML = '<span>Nenhum projeto</span>';
+                    projectList.appendChild(emptyItem);
+                    return;
+                }
+                
+                projects.forEach(project => {
+                    const projectItem = document.createElement('li');
+                    projectItem.className = 'feature-item';
+                    projectItem.dataset.project = project.id;
+                    projectItem.innerHTML = `
+                        <i class="feature-icon ri-folder-line"></i>
+                        <span>${project.title}</span>
+                    `;
+                    
+                    projectItem.addEventListener('click', () => {
+                        selectProject(project);
+                    });
+                    
+                    projectList.appendChild(projectItem);
+                });
+            }
+            
+            // Selecionar projeto
+            function selectProject(project) {
+                const message = `Olá! Vou ajudar você com o projeto "${project.title}". O que você gostaria de saber?`;
+                addMessage('ai', message);
+            }
+            
+            // Adicionar mensagem ao chat
+            function addMessage(sender, content) {
+                const messageEl = document.createElement('div');
+                messageEl.className = `message ${sender}`;
+                messageEl.innerHTML = `
+                    ${content}
+                    <div class="message-time">${formatTime(new Date())}</div>
+                `;
+                
+                chatMessages.appendChild(messageEl);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Salvar mensagem
+                messages.push({
+                    sender,
+                    content,
+                    timestamp: new Date().toISOString()
+                });
+                
+                localStorage.setItem('ai_messages', JSON.stringify(messages));
+            }
+            
+            // Mostrar indicador de digitação
+            function showTypingIndicator() {
+                if (isTyping) return;
+                
+                isTyping = true;
+                const indicator = document.createElement('div');
+                indicator.className = 'typing-indicator';
+                indicator.innerHTML = `
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                indicator.id = 'typing-indicator';
+                
+                chatMessages.appendChild(indicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Esconder indicador de digitação
+            function hideTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+                isTyping = false;
+            }
+            
+            // Formatar hora
+            function formatTime(date) {
+                return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+            
+            // Obter resposta da IA
+            function getAIResponse(message, feature) {
+                showTypingIndicator();
+                
+                // Simular delay de resposta
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    
+                    let response = '';
+                    
+                    // Respostas baseadas no tipo de assistente selecionado
+                    switch (feature) {
+                        case 'creative':
+                            if (message.toLowerCase().includes('ideia') || message.toLowerCase().includes('criativo')) {
+                                response = "Aqui estão algumas ideias criativas para seu próximo projeto:<br><br>1. <b>Documentário Interativo</b>: Combine elementos de documentário tradicional com experiências interativas que permitem ao espectador escolher diferentes perspectivas.<br><br>2. <b>Time-lapse Urbano</b>: Capture o ritmo da cidade com uma série de time-lapses conectados por uma narrativa sobre transformação urbana.<br><br>3. <b>Narrativa em Split-screen</b>: Conte histórias paralelas em tela dividida, mostrando diferentes ângulos da mesma situação.";
+                            } else {
+                                response = "Estou aqui para ajudar com ideias criativas para seu projeto. Você pode me perguntar sobre conceitos visuais, abordagens narrativas, técnicas experimentais ou referências artísticas que podem inspirar seu trabalho.";
+                            }
+                            break;
+                            
+                        case 'budget':
+                            response = "Para otimizar seu orçamento, recomendo:<br><br>1. Consolidar diárias de filmagem em locações próximas<br>2. Priorizar equipamentos essenciais e considerar alugar itens especializados apenas quando necessário<br>3. Solicitar descontos para aluguéis de longa duração<br>4. Reduzir o tamanho da equipe em dias de menor complexidade";
+                            break;
+                            
+                        case 'schedule':
+                            response = "Analisando sua agenda atual, vejo oportunidades para otimização:<br><br>1. Reagrupar as filmagens externas para reduzir deslocamentos<br>2. Reservar mais tempo para locações complexas como a cena noturna na ponte<br>3. Programar a gravação das entrevistas em sequência para manter a continuidade";
+                            break;
+                            
+                        case 'equipment':
+                            response = "Com base no seu projeto atual, recomendo:<br><br>1. <b>Câmera principal</b>: Sony FX6 oferece excelente performance em baixa luz para as cenas noturnas<br>2. <b>Lentes</b>: Conjunto de lentes prime para maior controle criativo (24mm, 35mm, 50mm, 85mm)<br>3. <b>Áudio</b>: Shotgun direcional Rode NTG5 e kit de lapelas sem fio para as entrevistas<br>4. <b>Iluminação</b>: Kit LED Aputure com modificadores para maior versatilidade";
+                            break;
+                            
+                        case 'shot':
+                            response = "Para sua cena atual, sugiro a seguinte lista de planos:<br><br>1. Plano geral de estabelecimento para contextualizar a locação<br>2. Plano médio para a conversa principal<br>3. Close nos rostos durante momentos emocionais<br>4. Plano detalhe dos objetos significativos<br>5. Plano de reação dos personagens secundários<br>6. Plano sequência final para acompanhar a saída do personagem";
+                            break;
+                            
+                        case 'location':
+                            response = "Analisando a locação descrita, observe os seguintes pontos:<br><br>1. <b>Direção da luz</b>: O sol vai criar contraluz forte pela manhã, ideal para silhuetas<br>2. <b>Acústica</b>: O espaço aberto vai requerer proteção contra vento nos microfones<br>3. <b>Logística</b>: Verifique pontos de energia e acesso para equipamentos pesados<br>4. <b>Alternativas</b>: Tenha um plano B para caso de chuva, como o galpão próximo";
+                            break;
+                            
+                        case 'script':
+                            response = "Analisando seu roteiro, sugiro:<br><br>1. O diálogo na página 15 pode ser mais sucinto para aumentar o impacto<br>2. A cena de transição na página 22 poderia mostrar em vez de contar a mudança emocional do personagem<br>3. Considere inverter a ordem das cenas 4 e 5 para criar mais tensão<br>4. As rubricas podem incluir mais detalhes sensoriais para guiar a equipe";
+                            break;
+                            
+                        default:
+                            response = "Como posso ajudar com seu projeto? Estou aqui para oferecer sugestões criativas, ajudar com planejamento ou responder perguntas técnicas.";
+                    }
+                    
+                    addMessage('ai', response);
+                }, 1500);
+            }
+            
+            // Event Listeners
+            featureItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remover classe active de todos os itens
+                    featureItems.forEach(i => i.classList.remove('active'));
+                    
+                    // Adicionar classe active ao item clicado
+                    this.classList.add('active');
+                    
+                    // Atualizar feature atual
+                    currentFeature = this.dataset.feature;
+                    
+                    // Adicionar mensagem de boas-vindas do assistente
+                    let welcomeMessage = '';
+                    switch (currentFeature) {
+                        case 'creative':
+                            welcomeMessage = "Olá! Sou seu assistente de ideias criativas. Como posso ajudar a impulsionar seu projeto hoje?";
+                            break;
+                        case 'budget':
+                            welcomeMessage = "Olá! Sou seu analista de orçamento. Vamos encontrar formas de otimizar seus recursos?";
+                            break;
+                        case 'schedule':
+                            welcomeMessage = "Olá! Sou seu assistente de agenda. Vamos organizar seu cronograma de forma eficiente?";
+                            break;
+                        case 'equipment':
+                            welcomeMessage = "Olá! Sou seu consultor de equipamentos. Posso ajudar a escolher o kit ideal para seu projeto?";
+                            break;
+                        case 'shot':
+                            welcomeMessage = "Olá! Sou seu assistente de decupagem. Vamos planejar os melhores planos para sua narrativa?";
+                            break;
+                        case 'location':
+                            welcomeMessage = "Olá! Sou seu analista de locações. Vamos avaliar os melhores lugares para suas filmagens?";
+                            break;
+                        case 'script':
+                            welcomeMessage = "Olá! Sou seu assistente de roteiro. Posso ajudar a desenvolver ou revisar sua narrativa?";
+                            break;
+                    }
+                    
+                    // Limpar mensagens anteriores
+                    chatMessages.innerHTML = '';
+                    messages = [];
+                    
+                    addMessage('ai', welcomeMessage);
+                });
+            });
+            
+            // Ajustar altura do textarea de input
+            chatInputField.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            // Enviar mensagem ao pressionar Enter (sem Shift)
+            chatInputField.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Enviar mensagem ao clicar no botão
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // Função para enviar mensagem
+            function sendMessage() {
+                const message = chatInputField.value.trim();
+                
+                if (!message) return;
+                
+                // Adicionar mensagem do usuário
+                addMessage('user', message);
+                
+                // Limpar input
+                chatInputField.value = '';
+                chatInputField.style.height = 'auto';
+                
+                // Obter resposta da IA
+                getAIResponse(message, currentFeature);
+            }
+            
+            // Inicialização
+            loadProjects();
+            
+            // Adicionar mensagem de boas-vindas se não houver mensagens
+            if (messages.length === 0) {
+                addMessage('ai', "Olá! Sou seu assistente de produção AI. Como posso ajudar com seu projeto hoje?");
+            } else {
+                // Carregar mensagens existentes
+                chatMessages.innerHTML = '';
+                messages.forEach(msg => {
+                    const messageEl = document.createElement('div');
+                    messageEl.className = `message ${msg.sender}`;
+                    messageEl.innerHTML = `
+                        ${msg.content}
+                        <div class="message-time">${formatTime(new Date(msg.timestamp))}</div>
+                    `;
+                    
+                    chatMessages.appendChild(messageEl);
+                });
+                
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>: var(--glass-blur);
+            border-right: 1px solid var(--glass-border);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-width-expanded);
+        }
+
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--header-height);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .logo-text {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--soft-white);
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: var(--glass-bg);
+        }
+
+        .menu-item.active {
+            background: var(--gradient-primary);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .menu-icon {
+            font-size: 20px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-text {
+            margin-left: 15px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* AI Assistant Container */
+        .ai-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            height: calc(100vh - var(--header-height) - 40px);
+        }
+
+        .ai-features {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--neon-blue);
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .feature-item {
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-item:hover {
+            background: var(--glass-bg);
+        }
+
+        .feature-item.active {
+            background: var(--glass-bg);
+            border-left: 3px solid var(--neon-blue);
+        }
+
+        .feature-icon {
+            font-size: 20px;
+            color: var(--neon-blue);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter
