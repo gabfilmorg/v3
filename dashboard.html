@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ícones modernos -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        :root {
+            /* Cores Base - Esquema Futurista */
+            --deep-space: #1A1B2E;
+            --neon-blue: #00F5FF;
+            --neon-purple: #B15EFF;
+            --cyber-green: #00FFB2;
+            --cyber-yellow: #FFD60A;
+            --cyber-red: #FF5E5E;
+            --soft-white: #F4F7FF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
+            --gradient-warning: linear-gradient(135deg, var(--cyber-yellow), var(--neon-purple));
+            --gradient-danger: linear-gradient(135deg, var(--cyber-red), var(--neon-purple));
+            
+            /* Efeitos */
+            --glass-blur: blur(10px);
+            --neon-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            
+            /* Dimensões */
+            --sidebar-width: 80px;
+            --sidebar-width-expanded: 240px;
+            --header-height: 70px;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(177, 94, 255, 0.1) 0%, transparent 20%);
+            background-attachment: fixed;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--glass-border);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-width-expanded);
+        }
+
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--header-height);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .logo-text {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--soft-white);
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: var(--glass-bg);
+        }
+
+        .menu-item.active {
+            background: var(--gradient-primary);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .menu-icon {
+            font-size: 20px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-text {
+            margin-left: 15px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(100px, auto);
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .dashboard-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dashboard-card-action {
+            background: var(--glass-bg);
+            border: none;
+            color: var(--soft-white);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card-action:hover {
+            background: var(--neon-blue);
+            color: var(--deep-space);
+        }
+
+        .dashboard-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Stat cards */
+        .stat-cards {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            grid-column: span 1;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.blue {
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.2), rgba(0, 245, 255, 0.1));
+            color: var(--neon-blue);
+        }
+
+        .stat-icon.purple {
+            background: linear-gradient(135deg, rgba(177, 94, 255, 0.2), rgba(177, 94, 255, 0.1));
+            color: var(--neon-purple);
+        }
+
+        .stat-icon.green {
+            background: linear-gradient(135deg, rgba(0, 255, 178, 0.2), rgba(0, 255, 178, 0.1));
+            color: var(--cyber-green);
+        }
+
+        .stat-icon.yellow {
+            background: linear-gradient(135deg, rgba(255, 214, 10, 0.2), rgba(255, 214, 10, 0.1));
+            color: var(--cyber-yellow);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        /* Project overview */
+        .project-overview {
+            grid-column: span 8;
+            grid-row: span 2;
+        }
+
+        .project-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .project-table th,
+        .project-table td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .project-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(244, 247, 255, 0.7);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .project-table tr {
+            border-bottom: 1px solid var(--glass-border);
+            transition: background 0.3s ease;
+        }
+
+        .project-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .project-table td {
+            color: var(--soft-white);
+        }
+
+        .project-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-planning {
+            background: rgba(0, 245, 255, 0.2);
+            color: var(--neon-blue);
+        }
+
+        .status-production {
+            background: rgba(0, 255, 178, 0.2);
+            color: var(--cyber-green);
+        }
+
+        .status-completed {
+            background: rgba(177, 94, 255, 0.2);
+            color: var(--neon-purple);
+        }
+
+        .btn-xs {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            background: var(--gradient-primary);
+            color: var(--soft-white);
+        }
+
+        /* Calendar */
+        .upcoming-schedule {
+            grid-column: span 4;
+            grid-row: span 2;
+        }
+
+        .calendar-view {
+            margin-top: 10px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-title {
+            font-weight: 500;
+        }
+
+        .calendar-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calendar-btn {
+            background: var(--glass-bg);
+            border: none;
+            color: var(--soft-white);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-btn:hover {
+            background: var(--neon-blue);
+            color: var(--deep-space);
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .calendar-day-label {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+            padding: 5px;
+        }
+
+        .calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-date {
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-date:hover {
+            background: var(--glass-bg);
+            border-color: var(--neon-blue);
+        }
+
+        .calendar-date.active {
+            background: rgba(0, 245, 255, 0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .calendar-date-number {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .calendar-date-indicator {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--neon-purple);
+            margin-top: 3px;
+        }
+
+        .event-list {
+            margin-top: 20px;
+        }
+
+        .event-item {
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .event-time {
+            font-size: 12px;
+            color: var(--neon-blue);
+            min-width: 50px;
+        }
+
+        .event-info {
+            flex: 1;
+        }
+
+        .event-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .event-location {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        /* Budget overview */
+        .budget-overview {
+            grid-column: span 6;
+            position: relative;
+        }
+
+        .chart-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 220px;
+        }
+
+        /* Team availability */
+        .team-availability {
+            grid-column: span 6;
+        }
+
+        .team-members {
+            margin-top: 10px;
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            background: var(--gradient-primary);
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .member-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: rgba(0, 255, 178, 0.2);
+            color: var(--cyber-green);
+        }
+
+        .status-busy {
+            background: rgba(255, 94, 94, 0.2);
+            color: var(--cyber-red);
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            grid-column: span 12;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .action-button {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(26, 27, 46, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: var(--gradient-primary);
+        }
+
+        .action-info {
+            flex: 1;
+        }
+
+        .action-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .action-description {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        /* Recent activities */
+        .recent-activities {
+            grid-column: span 12;
+        }
+
+        .activity-list {
+            margin-top: 10px;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .activity-icon.blue {
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.2), rgba(0, 245, 255, 0.1));
+            color: var(--neon-blue);
+        }
+
+        .activity-icon.purple {
+            background: linear-gradient(135deg, rgba(177, 94, 255, 0.2), rgba(177, 94, 255, 0.1));
+            color: var(--neon-purple);
+        }
+
+        .activity-icon.green {
+            background: linear-gradient(135deg, rgba(0, 255, 178, 0.2), rgba(0, 255, 178, 0.1));
+            color: var(--cyber-green);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .activity-text strong {
+            font-weight: 600;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .stat-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .project-overview {
+                grid-column: span 12;
+            }
+
+            .upcoming-schedule {
+                grid-column: span 12;
+            }
+
+            .budget-overview,
+            .team-availability {
+                grid-column: span 12;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+            }
+
+            .sidebar.show {
+                width: var(--sidebar-width-expanded);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stat-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-dates,
+            .calendar-days {
+                grid-template-columns: repeat(7, 1fr);
+            }
+
+            .calendar-date {
+                font-size: 12px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-button {
+                width: 100%;
+            }
+        }
+
+        /* Menu mobile */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+                margin-right: 15px;
+            }
+
+            .header {
+                padding: 0 15px;
+            }
+
+            .user-name {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">F</div>
+            <div class="logo-text">filmORG</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item active">
+                <i class="menu-icon ri-dashboard-line"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="projetos.html" class="menu-item">
+                <i class="menu-icon ri-movie-line"></i>
+                <span class="menu-text">Projetos</span>
+            </a>
+            <a href="equipe.html" class="menu-item">
+                <i class="menu-icon ri-team-line"></i>
+                <span class="menu-text">Equipe</span>
+            </a>
+            <a href="equipamentos.html" class="menu-item">
+                <i class="menu-icon ri-camera-line"></i>
+                <span class="menu-text">Equipamentos</span>
+            </a>
+            <a href="ai-assist.html" class="menu-item">
+                <i class="menu-icon ri-robot-line"></i>
+                <span class="menu-text">AI Assist</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="menu-icon ri-bar-chart-line"></i>
+                <span class="menu-text">Analytics</span>
+            </a>
+            <a href="agenda.html" class="menu-item">
+                <i class="menu-icon ri-calendar-line"></i>
+                <span class="menu-text">Agenda</span>
+            </a>
+            <a href="orcamento.html" class="menu-item">
+                <i class="menu-icon ri-money-dollar-circle-line"></i>
+                <span class="menu-text">Orçamento</span>
+            </a>
+            <a href="configuracoes.html" class="menu-item" style="margin-top: auto;">
+                <i class="menu-icon ri-settings-line"></i>
+                <span class="menu-text">Configurações</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="ri-menu-line"></i>
+            </button>
+            <h1 class="page-title">Dashboard</h1>
+            
+            <div class="header-actions">
+                <div class="notification-btn">
+                    <i class="ri-notification-3-line"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">U</div>
+                    <span class="user-name">Usuário</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Stat Cards -->
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="ri-movie-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Projetos Ativos</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="ri-calendar-check-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Eventos Próximos</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="ri-team-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Membros da Equipe</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon yellow">
+                        <i class="ri-money-dollar-circle-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">R$ 32k</div>
+                        <div class="stat-label">Orçamento Mensal</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Overview -->
+            <div class="dashboard-card project-overview">
+                <div class="dashboard-card-header">
+                    <div class="dashboard-card-title">Visão Geral de Projetos</div>
+                    <div class="dashboard-card-actions">
+                        <button class="dashboard-card-action">
+                            <i class="ri-refresh-line"></i>
+                        </button>
+                        <button class="dashboard-card-action">
+                            <i class="ri-more-2-fill"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <table class="project-table">
+                        <thead>
+                            <tr>
+                                <th>Projeto</th>
+                                <th>Cliente</th>
+                                <th>Status</th>
+                                <th>Progresso</th>
+                                <th>Prazo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Documentário Amazônia</td>
+                                <td>Canal Natureza</td>
+                                <td><span class="project-status status-production">Em Produção</span></td>
+                                <td>
+                                    <div class="progress-bar" style="width: 100px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                                        <div style="width: 65%; height: 100%; background: var(--neon-blue); border-radius: 5px;"></div>
+                                    </div>
+                                </td>
+                                <td>30/05/2025</td>
+                                <td>
+                                    <button class="btn-xs">Ver</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Curta-metragem "Reflexos"</td>
+                                <td>Produção Independente</td>
+                                <td><span class="project-status status-planning">Em Planejamento</span></td>
+                                <td>
+                                    <div class="progress-bar" style="width: 100px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                                        <div style="width: 20%; height: 100%; background: var(--neon-blue); border-radius: 5px;"></div>
+                                    </div>
+                                </td>
+                                <td>20/06/2025</td>
+                                <td>
+                                    <button class="btn-xs">Ver</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ensaio Fotográfico Urbano</td>
+                                <td>Revista Estilo</td>
+                                <td><span class="project-status status-completed">Concluído</span></td>
+                                <td>
+                                    <div class="progress-bar" style="width: 100px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                                        <div style="width: 100%; height: 100%; background: var(--neon-purple); border-radius: 5px;"></div>
+                                    </div>
+                                </td>
+                                <td>15/11/2024</td>
+                                <td>
+                                    <button class="btn-xs">Ver</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Videoclipe "Memórias"</td>
+                                <td>Banda Aurora</td>
+                                <td><span class="project-status status-planning">Em Planejamento</span></td>
+                                <td>
+                                    <div class="progress-bar" style="width: 100px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                                        <div style="width: 10%; height: 100%; background: var(--neon-blue); border-radius: 5px;"></div>
+                                    </div>
+                                </td>
+                                <td>15/07/2025</td>
+                                <td>
+                                    <button class="btn-xs">Ver</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Comercial "Eco-Friendly"</td>
+                                <td>Marca Verde</td>
+                                <td><span class="project-status status-production">Em Produção</span></td>
+                                <td>
+                                    <div class="progress-bar" style="width: 100px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                                        <div style="width: 45%; height: 100%; background: var(--neon-blue); border-radius: 5px;"></div>
+                                    </div>
+                                </td>
+                                <td>30/04/2025</td>
+                                <td>
+                                    <button class="btn-xs">Ver</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Upcoming Schedule -->
+            <div class="dashboard-card upcoming-schedule">
+                <div class="dashboard-card-header">
+                    <div class="dashboard-card-title">Agenda</div>
+                    <div class="dashboard-card-actions">
+                        <button class="dashboard-card-action">
+                            <i class="ri-refresh-line"></i>
+                        </button>
+                        <button class="dashboard-card-action">
+                            <i class="ri-more-2-fill"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <div class="calendar-view">
+                        <div class="calendar-header">
+                            <div class="calendar-title">Março 2025</div>
+                            <div class="calendar-actions">
+                                <button class="calendar-btn">
+                                    <i class="ri-arrow-left-s-line"></i>
+                                </button>
+                                <button class="calendar-btn">
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="calendar-days">
+                            <div class="calendar-day-label">Dom</div>
+                            <div class="calendar-day-label">Seg</div>
+                            <div class="calendar-day-label">Ter</div>
+                            <div class="calendar-day-label">Qua</div>
+                            <div class="calendar-day-label">Qui</div>
+                            <div class="calendar-day-label">Sex</div>
+                            <div class="calendar-day-label">Sáb</div>
+                        </div>
+                        <div class="calendar-dates">
+                            <div class="calendar-date"></div>
+                            <div class="calendar-date"></div>
+                            <div class="calendar-date"></div>
+                            <div class="calendar-date"></div>
+                            <div class="calendar-date"></div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">1</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">2</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">3</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">4</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">5</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">6</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">7</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">8</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">9</div>
+                            </div>
+                            <div class="calendar-date active">
+                                <div class="calendar-date-number">10</div>
+                                <div class="calendar-date-indicator"></div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">11</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">12</div>
+                                <div class="calendar-date-indicator"></div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">13</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">14</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">15</div>
+                                <div class="calendar-date-indicator"></div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">16</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">17</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">18</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">19</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">20</div>
+                                <div class="calendar-date-indicator"></div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">21</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">22</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">23</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">24</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">25</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">26</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">27</div>
+                                <div class="calendar-date-indicator"></div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">28</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">29</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">30</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">31</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="event-list">
+                        <div class="event-item">
+                            <div class="event-time">09:00</div>
+                            <div class="event-info">
+                                <div class="event-title">Gravação Documentário</div>
+                                <div class="event-location">Manaus - AM</div>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-time">14:30</div>
+                            <div class="event-info">
+                                <div class="event-title">Reunião de Produção</div>
+                                <div class="event-location">Estúdio Principal</div>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-time">17:00</div>
+                            <div class="event-info">
+                                <div class="event-title">Revisão de Equipamentos</div>
+                                <div class="event-location">Sala Técnica</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Budget Overview -->
+            <div class="dashboard-card budget-overview">
+                <div class="dashboard-card-header">
+                    <div class="dashboard-card-title">Visão Geral do Orçamento</div>
+                    <div class="dashboard-card-actions">
+                        <button class="dashboard-card-action">
+                            <i class="ri-refresh-line"></i>
+                        </button>
+                        <button class="dashboard-card-action">
+                            <i class="ri-more-2-fill"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <div class="chart-container">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Availability -->
+            <div class="dashboard-card team-availability">
+                <div class="dashboard-card-header">
+                    <div class="dashboard-card-title">Disponibilidade da Equipe</div>
+                    <div class="dashboard-card-actions">
+                        <button class="dashboard-card-action">
+                            <i class="ri-refresh-line"></i>
+                        </button>
+                        <button class="dashboard-card-action">
+                            <i class="ri-more-2-fill"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <div class="team-members">
+                        <div class="team-member">
+                            <div class="member-avatar">J</div>
+                            <div class="member-info">
+                                <div class="member-name">João Silva</div>
+                                <div class="member-role">Diretor</div>
+                            </div>
+                            <div class="member-status status-busy">Ocupado</div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar">M</div>
+                            <div class="member-info">
+                                <div class="member-name">Maria Souza</div>
+                                <div class="member-role">Fotógrafa</div>
+                            </div>
+                            <div class="member-status status-available">Disponível</div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar">P</div>
+                            <div class="member-info">
+                                <div class="member-name">Pedro Santos</div>
+                                <div class="member-role">Iluminador</div>
+                            </div>
+                            <div class="member-status status-available">Disponível</div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar">A</div>
+                            <div class="member-info">
+                                <div class="member-name">Ana Oliveira</div>
+                                <div class="member-role">Maquiadora</div>
+                            </div>
+                            <div class="member-status status-busy">Ocupada</div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar">C</div>
+                            <div class="member-info">
+                                <div class="member-name">Carlos Mendes</div>
+                                <div class="member-role">Editor</div>
+                            </div>
+                            <div class="member-status status-available">Disponível</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="dashboard-card quick-actions">
+                <div class="dashboard-card-header">
+                    <div class="dashboard-card-title">Ações Rápidas</div>
+                </div>
+                <div class="dashboard-card-content">
+                    <div class="action-buttons">
+                        <div class="action-button">
+                            <div class="action-icon">
+                                <i class="ri-add-line"></i>
+                            </div>
+                            <div class="action-info">
+                                <div class="action-title">Novo Projeto</div>
+                                <div class="action-description">Crie um novo projeto do zero</div>
+                            </div>
+                        </div>
+                        <div class="action-button">
+                            <div class="action-icon">
+                                <i class="ri-team-line"></i>
+                            </div>
+                            <div class="action-info">
+                                <div class="action-title">Gerenciar Equipe</div>
+                                <div class="action-description">Adicione ou edite membros da equipe</div>
+                            </div>
+                        </div>
+                        <div class="action-button">
+                            <div class="action-icon">
+                                <i class="ri-calendar-line"></i>
+                            </div>
+                            <div class="action-info">
+                                <div class="action-title">Agendar Evento</div>
+                                <div class="action-description">Crie um novo evento no calendário</div>
+                            </div>
+                        </div>
+                        <div class="action-button">
+                            <div class="action-icon">
+                                <i class="ri-file-list-3-line"></i>
+                            </div>
+                            <div class="action-info">
+                                <div class="action-title">Relatórios</div>
+                                <div class="action-description">Gere relatórios de projetos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activities -->
+            <div class="dashboard-card recent-activities">
+                <div class="dashboard-card-header">
+                    <div class="dashboard-card-title">Atividades Recentes</div>
+                    <div class="dashboard-card-actions">
+                        <button class="dashboard-card-action">
+                            <i class="ri-refresh-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon blue">
+                                <i class="ri-edit-line"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>Você</strong> atualizou o projeto <strong>Documentário Amazônia</strong></div>
+                                <div class="activity-time">Hoje, 14:30</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon purple">
+                                <i class="ri-user-add-line"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>Maria Souza</strong> foi adicionada ao projeto <strong>Curta-metragem "Reflexos"</strong></div>
+                                <div class="activity-time">Hoje, 11:15</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon green">
+                                <i class="ri-check-line"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>Projeto Ensaio Fotográfico Urbano</strong> foi marcado como concluído</div>
+                                <div class="activity-time">Ontem, 18:45</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon blue">
+                                <i class="ri-add-line"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>Você</strong> criou um novo projeto <strong>Videoclipe "Memórias"</strong></div>
+                                <div class="activity-time">Ontem, 10:30</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon purple">
+                                <i class="ri-calendar-event-line"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>Reunião de pré-produção</strong> agendada para <strong>15/03/2025</strong></div>
+                                <div class="activity-time">2 dias atrás</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Função para alternar o menu em dispositivos móveis
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                });
+            }
+            
+            // Detectar cliques fora do menu para fechá-lo em dispositivos móveis
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768 && sidebar.classList.contains('show') && !e.target.closest('.sidebar') && e.target !== menuToggle) {
+                    sidebar.classList.remove('show');
+                }
+            });
+            
+            // Gráfico de orçamento
+            const budgetCtx = document.getElementById('budgetChart');
+            
+            if (budgetCtx) {
+                const budgetChart = new Chart(budgetCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            'Equipe',
+                            'Equipamentos',
+                            'Locações',
+                            'Pós-Produção',
+                            'Diversos'
+                        ],
+                        datasets: [{
+                            data: [42, 23, 15, 12, 8],
+                            backgroundColor: [
+                                '#00F5FF', // Neon Blue
+                                '#B15EFF', // Neon Purple
+                                '#00FFB2', // Cyber Green
+                                '#FFD60A', // Cyber Yellow
+                                '#FF5E5E'  // Cyber Red
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 15
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: 'rgba(244, 247, 255, 0.8)',
+                                    padding: 15,
+                                    font: {
+                                        family: 'Montserrat',
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 27, 46, 0.8)',
+                                titleFont: {
+                                    family: 'Montserrat',
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                bodyFont: {
+                                    family: 'Montserrat',
+                                    size: 13
+                                },
+                                padding: 15,
+                                cornerRadius: 8,
+                                displayColors: true,
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        return `${label}: ${value}%`;
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '70%',
+                        radius: '90%'
+                    }
+                });
+                
+                // Função para atualizar os dados do gráfico
+                function updateBudgetChart() {
+                    // Simular uma atualização aleatória dos dados
+                    const newData = budgetChart.data.datasets[0].data.map(value => {
+                        return value + (Math.random() > 0.5 ? 1 : -1) * Math.random() * 5;
+                    });
+                    
+                    budgetChart.data.datasets[0].data = newData;
+                    budgetChart.update();
+                }
+                
+                // Atualizar ao clicar no botão de atualização
+                const refreshBudgetBtn = document.querySelector('.budget-overview .ri-refresh-line').closest('button');
+                if (refreshBudgetBtn) {
+                    refreshBudgetBtn.addEventListener('click', updateBudgetChart);
+                }
+            }
+            
+            // Função para carregar os projetos do localStorage
+            function loadProjects() {
+                try {
+                    const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                    
+                    // Atualizar contadores
+                    const activeProjects = projects.filter(p => 
+                        p.basicInfo && p.basicInfo.status && 
+                        ['pitch', 'planning', 'preproduction', 'production', 'postproduction'].includes(p.basicInfo.status)
+                    ).length;
+                    
+                    const completedProjects = projects.filter(p => 
+                        p.basicInfo && p.basicInfo.status && 
+                        p.basicInfo.status === 'completed'
+                    ).length;
+                    
+                    // Atualizar os valores dos cards estatísticos se existirem
+                    const projectStatValue = document.querySelector('.stat-card:nth-child(1) .stat-value');
+                    if (projectStatValue) {
+                        projectStatValue.textContent = activeProjects;
+                    }
+                    
+                    // Poderíamos atualizar a tabela de projetos aqui também
+                    
+                    return projects;
+                } catch (error) {
+                    console.error('Erro ao carregar projetos:', error);
+                    return [];
+                }
+            }
+            
+            // Carregar projetos ao inicializar
+            const projects = loadProjects();
+            
+            // Atualizar dados periodicamente (a cada 60 segundos)
+            setInterval(loadProjects, 60000);
+            
+            // Funções para o calendário
+            const calendarDates = document.querySelectorAll('.calendar-date');
+            calendarDates.forEach(date => {
+                date.addEventListener('click', function() {
+                    // Remover classe ativa de todas as datas
+                    calendarDates.forEach(d => d.classList.remove('active'));
+                    // Adicionar classe ativa à data clicada
+                    this.classList.add('active');
+                    
+                    // Aqui poderíamos atualizar a lista de eventos com base na data selecionada
+                });
+            });
+            
+            // Ações rápidas
+            const actionButtons = document.querySelectorAll('.action-button');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.querySelector('.action-title').textContent;
+                    
+                    switch(action) {
+                        case 'Novo Projeto':
+                            window.location.href = 'projetos.html';
+                            break;
+                        case 'Gerenciar Equipe':
+                            window.location.href = 'equipe.html';
+                            break;
+                        case 'Agendar Evento':
+                            window.location.href = 'agenda.html';
+                            break;
+                        case 'Relatórios':
+                            // Implementar geração de relatórios
+                            alert('Funcionalidade de relatórios em desenvolvimento');
+                            break;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

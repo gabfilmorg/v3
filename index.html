@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Cores Base - Esquema Futurista */
+            --deep-space: #1A1B2E;
+            --neon-blue: #00F5FF;
+            --neon-purple: #B15EFF;
+            --cyber-green: #00FFB2;
+            --soft-white: #F4F7FF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
+            
+            /* Efeitos */
+            --glass-blur: blur(10px);
+            --neon-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            
+            /* Dimensões */
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(177, 94, 255, 0.1) 0%, transparent 20%);
+            background-attachment: fixed;
+        }
+
+        .login-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-content {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            background: rgba(26, 27, 46, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--glass-border);
+        }
+
+        .login-showcase {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1601749900028-c7668d1d1400?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+        }
+
+        .login-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(26, 27, 46, 0.3), rgba(26, 27, 46, 0.9));
+            z-index: 1;
+        }
+
+        .showcase-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .showcase-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .showcase-description {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 80%;
+        }
+
+        .showcase-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .feature-badge {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .feature-badge i {
+            color: var(--neon-blue);
+        }
+
+        .login-form-container {
+            width: 450px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--neon-blue);
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            padding: 12px 15px;
+            padding-left: 40px;
+            border-radius: var(--border-radius);
+            outline: none;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 0 3px rgba(0, 245, 255, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 38px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot-link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .remember-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--neon-blue);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--soft-white);
+            margin-bottom: 15px;
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--neon-shadow);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(244, 247, 255, 0.2);
+            color: var(--soft-white);
+            margin-bottom: 10px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: rgba(244, 247, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid rgba(244, 247, 255, 0.2);
+        }
+
+        .login-divider::before {
+            margin-right: 10px;
+        }
+
+        .login-divider::after {
+            margin-left: 10px;
+        }
+
+        .signup-link {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .signup-link a {
+            color: var(--neon-blue);
+            text-decoration: none;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid var(--soft-white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .alert.show {
+            opacity: 1;
+            height: auto;
+            padding: 10px 15px;
+        }
+
+        .alert-danger {
+            background: rgba(255, 87, 87, 0.1);
+            border: 1px solid rgba(255, 87, 87, 0.3);
+            color: #ff5757;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 178, 0.1);
+            border: 1px solid rgba(0, 255, 178, 0.3);
+            color: var(--cyber-green);
+        }
+
+        /* Responsividade */
+        @media (max-width: 992px) {
+            .login-content {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .login-showcase {
+                display: none;
+            }
+
+            .login-form-container {
+                width: 100%;
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-form-container {
+                padding: 20px;
+            }
+
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .forgot-password {
+                text-align: left;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-content">
+            <div class="login-showcase">
+                <div class="showcase-content">
+                    <h1 class="showcase-title">Gerencie seus projetos audiovisuais</h1>
+                    <p class="showcase-description">Uma plataforma moderna e completa para produtoras de vídeo e fotógrafos organizarem seus projetos, equipes e equipamentos.</p>
+                    
+                    <div class="showcase-features">
+                        <div class="feature-badge">
+                            <i class="ri-movie-line"></i>
+                            <span>Gestão de Projetos</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="ri-team-line"></i>
+                            <span>Controle de Equipe</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="ri-camera-line"></i>
+                            <span>Inventário</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="ri-calendar-line"></i>
+                            <span>Agenda</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="ri-robot-line"></i>
+                            <span>AI Assist</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="login-form-container">
+                <div class="form-logo">
+                    <div class="logo-icon">F</div>
+                    <div class="logo-text">film<span>ORG</span></div>
+                </div>
+                
+                <h2 class="login-title">Bem-vindo de volta</h2>
+                <p class="login-subtitle">Entre com seus dados para acessar sua conta</p>
+                
+                <div id="alert" class="alert"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <i class="ri-mail-line input-icon"></i>
+                        <input 
+                            type="email" 
+                            class="form-control" 
+                            id="email" 
+                            placeholder="seu@email.com" 
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Senha</label>
+                        <i class="ri-lock-line input-icon"></i>
+                        <input 
+                            type="password" 
+                            class="form-control" 
+                            id="password" 
+                            placeholder="Sua senha" 
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
+                    
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" class="remember-checkbox">
+                            <label for="remember">Lembrar-me</label>
+                        </div>
+                        
+                        <div class="forgot-password">
+                            <a href="#" class="forgot-link" id="forgotPasswordLink">Esqueceu sua senha?</a>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="login-btn">
+                        <span>Entrar</span>
+                        <div class="loading-spinner"></div>
+                    </button>
+                    
+                    <div class="login-divider">ou</div>
+                    
+                    <button type="button" class="btn btn-outline" id="google-login">
+                        <i class="ri-google-fill"></i>
+                        <span>Continuar com Google</span>
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline" id="apple-login">
+                        <i class="ri-apple-fill"></i>
+                        <span>Continuar com Apple</span>
+                    </button>
+                    
+                    <div class="signup-link">
+                        Ainda não tem uma conta? <a href="signup.html">Criar conta</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('login-btn');
+            const spinner = document.querySelector('.loading-spinner');
+            const alertBox = document.getElementById('alert');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const rememberCheckbox = document.getElementById('remember');
+            const googleLoginBtn = document.getElementById('google-login');
+            const appleLoginBtn = document.getElementById('apple-login');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            
+            // Verificar se há informações salvas de login
+            if (localStorage.getItem('rememberedEmail')) {
+                emailInput.value = localStorage.getItem('rememberedEmail');
+                rememberCheckbox.checked = true;
+            }
+            
+            // Função para mostrar alertas
+            function showAlert(message, type) {
+                alertBox.className = `alert alert-${type}`;
+                alertBox.innerHTML = `
+                    <i class="${type === 'danger' ? 'ri-error-warning-line' : 'ri-checkbox-circle-line'}"></i>
+                    <span>${message}</span>
+                `;
+                alertBox.classList.add('show');
+                
+                setTimeout(() => {
+                    alertBox.classList.remove('show');
+                }, 5000);
+            }
+            
+            // Gerenciar loading
+            function setLoading(loading) {
+                loginBtn.disabled = loading;
+                spinner.style.display = loading ? 'block' : 'none';
+                loginBtn.querySelector('span').style.display = loading ? 'none' : 'block';
+            }
+            
+            // Login com Google (simulado)
+            googleLoginBtn.addEventListener('click', function() {
+                setLoading(true);
+                
+                setTimeout(() => {
+                    showAlert('Função em desenvolvimento. Por favor, use o login tradicional.', 'danger');
+                    setLoading(false);
+                }, 1500);
+            });
+            
+            // Login com Apple (simulado)
+            appleLoginBtn.addEventListener('click', function() {
+                setLoading(true);
+                
+                setTimeout(() => {
+                    showAlert('Função em desenvolvimento. Por favor, use o login tradicional.', 'danger');
+                    setLoading(false);
+                }, 1500);
+            });
+            
+            // Link de recuperação de senha
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                if (email) {
+                    showAlert(`Se ${email} estiver cadastrado, enviaremos um link de recuperação.`, 'success');
+                } else {
+                    showAlert('Por favor, informe seu email para recuperar a senha.', 'danger');
+                }
+            });
+            
+            // Validação e envio do formulário
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+                const remember = rememberCheckbox.checked;
+                
+                // Validação básica
+                if (!email || !password) {
+                    showAlert('Por favor, preencha todos os campos', 'danger');
+                    return;
+                }
+                
+                setLoading(true);
+                
+                try {
+                    // Simular delay de rede
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Verificar credenciais (mock)
+                    // Em uma aplicação real, isso seria feito no servidor
+                    const users = JSON.parse(localStorage.getItem('users')) || [
+                        { email: 'teste@teste.com', password: '123456', name: 'Usuário Teste' }
+                    ];
+                    
+                    const user = users.find(u => u.email === email && u.password === password);
+                    
+                    if (user) {
+                        // Salvar dados do usuário logado
+                        localStorage.setItem('userLoggedIn', 'true');
+                        localStorage.setItem('userEmail', email);
+                        
+                        // Salvar email se "lembrar-me" estiver marcado
+                        if (remember) {
+                            localStorage.setItem('rememberedEmail', email);
+                        } else {
+                            localStorage.removeItem('rememberedEmail');
+                        }
+                        
+                        showAlert('Login realizado com sucesso!', 'success');
+                        
+                        // Redirecionar após mensagem de sucesso
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1000);
+                    } else {
+                        showAlert('Email ou senha incorretos', 'danger');
+                        setLoading(false);
+                    }
+                } catch (error) {
+                    showAlert('Erro ao fazer login. Tente novamente.', 'danger');
+                    setLoading(false);
+                    console.error(error);
+                }
+            });
+            
+            // Verificar se usuário já está logado
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>
