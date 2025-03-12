@@ -40,9 +40,11 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
   const location = useLocation();
 
   const handleNavigation = (path: string) => {
-    navigate(path);
-    if (window.innerWidth < 600) {
-      onClose();
+    if (location.pathname !== path) {
+      navigate(path);
+      if (window.innerWidth < 600) {
+        onClose();
+      }
     }
   };
 
@@ -51,42 +53,66 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
       variant="permanent"
       open={open}
       sx={{
-        width: open ? 240 : 64,
+        width: open ? 240 : 72,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          width: open ? 240 : 64,
+          width: open ? 240 : 72,
           boxSizing: 'border-box',
-          transition: 'width 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
+          transition: 'all 0.3s ease-in-out',
           overflowX: 'hidden',
+          background: 'linear-gradient(180deg, #1a237e 0%, #0d47a1 100%)',
+          color: 'white',
+          borderRight: 'none',
         },
       }}
     >
-      <Box sx={{ height: 64 }} /> {/* Espaço para a navbar */}
-      <Divider />
-      <List>
+      <Box sx={{ height: 64, background: 'transparent' }} />
+      <Divider sx={{ backgroundColor: 'rgba(255, 255, 255, 0.12)' }} />
+      <List sx={{ pt: 1 }}>
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton
               selected={location.pathname === item.path}
               onClick={() => handleNavigation(item.path)}
               sx={{
-                minHeight: 48,
+                minHeight: 56,
                 justifyContent: open ? 'initial' : 'center',
                 px: 2.5,
+                mx: 1,
+                borderRadius: '8px',
+                mb: 0.5,
+                transition: 'all 0.2s ease-in-out',
+                '&.Mui-selected': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.24)',
+                  },
+                },
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                },
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : 'auto',
+                  mr: open ? 2 : 'auto',
                   justifyContent: 'center',
+                  color: 'inherit',
+                  transition: 'all 0.2s ease-in-out',
                 }}
               >
                 {item.icon}
               </ListItemIcon>
               <ListItemText
                 primary={item.text}
-                sx={{ opacity: open ? 1 : 0 }}
+                sx={{
+                  opacity: open ? 1 : 0,
+                  transition: 'opacity 0.2s ease-in-out',
+                  '& .MuiTypography-root': {
+                    fontWeight: location.pathname === item.path ? 600 : 400,
+                  },
+                }}
               />
             </ListItemButton>
           </ListItem>
