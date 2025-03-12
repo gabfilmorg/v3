@@ -437,13 +437,14 @@
         .modal {
             background: var(--deep-space);
             border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 800px; /* Aumentando para acomodar o formulário expandido */
-            max-height: 90vh;
-            overflow-y: auto;
+            width: 95%;
+            max-width: 1200px;
+            height: 90vh;
             border: 1px solid var(--glass-border);
             box-shadow: var(--card-shadow);
             padding: 0;
+            display: flex;
+            flex-direction: column;
         }
 
         .modal-header {
@@ -452,27 +453,65 @@
             align-items: center;
             padding: 20px;
             border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
             background: var(--deep-space);
-            z-index: 10;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--soft-white);
-            font-size: 24px;
-            cursor: pointer;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
 
         .modal-body {
             padding: 20px;
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--glass-border);
+            background: var(--deep-space);
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .form-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        #project-form {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .form-section {
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-blue) var(--deep-space);
+        }
+
+        .form-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .form-section::-webkit-scrollbar-track {
+            background: var(--deep-space);
+        }
+
+        .form-section::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 4px;
+        }
+
+        .form-section.active {
+            display: block;
         }
 
         .modal-footer {
@@ -481,10 +520,8 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            position: sticky;
-            bottom: 0;
             background: var(--deep-space);
-            z-index: 10;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
         }
 
         .form-group {
@@ -792,6 +829,53 @@
                 font-size: 14px;
             }
         }
+
+        /* Estilo para o botão de fechar */
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--soft-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+            border-color: var(--neon-blue);
+        }
+
+        .close-btn:hover::before {
+            opacity: 1;
+        }
+
+        .close-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+            border-radius: 50%;
+        }
+
+        .close-btn i {
+            font-size: 18px;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--soft-white), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
 <body>
@@ -911,7 +995,9 @@
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title">Novo Projeto</h3>
-                <button class="modal-close" id="modal-close">&times;</button>
+                <button class="close-btn" id="modal-close">
+                    <i class="ri-close-line"></i>
+                </button>
             </div>
             
             <div class="modal-body">
@@ -922,6 +1008,7 @@
                     <button class="tab-btn" data-tab="equipment">Equipamentos</button>
                     <button class="tab-btn" data-tab="schedule">Cronograma</button>
                     <button class="tab-btn" data-tab="budget">Orçamento</button>
+                    <button class="tab-btn" data-tab="scripts">Roteiros</button>
                     <button class="tab-btn" data-tab="details">Detalhes</button>
                 </div>
                 
@@ -1311,7 +1398,27 @@
                         </button>
                     </div>
                     
-                    <!-- Seção 7: Detalhes Específicos -->
+                    <!-- Seção 7: Roteiros -->
+                    <div class="form-section" id="scripts">
+                        <h4 class="section-title">Roteiros</h4>
+                        
+                        <div class="scripts-list" id="scripts-list">
+                            <!-- Roteiros serão adicionados aqui dinamicamente -->
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="add-script-btn">
+                                <i class="ri-add-line"></i>
+                                Adicionar Roteiro Existente
+                            </button>
+                            <button type="button" class="btn btn-primary" id="create-script-btn">
+                                <i class="ri-draft-line"></i>
+                                Criar Novo Roteiro
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção 8: Detalhes Específicos -->
                     <div class="form-section" id="details">
                         <h4 class="section-title">Detalhes Específicos</h4>
                         
@@ -1706,10 +1813,29 @@
                             </div>
                             ${teamHtml}
                         </div>
+                        <div class="project-actions">
+                            <button class="btn btn-outline" onclick="editProject(${project.id})">
+                                <i class="ri-edit-line"></i>
+                                Editar
+                            </button>
+                            <button class="btn btn-outline" onclick="openScripts(${project.id})">
+                                <i class="ri-draft-line"></i>
+                                Roteiros
+                            </button>
+                            <button class="btn btn-outline" onclick="openAnalytics()">
+                                <i class="ri-bar-chart-line"></i>
+                                Analytics
+                            </button>
+                            <button class="btn btn-outline" onclick="deleteProject()">
+                                <i class="ri-delete-bin-line"></i>
+                                Excluir
+                            </button>
+                        </div>
                     `;
                     
-                    // Adicionar evento de clique para editar
-                    projectCard.addEventListener('click', () => editProject(project.id));
+                    // Remover o evento de clique do card
+                    projectCard.removeEventListener('click', () => editProject(project.id));
+                    
                     projectGrid.appendChild(projectCard);
                 });
             }
@@ -1771,23 +1897,43 @@
             
             // Edita um projeto existente
             function editProject(id) {
-                const project = projects.find(p => p.id === id);
-                if (!project) return;
-                
-                // Definir o ID do projeto em edição
-                currentProjectId = id;
-                
-                // Copiar os dados do projeto para o objeto de dados
-                projectData = JSON.parse(JSON.stringify(project)); // Deep copy
-                
-                // Carregar os dados no formulário
-                loadProjectData(project);
-                
-                // Alterar o título do modal
-                document.querySelector('.modal-title').textContent = 'Editar Projeto';
-                
-                // Abrir o modal
-                openModal();
+                // Se o ID não foi fornecido, estamos criando um novo projeto
+                if (!id) {
+                    currentProjectId = null;
+                    projectData = {
+                        basicInfo: {},
+                        locations: [],
+                        team: [],
+                        equipment: [],
+                        schedule: [],
+                        budget: {
+                            total: 0,
+                            paymentStatus: 'pending',
+                            items: []
+                        },
+                        details: {}
+                    };
+                    openModal();
+                    return;
+                }
+
+                // Se temos um ID, verificar se é para edição ou visualização
+                const urlParams = new URLSearchParams(window.location.search);
+                const isEditing = urlParams.get('edit') === id;
+
+                if (isEditing) {
+                    // Modo de edição - abrir no modal
+                    currentProjectId = id;
+                    const project = projects.find(p => p.id === id);
+                    if (project) {
+                        projectData = { ...project };
+                        populateFormWithProject(project);
+                        openModal();
+                    }
+                } else {
+                    // Modo de visualização - abrir em nova aba
+                    window.open(`projeto-detalhes.html?id=${id}`, '_blank');
+                }
             }
             
             // Carrega os dados de um projeto no formulário
@@ -2553,6 +2699,313 @@
             // ===== INICIALIZAÇÃO =====
             // Renderizar projetos ao carregar a página
             renderProjects();
+
+            function openAnalytics() {
+                // Redirecionar para a página de analytics
+                window.location.href = 'analytics.html';
+            }
+
+            // Função para abrir a página de roteiros do projeto
+            function openScripts(projectId) {
+                window.location.href = `roteiro.html?projectId=${projectId}`;
+            }
+
+            // Variáveis globais - remover as declarações redundantes
+            // let currentProjectId = null; // já declarado anteriormente
+            // let projects = []; // já declarado anteriormente
+            // let teamMembers = []; // já declarado anteriormente
+            // let equipment = []; // já declarado anteriormente
+            let scripts = []; // Array para armazenar roteiros
+            
+            // Implementação das abas
+            tabButtons.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remover classes ativas
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    formSections.forEach(section => section.classList.remove('active'));
+                    
+                    // Adicionar classe ativa na tab clicada
+                    tab.classList.add('active');
+                    
+                    // Mostrar seção correspondente
+                    const tabId = tab.dataset.tab;
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Eventos para botões de gerenciamento de roteiros
+            document.getElementById('add-script-btn').addEventListener('click', function() {
+                // Aqui abriria um modal para selecionar roteiros existentes
+                alert('Funcionalidade de selecionar roteiros existentes será implementada.');
+            });
+            
+            document.getElementById('create-script-btn').addEventListener('click', function() {
+                // Salvar o projeto atual primeiro, depois redirecionar para a página de roteiros
+                saveProject().then(() => {
+                    if (currentProjectId) {
+                        window.location.href = `roteiro.html?projectId=${currentProjectId}`;
+                    } else {
+                        alert('Salve o projeto primeiro antes de criar um roteiro.');
+                    }
+                });
+            });
+            
+            // Função para carregar roteiros do projeto
+            function loadProjectScripts(projectId) {
+                // Aqui seria feita uma chamada ao backend para carregar os roteiros do projeto
+                // Simulando roteiros para demonstração
+                const mockScripts = [
+                    { id: 1, title: "Roteiro principal", status: "final" },
+                    { id: 2, title: "Versão alternativa", status: "draft" }
+                ];
+                
+                const scriptsList = document.getElementById('scripts-list');
+                scriptsList.innerHTML = '';
+                
+                if (mockScripts && mockScripts.length) {
+                    mockScripts.forEach(script => {
+                        const statusLabels = {
+                            'draft': 'Rascunho',
+                            'review': 'Em Revisão',
+                            'final': 'Finalizado'
+                        };
+                        
+                        const statusClasses = {
+                            'draft': 'status-draft',
+                            'review': 'status-review',
+                            'final': 'status-final'
+                        };
+                        
+                        const scriptItem = document.createElement('div');
+                        scriptItem.className = 'item-card';
+                        scriptItem.dataset.id = script.id;
+                        
+                        scriptItem.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${script.title}</div>
+                                <div class="item-badge ${statusClasses[script.status]}">${statusLabels[script.status]}</div>
+                            </div>
+                            <div class="item-footer">
+                                <button class="btn btn-sm btn-outline" onclick="editScript(${script.id})">Editar</button>
+                            </div>
+                            <button class="remove-btn" data-id="${script.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        scriptsList.appendChild(scriptItem);
+                    });
+                } else {
+                    scriptsList.innerHTML = '<p>Nenhum roteiro cadastrado para este projeto.</p>';
+                }
+            }
+            
+            // Função para editar um roteiro
+            function editScript(scriptId) {
+                window.location.href = `roteiro-editor.html?id=${scriptId}`;
+            }
+            
+            // Atualizar a função editProject para carregar roteiros
+            function editProject(projectId) {
+                currentProjectId = projectId;
+                
+                // Buscar o projeto
+                const project = projects.find(p => p.id === projectId);
+                if (!project) return;
+                
+                // Atualizar o título do modal
+                document.querySelector('.modal-title').textContent = `Editando: ${project.title}`;
+                
+                // Preencher os campos do formulário com os dados do projeto
+                document.getElementById('project-title').value = project.title;
+                document.getElementById('project-type').value = project.type || '';
+                document.getElementById('project-status').value = project.status || 'planning';
+                document.getElementById('project-description').value = project.description || '';
+                
+                // Atualizar o progresso
+                const progress = project.progress || 0;
+                progressBar.style.width = `${progress}%`;
+                progressValue.textContent = `${progress}%`;
+                
+                // Exibir detalhes específicos baseados no tipo
+                if (project.type === 'photography') {
+                    photographyDetails.style.display = 'block';
+                    videoDetails.style.display = 'none';
+                    
+                    // Preencher campos de fotografia
+                    if (project.photographyDetails) {
+                        document.getElementById('photography-style').value = project.photographyDetails.style || '';
+                        document.getElementById('photography-format').value = project.photographyDetails.format || '';
+                    }
+                } else if (project.type === 'video') {
+                    photographyDetails.style.display = 'none';
+                    videoDetails.style.display = 'block';
+                    
+                    // Preencher campos de vídeo
+                    if (project.videoDetails) {
+                        document.getElementById('video-duration').value = project.videoDetails.duration || '';
+                        document.getElementById('video-format').value = project.videoDetails.format || '';
+                    }
+                } else {
+                    photographyDetails.style.display = 'none';
+                    videoDetails.style.display = 'none';
+                }
+                
+                // Carregar locações
+                if (project.locations && project.locations.length) {
+                    locationList.innerHTML = '';
+                    
+                    project.locations.forEach(location => {
+                        const locationEl = document.createElement('div');
+                        locationEl.className = 'item-card';
+                        locationEl.dataset.id = location.id;
+                        
+                        locationEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${location.name}</div>
+                                <div class="item-badge">${location.type}</div>
+                            </div>
+                            <div class="item-content">${location.address}</div>
+                            <button class="remove-btn" data-id="${location.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        locationList.appendChild(locationEl);
+                    });
+                }
+                
+                // Carregar equipe
+                if (project.team && project.team.length) {
+                    teamList.innerHTML = '';
+                    
+                    project.team.forEach(member => {
+                        const memberEl = document.createElement('div');
+                        memberEl.className = 'item-card';
+                        memberEl.dataset.id = member.id;
+                        
+                        memberEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${member.name}</div>
+                                <div class="item-badge">${member.role}</div>
+                            </div>
+                            <button class="remove-btn" data-id="${member.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        teamList.appendChild(memberEl);
+                    });
+                }
+                
+                // Carregar equipamentos
+                if (project.equipment && project.equipment.length) {
+                    equipmentList.innerHTML = '';
+                    
+                    project.equipment.forEach(equipment => {
+                        const equipmentEl = document.createElement('div');
+                        equipmentEl.className = 'item-card';
+                        equipmentEl.dataset.id = equipment.id;
+                        
+                        const sourceLabels = { 
+                            'own': 'Próprio', 
+                            'rental': 'Aluguel', 
+                            'partner': 'Parceiro' 
+                        };
+                        
+                        equipmentEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${equipment.name}</div>
+                                <div class="item-badge">${sourceLabels[equipment.source] || equipment.source}</div>
+                            </div>
+                            <div class="item-content">${equipment.quantity || 1} unidade(s) por ${equipment.days || 1} dia(s)</div>
+                            <div class="item-footer">
+                                <div>Custo: R$ ${equipment.cost ? equipment.cost.toFixed(2) : '0.00'}</div>
+                            </div>
+                            <button class="remove-btn" data-id="${equipment.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        equipmentList.appendChild(equipmentEl);
+                    });
+                }
+                
+                // Carregar cronograma
+                if (project.schedule && project.schedule.length) {
+                    scheduleDaysList.innerHTML = '';
+                    
+                    project.schedule.forEach(day => {
+                        const dayEl = document.createElement('div');
+                        dayEl.className = 'item-card';
+                        dayEl.dataset.id = day.id;
+                        
+                        const date = new Date(day.date);
+                        const dateFormatted = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+                        
+                        dayEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${day.title}</div>
+                                <div class="item-badge">${dateFormatted}</div>
+                            </div>
+                            <div class="item-content">${day.description}</div>
+                            <button class="remove-btn" data-id="${day.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        scheduleDaysList.appendChild(dayEl);
+                    });
+                }
+                
+                // Carregar orçamento
+                if (project.budget && project.budget.items && project.budget.items.length) {
+                    budgetItemsList.innerHTML = '';
+                    
+                    project.budget.items.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'item-card';
+                        itemEl.dataset.id = item.id;
+                        
+                        itemEl.innerHTML = `
+                            <div class="item-header">
+                                <div class="item-title">${item.description}</div>
+                                <div class="item-badge">${item.category}</div>
+                            </div>
+                            <div class="item-content">
+                                Valor: R$ ${item.amount.toFixed(2)}
+                            </div>
+                            <button class="remove-btn" data-id="${item.id}"><i class="ri-delete-bin-line"></i></button>
+                        `;
+                        
+                        budgetItemsList.appendChild(itemEl);
+                    });
+                    
+                    // Atualizar o total do orçamento
+                    updateBudgetTotal();
+                }
+                
+                // Carregar roteiros do projeto
+                loadProjectScripts(projectId);
+                
+                // Abrir o modal
+                openModal();
+            }
+            
+            // Função para salvar o projeto
+            function saveProject() {
+                return new Promise((resolve) => {
+                    // Aqui você implementaria a lógica para salvar o projeto
+                    // no backend, usando os valores dos campos do formulário
+                    
+                    // Por enquanto, apenas simulando:
+                    setTimeout(() => {
+                        // Se for um novo projeto, atribuir um ID
+                        if (!currentProjectId) {
+                            currentProjectId = Date.now();
+                        }
+                        
+                        // Notificar sucesso
+                        alert('Projeto salvo com sucesso!');
+                        closeModal();
+                        
+                        // Carregar projetos novamente
+                        loadProjects();
+                        
+                        resolve(currentProjectId);
+                    }, 500);
+                });
+            }
         });
     </script>
 </body>

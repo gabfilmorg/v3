@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filmORG - Editor de Roteiro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+    
+    <style>
+        :root {
+            /* Cores Base - Esquema Futurista */
+            --deep-space: #1A1B2E;
+            --neon-blue: #00F5FF;
+            --neon-purple: #B15EFF;
+            --cyber-green: #00FFB2;
+            --soft-white: #F4F7FF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
+            
+            /* Efeitos */
+            --glass-blur: blur(10px);
+            --neon-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            
+            /* Dimensões */
+            --sidebar-width: 80px;
+            --sidebar-width-expanded: 240px;
+            --header-height: 70px;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar e estilos base herdados do roteiro.html */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(26, 27, 46, 0.95);
+            backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--glass-border);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar:hover {
+            width: var(--sidebar-width-expanded);
+        }
+
+        .sidebar-logo {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        .logo-icon {
+            min-width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .logo-text {
+            opacity: 1;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--soft-white);
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background: var(--glass-bg);
+        }
+
+        .menu-item.active {
+            background: var(--gradient-primary);
+        }
+
+        .menu-icon {
+            font-size: 20px;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-text {
+            margin-left: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
+        }
+
+        /* Editor Workspace */
+        .editor-workspace {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar do Editor */
+        .editor-sidebar {
+            background: rgba(26, 27, 46, 0.95);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px);
+            overflow: hidden;
+        }
+
+        .scene-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .scene-item {
+            padding: 15px;
+            background: rgba(0, 245, 255, 0.1);
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .scene-item:hover {
+            border-color: var(--neon-blue);
+            transform: translateX(5px);
+        }
+
+        .scene-item.active {
+            background: var(--gradient-primary);
+        }
+
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        /* Área Principal do Editor */
+        .editor-main {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px);
+            background: rgba(26, 27, 46, 0.95);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+
+        .editor-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--neon-blue);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .editor-toolbar {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .editor-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Botões de Formatação */
+        .format-btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--soft-white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .format-btn:hover {
+            background: rgba(0, 245, 255, 0.2);
+            border-color: var(--neon-blue);
+        }
+
+        /* Modal de IA */
+        .ai-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1100;
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .ai-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            background: rgba(26, 27, 46, 0.95);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: var(--neon-shadow);
+        }
+
+        /* Customização do CKEditor */
+        .ck-editor__editable {
+            background: var(--deep-space) !important;
+            color: var(--soft-white) !important;
+            min-height: calc(100vh - 250px);
+            border: none !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        .ck.ck-editor__main>.ck-editor__editable {
+            background: var(--deep-space) !important;
+            padding: 20px !important;
+        }
+
+        .ck.ck-toolbar {
+            background: rgba(0, 245, 255, 0.1) !important;
+            border: none !important;
+        }
+
+        .ck.ck-button {
+            color: var(--soft-white) !important;
+        }
+
+        .ck.ck-button:hover {
+            background: rgba(177, 94, 255, 0.2) !important;
+        }
+
+        .ck.ck-button.ck-on {
+            background: var(--neon-blue) !important;
+            color: var(--deep-space) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">F</div>
+            <div class="logo-text">filmORG</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="menu-icon ri-dashboard-line"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="projetos.html" class="menu-item">
+                <i class="menu-icon ri-movie-line"></i>
+                <span class="menu-text">Projetos</span>
+            </a>
+            <a href="roteiro.html" class="menu-item active">
+                <i class="menu-icon ri-draft-line"></i>
+                <span class="menu-text">Roteiro</span>
+            </a>
+            <a href="equipe.html" class="menu-item">
+                <i class="menu-icon ri-team-line"></i>
+                <span class="menu-text">Equipe</span>
+            </a>
+            <a href="equipamentos.html" class="menu-item">
+                <i class="menu-icon ri-camera-line"></i>
+                <span class="menu-text">Equipamentos</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="menu-icon ri-bar-chart-line"></i>
+                <span class="menu-text">Analytics</span>
+            </a>
+            <a href="agenda.html" class="menu-item">
+                <i class="menu-icon ri-calendar-line"></i>
+                <span class="menu-text">Agenda</span>
+            </a>
+            <a href="orcamento.html" class="menu-item">
+                <i class="menu-icon ri-money-dollar-circle-line"></i>
+                <span class="menu-text">Orçamento</span>
+            </a>
+            <a href="configuracoes.html" class="menu-item" style="margin-top: auto;">
+                <i class="menu-icon ri-settings-line"></i>
+                <span class="menu-text">Configurações</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Editor Workspace -->
+    <div class="editor-workspace">
+        <!-- Sidebar do Editor -->
+        <div class="editor-sidebar">
+            <div class="sidebar-header">
+                <h3>Cenas</h3>
+                <button class="btn btn-outline btn-sm" onclick="addScene()">
+                    <i class="ri-add-line"></i>
+                    Nova Cena
+                </button>
+            </div>
+
+            <div class="scene-list">
+                <div class="scene-item active">
+                    <div class="scene-header">
+                        <span>Cena 1</span>
+                        <span>2:30</span>
+                    </div>
+                    <div class="scene-description">INT. SALA DE ESTAR - DIA</div>
+                </div>
+                <!-- Mais cenas serão adicionadas dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Área Principal do Editor -->
+        <div class="editor-main">
+            <div class="editor-header">
+                <div class="editor-title">
+                    <h1>A Jornada</h1>
+                    <span class="status-badge status-draft">Rascunho</span>
+                </div>
+                <div class="editor-actions">
+                    <button class="btn btn-outline" onclick="saveScript()">
+                        <i class="ri-save-line"></i>
+                        Salvar
+                    </button>
+                    <button class="btn btn-primary" onclick="openAIModal()">
+                        <i class="ri-magic-line"></i>
+                        Ajuda da IA
+                    </button>
+                </div>
+            </div>
+
+            <div class="editor-toolbar">
+                <button class="format-btn" data-format="scene">
+                    <i class="ri-film-line"></i>
+                    Cabeçalho de Cena
+                </button>
+                <button class="format-btn" data-format="action">
+                    <i class="ri-file-text-line"></i>
+                    Ação
+                </button>
+                <button class="format-btn" data-format="character">
+                    <i class="ri-user-line"></i>
+                    Personagem
+                </button>
+                <button class="format-btn" data-format="dialogue">
+                    <i class="ri-chat-3-line"></i>
+                    Diálogo
+                </button>
+                <button class="format-btn" data-format="parenthetical">
+                    <i class="ri-parentheses-line"></i>
+                    Rubrica
+                </button>
+                <button class="format-btn" data-format="transition">
+                    <i class="ri-arrow-right-line"></i>
+                    Transição
+                </button>
+            </div>
+
+            <div class="editor-content">
+                <div id="editor"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de IA -->
+    <div class="ai-modal" id="ai-modal">
+        <div class="ai-modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Assistente de IA</h3>
+                <button class="close-btn" onclick="closeAIModal()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">O que você precisa?</label>
+                    <select class="form-control" id="ai-task">
+                        <option value="continue">Continuar a cena atual</option>
+                        <option value="improve">Melhorar o diálogo selecionado</option>
+                        <option value="suggest">Sugerir próxima cena</option>
+                        <option value="describe">Descrever ambiente em detalhes</option>
+                        <option value="character">Desenvolver perfil do personagem</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Instruções específicas</label>
+                    <textarea class="form-control" id="ai-instructions" rows="4" 
+                        placeholder="Ex: Mantenha o tom dramático, adicione mais tensão..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="closeAIModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="generateWithAI()">Gerar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicialização de variáveis de controle
+        let scriptId = null;
+        let projectId = null;
+        let scriptTitle = "Novo Roteiro";
+        let scriptStatus = "draft";
+        
+        // Recuperar parâmetros da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        scriptId = urlParams.get('id');
+        projectId = urlParams.get('projectId');
+        
+        // Funções do editor
+        document.addEventListener('DOMContentLoaded', function() {
+            // Se tiver um ID de roteiro, carregar os dados
+            if (scriptId) {
+                loadScriptData(scriptId);
+            }
+            
+            // Se tiver um ID de projeto, vincular o roteiro ao projeto
+            if (projectId) {
+                document.querySelector('.editor-title h1').innerHTML += `<span class="project-badge">Projeto #${projectId}</span>`;
+            }
+        });
+        
+        // Função para carregar dados do roteiro
+        function loadScriptData(id) {
+            // Aqui seria feita uma chamada ao backend para carregar os dados do roteiro
+            // Por enquanto, simulando dados para demonstração
+            setTimeout(() => {
+                scriptTitle = "A Jornada";
+                scriptStatus = "draft";
+                
+                // Atualizar interface
+                document.querySelector('.editor-title h1').textContent = scriptTitle;
+                
+                // Simular carregamento do conteúdo
+                if (window.editor) {
+                    window.editor.setData(`
+                        <h2>INT. SALA DE ESTAR - DIA</h2>
+                        <p>JOÃO, 30, está sentado no sofá, olhando para seu celular, preocupado.</p>
+                        <p>MARIA entra na sala, carregando duas xícaras de café.</p>
+                        <h3>MARIA</h3>
+                        <p>Você parece preocupado. O que houve?</p>
+                        <h3>JOÃO</h3>
+                        <p>Acabei de receber uma mensagem estranha.</p>
+                    `);
+                }
+            }, 500);
+        }
+        
+        // Inicialização do CKEditor
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: ['heading', '|', 'bold', 'italic', '|', 'undo', 'redo'],
+                placeholder: 'Comece a escrever seu roteiro...'
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Funções do Modal de IA
+        function openAIModal() {
+            document.getElementById('ai-modal').style.display = 'block';
+        }
+
+        function closeAIModal() {
+            document.getElementById('ai-modal').style.display = 'none';
+        }
+
+        function generateWithAI() {
+            // Implementar integração com IA
+            alert('Gerando sugestões com IA...');
+            closeAIModal();
+        }
+
+        // Função para adicionar nova cena
+        function addScene() {
+            const sceneList = document.querySelector('.scene-list');
+            const newScene = document.createElement('div');
+            newScene.className = 'scene-item';
+            newScene.innerHTML = `
+                <div class="scene-header">
+                    <span>Nova Cena</span>
+                    <span>0:00</span>
+                </div>
+                <div class="scene-description">INT/EXT. LOCALIZAÇÃO - PERÍODO</div>
+            `;
+            sceneList.appendChild(newScene);
+        }
+        
+        // Função para salvar o roteiro
+        function saveScript() {
+            // Implementar lógica de salvamento
+            alert('Salvando roteiro...');
+        }
+        
+        // Formatação do texto
+        document.querySelectorAll('.format-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const format = btn.dataset.format;
+                applyFormat(format);
+            });
+        });
+        
+        function applyFormat(format) {
+            const editor = window.editor;
+            if (!editor) return;
+            
+            const formats = {
+                scene: 'INTERIOR - LOCALIZAÇÃO - DIA\n',
+                action: '\nDescrição da ação...\n',
+                character: '\nPERSONAGEM\n',
+                dialogue: 'Fala do personagem...\n',
+                parenthetical: '(emoção/ação)\n',
+                transition: '\nCORTA PARA:\n'
+            };
+            
+            editor.model.change(writer => {
+                editor.model.insertContent(formats[format]);
+            });
+        }
+    </script>
+</body>
+</html>

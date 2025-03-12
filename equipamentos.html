@@ -552,6 +552,53 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Estilo para o botão de fechar */
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--soft-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+            border-color: var(--neon-blue);
+        }
+
+        .close-btn:hover::before {
+            opacity: 1;
+        }
+
+        .close-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+            border-radius: 50%;
+        }
+
+        .close-btn i {
+            font-size: 18px;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--soft-white), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
 <body>
@@ -718,7 +765,9 @@
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title">Novo Equipamento</h3>
-                <button class="modal-close" id="modal-close">&times;</button>
+                <button class="close-btn" id="modal-close">
+                    <i class="ri-close-line"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="equipment-form">
@@ -741,3 +790,13 @@
                     <div class="form-group">
                         <label class="form-label">Código/Serial</label>
                         <input type="text" class="form-control" id="equipment-code" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="save-equipment-btn">Salvar</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
