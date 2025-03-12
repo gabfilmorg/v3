@@ -6,6 +6,7 @@
     <title>filmORG - Agenda</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="base.css">
     <style>
         :root {
             /* Cores Base - Esquema Futurista */
@@ -828,6 +829,173 @@
                 gap: 0;
             }
         }
+
+        .calendar-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .calendar-sidebar {
+            background: rgba(26, 27, 46, 0.95);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+        }
+
+        .calendar-main {
+            background: rgba(26, 27, 46, 0.95);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calendar-nav-btn {
+            background: var(--glass-bg);
+            border: none;
+            color: var(--soft-white);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--neon-blue);
+            color: var(--deep-space);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-size: 14px;
+            color: var(--neon-blue);
+            padding: 10px;
+            font-weight: 500;
+        }
+
+        .calendar-date {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .calendar-date:hover {
+            background: rgba(0, 245, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .calendar-date.active {
+            background: var(--gradient-primary);
+        }
+
+        .calendar-date.has-events::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            width: 6px;
+            height: 6px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+        }
+
+        .event-list {
+            margin-top: 20px;
+        }
+
+        .event-item {
+            padding: 15px;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .event-item:hover {
+            transform: translateX(5px);
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        .event-time {
+            font-size: 14px;
+            color: var(--neon-blue);
+            margin-bottom: 5px;
+        }
+
+        .event-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .event-location {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .event-category {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .category-production {
+            background: rgba(0, 245, 255, 0.2);
+            color: var(--neon-blue);
+        }
+
+        .category-meeting {
+            background: rgba(177, 94, 255, 0.2);
+            color: var(--neon-purple);
+        }
+
+        .category-deadline {
+            background: rgba(255, 94, 94, 0.2);
+            color: #FF5E5E;
+        }
+
+        @media (max-width: 1024px) {
+            .calendar-container {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -847,6 +1015,10 @@
                 <i class="menu-icon ri-movie-line"></i>
                 <span class="menu-text">Projetos</span>
             </a>
+            <a href="roteiro.html" class="menu-item">
+                <i class="menu-icon ri-file-text-line"></i>
+                <span class="menu-text">Roteiros</span>
+            </a>
             <a href="equipe.html" class="menu-item">
                 <i class="menu-icon ri-team-line"></i>
                 <span class="menu-text">Equipe</span>
@@ -854,10 +1026,6 @@
             <a href="equipamentos.html" class="menu-item">
                 <i class="menu-icon ri-camera-line"></i>
                 <span class="menu-text">Equipamentos</span>
-            </a>
-            <a href="ai-assist.html" class="menu-item">
-                <i class="menu-icon ri-robot-line"></i>
-                <span class="menu-text">AI Assist</span>
             </a>
             <a href="analytics.html" class="menu-item">
                 <i class="menu-icon ri-bar-chart-line"></i>
@@ -878,1043 +1046,119 @@
         </nav>
     </div>
 
-    <!-- Main Content -->
+    <!-- Overlay para mobile -->
+    <div class="mobile-overlay"></div>
+
+    <!-- Conteúdo principal -->
     <div class="main-content">
-        <div class="header">
+        <div class="page-header">
             <h1 class="page-title">Agenda</h1>
-            
-            <div class="header-actions">
-                <div class="notification-btn">
-                    <i class="ri-notification-3-line"></i>
-                    <div class="notification-badge">3</div>
-                </div>
-                <div class="user-profile">
-                    <div class="user-avatar" id="user-initial">U</div>
-                    <span class="user-name" id="user-name">Usuário</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Ferramentas do Calendário -->
-        <div class="calendar-tools">
-            <div class="calendar-navigation">
-                <button class="nav-button" id="prev-month">
-                    <i class="ri-arrow-left-s-line"></i>
-                </button>
-                <div class="current-month" id="current-month">Dezembro 2023</div>
-                <button class="nav-button" id="next-month">
-                    <i class="ri-arrow-right-s-line"></i>
+            <div class="page-actions">
+                <button class="btn btn-primary">
+                    <i class="ri-add-line"></i>
+                    Novo Evento
                 </button>
             </div>
-            
-            <div class="view-options">
-                <div class="view-option active" data-view="month">Mês</div>
-                <div class="view-option" data-view="week">Semana</div>
-                <div class="view-option" data-view="list">Lista</div>
-            </div>
-            
-            <button class="btn btn-primary" id="new-event-btn">
-                <i class="ri-add-line"></i> Novo Evento
-            </button>
         </div>
-        
-        <!-- Visualização de Mês -->
-        <div class="month-calendar" id="month-view">
-            <div class="calendar-header">
-                <div class="calendar-header-cell">Dom</div>
-                <div class="calendar-header-cell">Seg</div>
-                <div class="calendar-header-cell">Ter</div>
-                <div class="calendar-header-cell">Qua</div>
-                <div class="calendar-header-cell">Qui</div>
-                <div class="calendar-header-cell">Sex</div>
-                <div class="calendar-header-cell">Sáb</div>
-            </div>
-            
-            <div class="calendar-grid" id="month-grid">
-                <!-- Dias do mês serão carregados dinamicamente -->
-            </div>
-        </div>
-        
-        <!-- Visualização de Semana -->
-        <div class="week-calendar" id="week-view">
-            <div class="week-header">
-                <div class="week-header-cell"></div>
-                <div class="week-header-cell">Dom<br>10</div>
-                <div class="week-header-cell">Seg<br>11</div>
-                <div class="week-header-cell">Ter<br>12</div>
-                <div class="week-header-cell">Qua<br>13</div>
-                <div class="week-header-cell">Qui<br>14</div>
-                <div class="week-header-cell">Sex<br>15</div>
-                <div class="week-header-cell">Sáb<br>16</div>
-            </div>
-            
-            <div class="week-time-grid">
-                <div class="time-column">
-                    <div class="time-slot">08:00</div>
-                    <div class="time-slot">09:00</div>
-                    <div class="time-slot">10:00</div>
-                    <div class="time-slot">11:00</div>
-                    <div class="time-slot">12:00</div>
-                    <div class="time-slot">13:00</div>
-                    <div class="time-slot">14:00</div>
-                    <div class="time-slot">15:00</div>
-                    <div class="time-slot">16:00</div>
-                    <div class="time-slot">17:00</div>
-                    <div class="time-slot">18:00</div>
-                    <div class="time-slot">19:00</div>
-                </div>
-                
-                <div class="day-column" id="sunday-column">
-                    <div class="time-grid">
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
+
+        <div class="calendar-container">
+            <div class="calendar-sidebar">
+                <div class="calendar-header">
+                    <div class="calendar-title">Março 2025</div>
+                    <div class="calendar-nav">
+                        <button class="calendar-nav-btn">
+                            <i class="ri-arrow-left-s-line"></i>
+                        </button>
+                        <button class="calendar-nav-btn">
+                            <i class="ri-arrow-right-s-line"></i>
+                        </button>
                     </div>
                 </div>
-                
-                <div class="day-column" id="monday-column">
-                    <div class="time-grid">
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                    </div>
-                    <!-- Eventos de exemplo da semana -->
-                    <div class="week-event meeting" style="top: 60px; height: 90px;">
-                        Reunião de Pré-produção
-                    </div>
-                </div>
-                
-                <div class="day-column" id="tuesday-column">
-                    <div class="time-grid">
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                    </div>
-                </div>
-                
-                <div class="day-column" id="wednesday-column">
-                    <div class="time-grid">
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                    </div>
-                    <div class="week-event filming" style="top: 180px; height: 240px;">
-                        Filmagem externa - Praça Central
-                    </div>
-                </div>
-                
-                <div class="day-column" id="thursday-column">
-                    <div class="time-grid">
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                    </div>
-                    <div class="week-event editing" style="top: 480px; height: 120px;">
-                        Edição - Cenas 12-15
-                    </div>
-                </div>
-                
-                <div class="day-column" id="friday-column">
-                    <div class="time-grid">
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                    </div>
-                </div>
-                
-                <div class="day-column" id="saturday-column">
-                    <div class="time-grid">
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                        <div class="hour-slot"></div>
-                    </div>
-                    <div class="week-event meeting" style="top: 300px; height: 60px;">
-                        Revisão de Roteiro
-                    </div>
+
+                <div class="calendar-grid">
+                    <div class="calendar-weekday">Dom</div>
+                    <div class="calendar-weekday">Seg</div>
+                    <div class="calendar-weekday">Ter</div>
+                    <div class="calendar-weekday">Qua</div>
+                    <div class="calendar-weekday">Qui</div>
+                    <div class="calendar-weekday">Sex</div>
+                    <div class="calendar-weekday">Sáb</div>
+
+                    <!-- Dias do calendário -->
+                    <div class="calendar-date">1</div>
+                    <div class="calendar-date">2</div>
+                    <div class="calendar-date has-events">3</div>
+                    <div class="calendar-date">4</div>
+                    <div class="calendar-date has-events">5</div>
+                    <div class="calendar-date">6</div>
+                    <div class="calendar-date">7</div>
+                    <div class="calendar-date has-events">8</div>
+                    <div class="calendar-date">9</div>
+                    <div class="calendar-date active has-events">10</div>
+                    <div class="calendar-date">11</div>
+                    <div class="calendar-date">12</div>
+                    <div class="calendar-date has-events">13</div>
+                    <div class="calendar-date">14</div>
+                    <div class="calendar-date">15</div>
+                    <!-- ... mais dias ... -->
                 </div>
             </div>
-        </div>
-        
-        <!-- Visualização de Lista -->
-        <div class="upcoming-events" id="list-view" style="display: none;">
-            <h3 class="upcoming-title">Próximos Eventos</h3>
-            
-            <div class="event-list" id="event-list">
-                <!-- Eventos serão carregados dinamicamente -->
-            </div>
-        </div>
-        
-        <!-- Modal de Evento -->
-        <div class="modal-overlay" id="event-modal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modal-title">Novo Evento</h3>
-                    <button class="close-btn" id="modal-close">
-                        <i class="ri-close-line"></i>
-                    </button>
+
+            <div class="calendar-main">
+                <div class="calendar-header">
+                    <div class="calendar-title">Eventos do Dia</div>
                 </div>
-                <div class="modal-body">
-                    <form id="event-form">
-                        <div class="form-group">
-                            <label for="event-title" class="form-label">Título do Evento</label>
-                            <input type="text" class="form-control" id="event-title" placeholder="Nome do evento" required>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="event-start-date" class="form-label">Data de Início</label>
-                                <input type="date" class="form-control" id="event-start-date" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="event-start-time" class="form-label">Hora de Início</label>
-                                <input type="time" class="form-control" id="event-start-time" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="event-end-date" class="form-label">Data de Término</label>
-                                <input type="date" class="form-control" id="event-end-date" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="event-end-time" class="form-label">Hora de Término</label>
-                                <input type="time" class="form-control" id="event-end-time" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="event-type" class="form-label">Tipo de Evento</label>
-                            <select class="form-select" id="event-type" required>
-                                <option value="">Selecione um tipo</option>
-                                <option value="filming">Filmagem</option>
-                                <option value="meeting">Reunião</option>
-                                <option value="editing">Edição</option>
-                                <option value="other">Outro</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="event-project" class="form-label">Projeto Relacionado</label>
-                            <select class="form-select" id="event-project">
-                                <option value="">Selecione um projeto</option>
-                                <!-- Projetos serão carregados dinamicamente -->
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="event-location" class="form-label">Local</label>
-                            <input type="text" class="form-control" id="event-location" placeholder="Local do evento">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="event-team" class="form-label">Equipe</label>
-                            <select class="form-select" id="event-team" multiple size="3">
-                                <!-- Membros da equipe serão carregados dinamicamente -->
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="event-equipment" class="form-label">Equipamentos</label>
-                            <select class="form-select" id="event-equipment" multiple size="3">
-                                <!-- Equipamentos serão carregados dinamicamente -->
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="event-description" class="form-label">Descrição</label>
-                            <textarea class="form-control" id="event-description" rows="3" placeholder="Detalhes do evento"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-danger" id="delete-event-btn" style="display: none;">Excluir</button>
-                    <button class="btn btn-outline" id="cancel-event-btn">Cancelar</button>
-                    <button class="btn btn-primary" id="save-event-btn">Salvar</button>
+
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-time">09:00 - 12:00</div>
+                        <div class="event-title">Gravação Documentário Amazônia</div>
+                        <div class="event-location">Manaus - AM</div>
+                        <div class="event-category category-production">Produção</div>
+                    </div>
+
+                    <div class="event-item">
+                        <div class="event-time">14:30 - 16:00</div>
+                        <div class="event-title">Reunião de Produção</div>
+                        <div class="event-location">Sala de Reuniões</div>
+                        <div class="event-category category-meeting">Reunião</div>
+                    </div>
+
+                    <div class="event-item">
+                        <div class="event-time">17:00</div>
+                        <div class="event-title">Deadline - Entrega de Roteiro</div>
+                        <div class="event-location">Online</div>
+                        <div class="event-category category-deadline">Deadline</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="layout.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Elementos DOM
-            const monthView = document.getElementById('month-view');
-            const weekView = document.getElementById('week-view');
-            const listView = document.getElementById('list-view');
-            const monthGrid = document.getElementById('month-grid');
-            const eventList = document.getElementById('event-list');
-            const viewOptions = document.querySelectorAll('.view-option');
-            const currentMonthEl = document.getElementById('current-month');
-            const prevMonthBtn = document.getElementById('prev-month');
-            const nextMonthBtn = document.getElementById('next-month');
-            const newEventBtn = document.getElementById('new-event-btn');
-            const eventModal = document.getElementById('event-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalClose = document.getElementById('modal-close');
-            const cancelEventBtn = document.getElementById('cancel-event-btn');
-            const saveEventBtn = document.getElementById('save-event-btn');
-            const deleteEventBtn = document.getElementById('delete-event-btn');
-            const eventForm = document.getElementById('event-form');
-            const eventTitleInput = document.getElementById('event-title');
-            const eventTypeSelect = document.getElementById('event-type');
-            const eventProjectSelect = document.getElementById('event-project');
-            const eventTeamSelect = document.getElementById('event-team');
-            const eventEquipmentSelect = document.getElementById('event-equipment');
-            const userInitialEl = document.getElementById('user-initial');
-            const userNameEl = document.getElementById('user-name');
-            
-            // Verificar usuário logado
-            const userEmail = localStorage.getItem('userEmail');
-            if (userEmail) {
-                const initial = userEmail.charAt(0).toUpperCase();
-                userInitialEl.textContent = initial;
-                
-                // Pegar nome do usuário, se disponível
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                const user = users.find(u => u.email === userEmail);
-                if (user && user.name) {
-                    const firstName = user.name.split(' ')[0];
-                    userNameEl.textContent = firstName;
-                } else {
-                    userNameEl.textContent = userEmail.split('@')[0];
-                }
-            }
-            
-            // Estado da aplicação
-            let events = JSON.parse(localStorage.getItem('calendar_events')) || [];
-            let projects = JSON.parse(localStorage.getItem('projects')) || [];
-            let equipments = JSON.parse(localStorage.getItem('equipments')) || [];
-            let team = JSON.parse(localStorage.getItem('team')) || [];
-            let currentDate = new Date();
-            let currentView = 'month';
-            let currentEventId = null;
-            
-            // Funções auxiliares
-            function generateId() {
-                return Math.random().toString(36).substr(2, 9);
-            }
-            
-            function formatDate(date) {
-                return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            }
-            
-            function formatTime(date) {
-                return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            }
-            
-            function formatMonthYear(date) {
-                return date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-            }
-            
-            function getDaysInMonth(year, month) {
-                return new Date(year, month + 1, 0).getDate();
-            }
-            
-            function getFirstDayOfMonth(year, month) {
-                return new Date(year, month, 1).getDay();
-            }
-            
-            // Alternar entre visualizações
-            function setView(view) {
-                currentView = view;
-                
-                // Atualizar classes ativas
-                viewOptions.forEach(option => {
-                    if (option.dataset.view === view) {
-                        option.classList.add('active');
-                    } else {
-                        option.classList.remove('active');
-                    }
-                });
-                
-                // Mostrar visualização selecionada
-                monthView.style.display = view === 'month' ? 'block' : 'none';
-                weekView.style.display = view === 'week' ? 'block' : 'none';
-                listView.style.display = view === 'list' ? 'block' : 'none';
-                
-                // Renderizar dados para a visualização atual
-                renderCalendar();
-            }
-            
-            // Renderizar o calendário com base na visualização atual
-            function renderCalendar() {
-                switch (currentView) {
-                    case 'month':
-                        renderMonthView();
-                        break;
-                    case 'week':
-                        renderWeekView();
-                        break;
-                    case 'list':
-                        renderListView();
-                        break;
-                }
-                
-                // Atualizar título do mês
-                currentMonthEl.textContent = formatMonthYear(currentDate);
-            }
-            
-            // Renderizar visualização de mês
-            function renderMonthView() {
-                monthGrid.innerHTML = '';
-                
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth();
-                const today = new Date();
-                
-                const daysInMonth = getDaysInMonth(year, month);
-                const firstDay = getFirstDayOfMonth(year, month);
-                
-                // Dias do mês anterior
-                const prevMonth = new Date(year, month - 1, 1);
-                const daysInPrevMonth = getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
-                
-                for (let i = 0; i < firstDay; i++) {
-                    const dayNumber = daysInPrevMonth - firstDay + i + 1;
-                    const date = new Date(year, month - 1, dayNumber);
+            // Função para atualizar eventos quando uma data é selecionada
+            const dates = document.querySelectorAll('.calendar-date');
+            dates.forEach(date => {
+                date.addEventListener('click', function() {
+                    // Remover classe ativa de todas as datas
+                    dates.forEach(d => d.classList.remove('active'));
+                    // Adicionar classe ativa à data clicada
+                    this.classList.add('active');
                     
-                    const dayEl = document.createElement('div');
-                    dayEl.className = 'calendar-day different-month';
-                    dayEl.dataset.date = date.toISOString().split('T')[0];
-                    
-                    const dayNumberEl = document.createElement('div');
-                    dayNumberEl.className = 'day-number';
-                    dayNumberEl.textContent = dayNumber;
-                    
-                    const dayEventsEl = document.createElement('div');
-                    dayEventsEl.className = 'day-events';
-                    
-                    dayEl.appendChild(dayNumberEl);
-                    dayEl.appendChild(dayEventsEl);
-                    monthGrid.appendChild(dayEl);
-                }
-                
-                // Dias do mês atual
-                for (let i = 1; i <= daysInMonth; i++) {
-                    const date = new Date(year, month, i);
-                    const isToday = date.getDate() === today.getDate() && 
-                                    date.getMonth() === today.getMonth() && 
-                                    date.getFullYear() === today.getFullYear();
-                    
-                    const dayEl = document.createElement('div');
-                    dayEl.className = 'calendar-day';
-                    if (isToday) dayEl.classList.add('today');
-                    dayEl.dataset.date = date.toISOString().split('T')[0];
-                    
-                    const dayNumberEl = document.createElement('div');
-                    dayNumberEl.className = 'day-number';
-                    dayNumberEl.textContent = i;
-                    
-                    const dayEventsEl = document.createElement('div');
-                    dayEventsEl.className = 'day-events';
-                    
-                    // Adicionar eventos do dia
-                    const dayEvents = events.filter(event => {
-                        const eventDate = new Date(event.startDate);
-                        return eventDate.getDate() === i && 
-                               eventDate.getMonth() === month && 
-                               eventDate.getFullYear() === year;
-                    });
-                    
-                    dayEvents.forEach(event => {
-                        const eventEl = document.createElement('div');
-                        eventEl.className = `day-event ${event.type}`;
-                        eventEl.textContent = event.title;
-                        eventEl.dataset.id = event.id;
-                        
-                        eventEl.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            editEvent(event.id);
-                        });
-                        
-                        dayEventsEl.appendChild(eventEl);
-                    });
-                    
-                    dayEl.appendChild(dayNumberEl);
-                    dayEl.appendChild(dayEventsEl);
-                    
-                    // Adicionar evento ao clicar no dia
-                    dayEl.addEventListener('click', () => {
-                        newEvent(date);
-                    });
-                    
-                    monthGrid.appendChild(dayEl);
-                }
-                
-                // Dias do próximo mês para preencher o grid
-                const totalCells = 42; // 6 semanas x 7 dias
-                const remainingCells = totalCells - (firstDay + daysInMonth);
-                
-                for (let i = 1; i <= remainingCells; i++) {
-                    const date = new Date(year, month + 1, i);
-                    
-                    const dayEl = document.createElement('div');
-                    dayEl.className = 'calendar-day different-month';
-                    dayEl.dataset.date = date.toISOString().split('T')[0];
-                    
-                    const dayNumberEl = document.createElement('div');
-                    dayNumberEl.className = 'day-number';
-                    dayNumberEl.textContent = i;
-                    
-                    const dayEventsEl = document.createElement('div');
-                    dayEventsEl.className = 'day-events';
-                    
-                    dayEl.appendChild(dayNumberEl);
-                    dayEl.appendChild(dayEventsEl);
-                    monthGrid.appendChild(dayEl);
-                }
-            }
-            
-            // Renderizar visualização de semana
-            function renderWeekView() {
-                // Atualizar cabeçalho com datas da semana
-                const weekHeader = document.querySelector('.week-header');
-                weekHeader.innerHTML = '<div class="week-header-cell"></div>';
-                
-                // Calcular início da semana (domingo)
-                const currentDay = currentDate.getDay();
-                const startOfWeek = new Date(currentDate);
-                startOfWeek.setDate(currentDate.getDate() - currentDay);
-                
-                // Criar cabeçalho para cada dia da semana
-                for (let i = 0; i < 7; i++) {
-                    const date = new Date(startOfWeek);
-                    date.setDate(startOfWeek.getDate() + i);
-                    
-                    const dayCell = document.createElement('div');
-                    dayCell.className = 'week-header-cell';
-                    dayCell.innerHTML = `${['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][i]}<br>${date.getDate()}`;
-                    
-                    weekHeader.appendChild(dayCell);
-                }
-                
-                // Limpar eventos anteriores
-                document.querySelectorAll('.week-event').forEach(event => event.remove());
-                
-                // Adicionar eventos da semana
-                for (let i = 0; i < 7; i++) {
-                    const date = new Date(startOfWeek);
-                    date.setDate(startOfWeek.getDate() + i);
-                    const dayColumn = document.getElementById(`${['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][i]}-column`);
-                    
-                    // Filtrar eventos do dia
-                    const dayEvents = events.filter(event => {
-                        const eventDate = new Date(event.startDate);
-                        return eventDate.getDate() === date.getDate() && 
-                               eventDate.getMonth() === date.getMonth() && 
-                               eventDate.getFullYear() === date.getFullYear();
-                    });
-                    
-                    // Adicionar eventos à coluna do dia
-                    dayEvents.forEach(event => {
-                        const startTime = new Date(event.startDate + 'T' + event.startTime);
-                        const endTime = new Date(event.endDate + 'T' + event.endTime);
-                        
-                        // Calcular posição e altura com base no horário
-                        const startHour = startTime.getHours();
-                        const startMinute = startTime.getMinutes();
-                        const endHour = endTime.getHours();
-                        const endMinute = endTime.getMinutes();
-                        
-                        // Hora atual - 8 (início às 8h) * 60px (altura de cada hora)
-                        const top = ((startHour - 8) * 60) + (startMinute * 1);
-                        
-                        // Duração em minutos * 1px (1px por minuto)
-                        const duration = ((endHour - startHour) * 60) + (endMinute - startMinute);
-                        const height = Math.max(duration, 30); // Altura mínima de 30px
-                        
-                        const eventEl = document.createElement('div');
-                        eventEl.className = `week-event ${event.type}`;
-                        eventEl.textContent = event.title;
-                        eventEl.dataset.id = event.id;
-                        eventEl.style.top = `${top}px`;
-                        eventEl.style.height = `${height}px`;
-                        
-                        eventEl.addEventListener('click', () => {
-                            editEvent(event.id);
-                        });
-                        
-                        dayColumn.appendChild(eventEl);
-                    });
-                }
-            }
-            
-            // Renderizar visualização de lista
-            function renderListView() {
-                eventList.innerHTML = '';
-                
-                // Ordenar eventos por data
-                const sortedEvents = [...events].sort((a, b) => {
-                    const dateA = new Date(a.startDate + 'T' + a.startTime);
-                    const dateB = new Date(b.startDate + 'T' + b.startTime);
-                    return dateA - dateB;
-                });
-                
-                // Filtrar eventos futuros
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                const upcomingEvents = sortedEvents.filter(event => {
-                    const eventDate = new Date(event.startDate);
-                    eventDate.setHours(0, 0, 0, 0);
-                    return eventDate >= today;
-                });
-                
-                if (upcomingEvents.length === 0) {
-                    const emptyMessage = document.createElement('div');
-                    emptyMessage.style.textAlign = 'center';
-                    emptyMessage.style.padding = '30px 0';
-                    emptyMessage.innerHTML = `
-                        <i class="ri-calendar-line" style="font-size: 48px; color: var(--neon-blue);"></i>
-                        <h3 style="margin: 15px 0;">Nenhum evento futuro</h3>
-                        <p style="margin-bottom: 20px;">Adicione eventos à sua agenda</p>
-                        <button class="btn btn-primary" id="empty-new-event">
-                            <i class="ri-add-line"></i> Novo Evento
-                        </button>
-                    `;
-                    
-                    eventList.appendChild(emptyMessage);
-                    
-                    document.getElementById('empty-new-event').addEventListener('click', () => {
-                        newEvent();
-                    });
-                    
-                    return;
-                }
-                
-                // Mostrar eventos próximos
-                upcomingEvents.slice(0, 10).forEach(event => {
-                    const eventDate = new Date(event.startDate);
-                    const eventMonth = eventDate.toLocaleDateString('pt-BR', { month: 'short' }).toUpperCase();
-                    const eventDay = eventDate.getDate();
-                    
-                    // Buscar projeto relacionado
-                    const project = event.projectId ? projects.find(p => p.id === event.projectId) : null;
-                    
-                    const eventItem = document.createElement('div');
-                    eventItem.className = 'event-item';
-                    eventItem.dataset.id = event.id;
-                    
-                    eventItem.innerHTML = `
-                        <div class="event-date">
-                            <div class="event-day">${eventDay}</div>
-                            <div class="event-month">${eventMonth}</div>
-                        </div>
-                        <div class="event-details">
-                            <h4 class="event-name">${event.title}</h4>
-                            <div class="event-info">
-                                <div class="event-time">
-                                    <i class="ri-time-line"></i>
-                                    <span>${event.startTime} - ${event.endTime}</span>
-                                </div>
-                                ${event.location ? `
-                                <div class="event-location">
-                                    <i class="ri-map-pin-line"></i>
-                                    <span>${event.location}</span>
-                                </div>
-                                ` : ''}
-                                ${project ? `
-                                <div class="event-project">
-                                    <i class="ri-movie-line"></i>
-                                    <span>${project.title}</span>
-                                </div>
-                                ` : ''}
-                            </div>
-                            ${event.description ? `
-                            <div class="event-description">
-                                ${event.description}
-                            </div>
-                            ` : ''}
-                            <div class="event-actions">
-                                <button class="event-btn edit-event-btn">
-                                    <i class="ri-edit-line"></i> Editar
-                                </button>
-                                <button class="event-btn delete-event-btn">
-                                    <i class="ri-delete-bin-line"></i> Excluir
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    // Adicionar listeners para os botões
-                    eventItem.querySelector('.edit-event-btn').addEventListener('click', () => {
-                        editEvent(event.id);
-                    });
-                    
-                    eventItem.querySelector('.delete-event-btn').addEventListener('click', () => {
-                        if (confirm('Tem certeza que deseja excluir este evento?')) {
-                            deleteEvent(event.id);
-                        }
-                    });
-                    
-                    eventList.appendChild(eventItem);
-                });
-            }
-            
-            // Carregar projetos, equipe e equipamentos nos selects
-            function loadFormSelects() {
-                // Limpar opções atuais
-                eventProjectSelect.innerHTML = '<option value="">Selecione um projeto</option>';
-                eventTeamSelect.innerHTML = '';
-                eventEquipmentSelect.innerHTML = '';
-                
-                // Adicionar projetos
-                projects.forEach(project => {
-                    const option = document.createElement('option');
-                    option.value = project.id;
-                    option.textContent = project.title;
-                    eventProjectSelect.appendChild(option);
-                });
-                
-                // Adicionar equipe (simulado)
-                if (team.length === 0) {
-                    team = [
-                        { id: 'team1', name: 'João Silva', role: 'Diretor' },
-                        { id: 'team2', name: 'Maria Oliveira', role: 'Cinegrafista' },
-                        { id: 'team3', name: 'Carlos Santos', role: 'Editor' },
-                        { id: 'team4', name: 'Ana Souza', role: 'Produtora' }
-                    ];
-                }
-                
-                team.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member.id;
-                    option.textContent = `${member.name} (${member.role})`;
-                    eventTeamSelect.appendChild(option);
-                });
-                
-                // Adicionar equipamentos
-                equipments.forEach(equipment => {
-                    const option = document.createElement('option');
-                    option.value = equipment.id;
-                    option.textContent = equipment.name;
-                    eventEquipmentSelect.appendChild(option);
-                });
-            }
-            
-            // Criar novo evento
-            function newEvent(date = new Date()) {
-                currentEventId = null;
-                modalTitle.textContent = 'Novo Evento';
-                deleteEventBtn.style.display = 'none';
-                
-                // Limpar formulário
-                eventForm.reset();
-                
-                // Definir data selecionada
-                const formattedDate = date.toISOString().split('T')[0];
-                document.getElementById('event-start-date').value = formattedDate;
-                document.getElementById('event-end-date').value = formattedDate;
-                
-                // Definir horários padrão
-                document.getElementById('event-start-time').value = '09:00';
-                document.getElementById('event-end-time').value = '10:00';
-                
-                openModal();
-            }
-            
-            // Editar evento existente
-            function editEvent(id) {
-                const event = events.find(e => e.id === id);
-                if (!event) return;
-                
-                currentEventId = id;
-                modalTitle.textContent = 'Editar Evento';
-                deleteEventBtn.style.display = 'block';
-                
-                // Preencher formulário com dados do evento
-                eventTitleInput.value = event.title;
-                document.getElementById('event-start-date').value = event.startDate;
-                document.getElementById('event-start-time').value = event.startTime;
-                document.getElementById('event-end-date').value = event.endDate;
-                document.getElementById('event-end-time').value = event.endTime;
-                eventTypeSelect.value = event.type;
-                eventProjectSelect.value = event.projectId || '';
-                document.getElementById('event-location').value = event.location || '';
-                document.getElementById('event-description').value = event.description || '';
-                
-                // Selecionar equipe
-                if (event.team && event.team.length > 0) {
-                    Array.from(eventTeamSelect.options).forEach(option => {
-                        option.selected = event.team.includes(option.value);
-                    });
-                }
-                
-                // Selecionar equipamentos
-                if (event.equipment && event.equipment.length > 0) {
-                    Array.from(eventEquipmentSelect.options).forEach(option => {
-                        option.selected = event.equipment.includes(option.value);
-                    });
-                }
-                
-                openModal();
-            }
-            
-            // Salvar evento
-            function saveEvent() {
-                const title = eventTitleInput.value.trim();
-                const startDate = document.getElementById('event-start-date').value;
-                const startTime = document.getElementById('event-start-time').value;
-                const endDate = document.getElementById('event-end-date').value;
-                const endTime = document.getElementById('event-end-time').value;
-                const type = eventTypeSelect.value;
-                const projectId = eventProjectSelect.value || null;
-                const location = document.getElementById('event-location').value.trim();
-                const description = document.getElementById('event-description').value.trim();
-                
-                // Obter equipe selecionada
-                const selectedTeam = Array.from(eventTeamSelect.selectedOptions).map(option => option.value);
-                
-                // Obter equipamentos selecionados
-                const selectedEquipment = Array.from(eventEquipmentSelect.selectedOptions).map(option => option.value);
-                
-                // Validação básica
-                if (!title || !startDate || !startTime || !endDate || !endTime || !type) {
-                    alert('Por favor, preencha todos os campos obrigatórios.');
-                    return;
-                }
-                
-                // Validar datas
-                const start = new Date(startDate + 'T' + startTime);
-                const end = new Date(endDate + 'T' + endTime);
-                
-                if (end < start) {
-                    alert('A data/hora de término deve ser posterior à data/hora de início.');
-                    return;
-                }
-                
-                // Criar ou atualizar evento
-                const eventData = {
-                    title,
-                    startDate,
-                    startTime,
-                    endDate,
-                    endTime,
-                    type,
-                    projectId,
-                    location,
-                    description,
-                    team: selectedTeam,
-                    equipment: selectedEquipment
-                };
-                
-                if (currentEventId) {
-                    // Atualizar evento existente
-                    const index = events.findIndex(e => e.id === currentEventId);
-                    if (index !== -1) {
-                        events[index] = {
-                            ...events[index],
-                            ...eventData,
-                            updatedAt: new Date().toISOString()
-                        };
-                    }
-                } else {
-                    // Criar novo evento
-                    const newEvent = {
-                        id: generateId(),
-                        ...eventData,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    };
-                    
-                    events.push(newEvent);
-                }
-                
-                // Salvar eventos e atualizar calendário
-                localStorage.setItem('calendar_events', JSON.stringify(events));
-                closeModal();
-                renderCalendar();
-            }
-            
-            // Excluir evento
-            function deleteEvent(id) {
-                events = events.filter(e => e.id !== id);
-                localStorage.setItem('calendar_events', JSON.stringify(events));
-                
-                if (eventModal.classList.contains('show')) {
-                    closeModal();
-                }
-                
-                renderCalendar();
-            }
-            
-            // Abrir modal
-            function openModal() {
-                eventModal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-                loadFormSelects();
-            }
-            
-            // Fechar modal
-            function closeModal() {
-                eventModal.classList.remove('show');
-                document.body.style.overflow = '';
-                currentEventId = null;
-            }
-            
-            // Mudar mês
-            function changeMonth(delta) {
-                currentDate.setMonth(currentDate.getMonth() + delta);
-                renderCalendar();
-            }
-            
-            // Event Listeners
-            viewOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    setView(option.dataset.view);
+                    // Aqui você pode adicionar a lógica para carregar os eventos do dia
                 });
             });
-            
-            prevMonthBtn.addEventListener('click', () => changeMonth(-1));
-            nextMonthBtn.addEventListener('click', () => changeMonth(1));
-            
-            newEventBtn.addEventListener('click', () => newEvent());
-            modalClose.addEventListener('click', closeModal);
-            cancelEventBtn.addEventListener('click', closeModal);
-            
-            saveEventBtn.addEventListener('click', saveEvent);
-            
-            deleteEventBtn.addEventListener('click', () => {
-                if (confirm('Tem certeza que deseja excluir este evento?')) {
-                    deleteEvent(currentEventId);
-                }
-            });
-            
-            // Fechar modal ao clicar fora
-            eventModal.addEventListener('click', function(e) {
-                if (e.target === eventModal) {
-                    closeModal();
-                }
-            });
-            
-            // Inicialização
-            renderCalendar();
-            
-            // Adicionar eventos de exemplo se não houver nenhum
-            if (events.length === 0) {
-                const today = new Date();
-                const tomorrow = new Date(today);
-                tomorrow.setDate(today.getDate() + 1);
-                const dayAfterTomorrow = new Date(today);
-                dayAfterTomorrow.setDate(today.getDate() + 2);
-                
-                const sampleEvents = [
-                    {
-                        id: generateId(),
-                        title: 'Reunião de Pré-produção',
-                        startDate: today.toISOString().split('T')[0],
-                        startTime: '09:00',
-                        endDate: today.toISOString().split('T')[0],
-                        endTime: '10:30',
-                        type: 'meeting',
-                        projectId: projects.length > 0 ? projects[0].id : null,
-                        location: 'Sala de Reuniões',
-                        description: 'Discussão sobre o roteiro e planejamento inicial',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        title: 'Filmagem externa',
-                        startDate: tomorrow.toISOString().split('T')[0],
-                        startTime: '08:00',
-                        endDate: tomorrow.toISOString().split('T')[0],
-                        endTime: '16:00',
-                        type: 'filming',
-                        projectId: projects.length > 0 ? projects[0].id : null,
-                        location: 'Praça Central',
-                        description: 'Cenas externas com equipe completa',
-                        team: ['team1', 'team2', 'team4'],
-                        equipment: equipments.length > 0 ? [equipments[0].id, equipments[1].id] : [],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    },
-                    {
-                        id: generateId(),
-                        title: 'Edição de Vídeo',
-                        startDate: dayAfterTomorrow.toISOString().split('T')[0],
-                        startTime: '13:00',
-                        endDate: dayAfterTomorrow.toISOString().split('T')[0],
-                        endTime: '18:00',
-                        type: 'editing',
-                        projectId: projects.length > 0 ? projects[0].id : null,
-                        location: 'Estúdio',
-                        description: 'Edição de cenas gravadas anteriormente',
-                        team: ['team3'],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    }
-                ];
-                
-                events = sampleEvents;
-                localStorage.setItem('calendar_events', JSON.stringify(events));
-                renderCalendar();
+
+            // Função para abrir modal de novo evento
+            const newEventBtn = document.querySelector('.btn-primary');
+            if (newEventBtn) {
+                newEventBtn.addEventListener('click', function() {
+                    // Aqui você pode adicionar a lógica para abrir o modal de novo evento
+                    alert('Funcionalidade em desenvolvimento');
+                });
             }
         });
     </script>

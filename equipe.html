@@ -6,964 +6,217 @@
     <title>filmORG - Equipe</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="base.css">
     <style>
-        :root {
-            /* Cores Base - Esquema Minimalista */
-            --deep-space: #1A1B2E;
-            --neon-blue: #00C2FF;
-            --neon-purple: #B15EFF;
-            --cyber-green: #00FFB2;
-            --soft-white: #F4F7FF;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.05);
-            
-            /* Gradientes */
-            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            --gradient-success: linear-gradient(135deg, var(--cyber-green), var(--neon-blue));
-            
-            /* Efeitos */
-            --glass-blur: blur(10px);
-            --neon-shadow: 0 0 15px rgba(0, 194, 255, 0.3);
-            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            
-            /* Dimensões */
-            --sidebar-width: 80px;
-            --sidebar-width-expanded: 240px;
-            --header-height: 70px;
-            --border-radius: 12px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        body {
-            background-color: var(--deep-space);
-            color: var(--soft-white);
-            min-height: 100vh;
-            display: flex;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 194, 255, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(177, 94, 255, 0.05) 0%, transparent 20%);
-            background-attachment: fixed;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: rgba(26, 27, 46, 0.8);
-            backdrop-filter: var(--glass-blur);
-            border-right: 1px solid var(--glass-border);
-            height: 100vh;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            transition: width 0.3s ease;
-            z-index: 1000;
-        }
-
-        .sidebar:hover {
-            width: var(--sidebar-width-expanded);
-        }
-
-        .sidebar-logo {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: var(--header-height);
-        }
-
-        /* CORREÇÃO: Icone do Logo perfeitamente centralizado */
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 20px;
-            line-height: 0;
-            padding-bottom: 2px;
-        }
-
-        .logo-text {
-            margin-left: 15px;
-            font-size: 20px;
-            font-weight: 600;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar:hover .logo-text {
-            opacity: 1;
-        }
-
-        .sidebar-menu {
-            padding: 20px;
-            flex: 1;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--soft-white);
-            text-decoration: none;
-        }
-
-        .menu-item:hover {
-            background: var(--glass-bg);
-        }
-
-        .menu-item.active {
-            background: var(--gradient-primary);
-            box-shadow: var(--neon-shadow);
-        }
-
-        .menu-icon {
-            font-size: 20px;
-            min-width: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .menu-text {
-            margin-left: 15px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar:hover .menu-text {
-            opacity: 1;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            min-height: 100vh;
-            padding: 20px;
-            transition: margin-left 0.3s ease;
-        }
-
-        /* Header Limpo e Minimalista */
-        .header {
-            height: var(--header-height);
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
-            background: rgba(26, 27, 46, 0.8);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
-        }
-
-        .page-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--soft-white);
-            margin-right: 30px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .team-stats {
-            display: flex;
-            gap: 15px;
-            flex: 1;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding-bottom: 5px;
-        }
-
-        .stat-card {
-            background: rgba(26, 27, 46, 0.8);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            padding: 12px 15px;
-            min-width: 130px;
-            text-align: center;
-            transition: all 0.3s ease;
-            flex: 1;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 194, 255, 0.1);
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--neon-blue);
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: rgba(244, 247, 255, 0.7);
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: var(--glass-bg);
-            border-radius: 20px;
-            padding: 8px 15px;
-            width: 250px;
-            margin: 0 20px;
-            flex-shrink: 0;
-        }
-
-        .search-bar i {
-            color: var(--neon-blue);
-        }
-
-        .search-bar input {
-            background: none;
-            border: none;
-            color: var(--soft-white);
-            margin-left: 10px;
-            flex: 1;
-            outline: none;
-        }
-
-        .search-bar input::placeholder {
-            color: rgba(244, 247, 255, 0.5);
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-shrink: 0;
-        }
-
-        .notification-btn {
-            position: relative;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(26, 27, 46, 0.8);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .notification-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--neon-purple);
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-        }
-
-        .user-profile:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            line-height: 0;
-        }
-
-        .user-name {
-            font-weight: 500;
-            color: var(--soft-white);
-        }
-
-        @media (max-width: 1400px) {
-            .team-stats {
-                flex-wrap: nowrap;
-            }
-            
-            .stat-card {
-                min-width: 120px;
-            }
-            
-            .search-bar {
-                width: 200px;
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .header {
-                flex-wrap: wrap;
-                height: auto;
-                padding: 15px 20px;
-                gap: 15px;
-            }
-
-            .page-title {
-                margin-right: 0;
-                flex: 1;
-            }
-            
-            .search-bar {
-                order: 3;
-                width: 100%;
-                margin: 10px 0 0 0;
-            }
-
-            .team-stats {
-                order: 4;
-                width: 100%;
-                margin-top: 15px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                padding: 15px;
-                gap: 10px;
-            }
-
-            .page-title {
-                width: 100%;
-                font-size: 20px;
-            }
-            
-            .header-actions {
-                margin-left: auto;
-            }
-
-            .user-name {
-                display: none;
-            }
-            
-            .stat-card {
-                min-width: 110px;
-                padding: 10px;
-            }
-            
-            .stat-value {
-                font-size: 20px;
-            }
-        }
-
-        /* Action Bar em Duas Linhas */
-        .action-bar {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: rgba(26, 27, 46, 0.8);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--glass-border);
-            margin-bottom: 20px;
-        }
-
-        .action-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .filters-row-1, .filters-row-2 {
-            display: flex;
-            gap: 10px;
-            flex: 1;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding-bottom: 5px;
-        }
-
-        .filters-row-1::-webkit-scrollbar, .filters-row-2::-webkit-scrollbar {
-            display: none;
-        }
-
-        .filter-select {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--soft-white);
-            padding: 8px 12px;
-            border-radius: var(--border-radius);
-            outline: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 150px;
-            font-size: 14px;
-            flex: 1;
-        }
-
-        .filter-select:hover {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 10px rgba(0, 194, 255, 0.1);
-        }
-
-        .filter-select:focus {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 194, 255, 0.2);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: var(--border-radius);
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: var(--soft-white);
-        }
-
-        .btn-primary:hover {
-            box-shadow: var(--neon-shadow);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-        }
-
-        .btn-outline:hover {
-            background: rgba(0, 194, 255, 0.1);
-        }
-
-        /* Responsividade para Action Bar */
-        @media (max-width: 992px) {
-            .action-row {
-                flex-wrap: wrap;
-            }
-            
-            .filters-row-1, .filters-row-2 {
-                width: 100%;
-            }
-            
-            .action-buttons {
-                width: 100%;
-                justify-content: flex-end;
-                margin-top: 10px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .filter-select {
-                min-width: 120px;
-            }
-            
-            .action-buttons {
-                justify-content: space-between;
-            }
-            
-            .btn {
-                flex: 1;
-                justify-content: center;
-            }
-        }
-
-        /* Team Grid View */
         .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
-        .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            background: rgba(26, 27, 46, 0.8);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--glass-border);
-        }
-
-        .no-results i {
-            font-size: 48px;
-            color: var(--neon-blue);
-            margin-bottom: 15px;
-        }
-
-        .no-results p {
-            font-size: 16px;
-            color: rgba(244, 247, 255, 0.7);
-            margin-bottom: 20px;
-        }
-
-        .no-results .btn {
-            margin: 0 auto;
-        }
-
-        .team-card {
-            background: rgba(26, 27, 46, 0.8);
+        .member-card {
+            background: rgba(26, 27, 46, 0.95);
             backdrop-filter: var(--glass-blur);
             border-radius: var(--border-radius);
             border: 1px solid var(--glass-border);
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            position: relative;
+            padding: 20px;
+            transition: all 0.3s ease;
         }
 
-        .team-card:hover {
+        .member-card:hover {
             transform: translateY(-5px);
+            border-color: var(--neon-blue);
             box-shadow: var(--neon-shadow);
         }
 
-        .delete-member-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: rgba(255, 87, 87, 0.2);
-            border: none;
-            color: #ff5757;
+        .member-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0;
-            z-index: 3;
-        }
-
-        .team-card:hover .delete-member-btn {
-            opacity: 1;
-        }
-
-        .delete-member-btn:hover {
-            background: rgba(255, 87, 87, 0.3);
-            transform: scale(1.1);
-        }
-
-        /* Ajuste do Card */
-        .card-cover {
-            height: 60px;
-            background: var(--gradient-primary);
-            position: relative;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .member-avatar {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: var(--deep-space);
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 3px solid var(--deep-space);
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 600;
-            color: var(--soft-white);
-            line-height: 0;
-            z-index: 2;
-            overflow: hidden;
+            color: var(--deep-space);
         }
 
-        .card-body {
-            padding: 50px 20px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            text-align: center;
+        .member-info {
+            flex: 1;
         }
 
         .member-name {
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 500;
             margin-bottom: 5px;
         }
 
         .member-role {
-            color: var(--neon-blue);
             font-size: 14px;
-            margin-bottom: 15px;
+            color: var(--neon-blue);
         }
 
-        /* Estilo Monday.com para especialidades */
-        .specialties-grid {
+        .member-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .status-active {
+            background: rgba(0, 255, 157, 0.2);
+            color: #00FF9D;
+        }
+
+        .status-busy {
+            background: rgba(255, 184, 0, 0.2);
+            color: #FFB800;
+        }
+
+        .status-offline {
+            background: rgba(255, 94, 94, 0.2);
+            color: #FF5E5E;
+        }
+
+        .member-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .detail-value {
+            color: var(--soft-white);
+            font-weight: 500;
+        }
+
+        .member-projects {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 15px;
+        }
+
+        .projects-title {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .project-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            justify-content: center;
-            margin: 15px 0;
         }
 
-        .specialty-box {
-            padding: 6px 12px;
-            border-radius: 12px;
+        .project-tag {
+            background: var(--glass-bg);
+            padding: 4px 8px;
+            border-radius: 15px;
             font-size: 12px;
-            font-weight: 500;
-            background: rgba(0, 245, 255, 0.1);
-            color: var(--neon-blue);
-            border: 1px solid rgba(0, 245, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .specialty-box:hover {
-            background: rgba(0, 245, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .member-info {
-            margin-top: auto;
-            padding-top: 15px;
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            justify-content: center;
-            font-size: 13px; /* Reduzindo o tamanho da fonte */
-            white-space: nowrap; /* Evita quebra de linha */
-            overflow: hidden; /* Esconde o excesso */
-            text-overflow: ellipsis; /* Adiciona ... quando necessário */
-        }
-
-        .info-item:last-child {
-            margin-top: 5px;
-        }
-
-        .info-item span {
-            max-width: 150px; /* Limita a largura máxima */
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Estilos para o Menu de Disponibilidade */
-        .availability-status {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            background-color: rgba(26, 27, 46, 0.8);
-        }
-
-        .availability-status:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .availability-status.disponivel {
-            color: var(--cyber-green);
-        }
-
-        .availability-status.ocupado {
-            color: var(--neon-purple);
-        }
-
-        .availability-status.indisponivel {
-            color: #ff5757;
-        }
-
-        .availability-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: rgba(26, 27, 46, 0.95);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            padding: 8px 0;
-            display: none;
-            z-index: 1000;
-            min-width: 200px;
-            margin-top: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .availability-menu.show {
-            display: block !important;
-        }
-
-        .availability-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .availability-option:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .availability-option i {
-            font-size: 16px;
-        }
-
-        .availability-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            font-size: 13px;
-            color: rgba(244, 247, 255, 0.7);
-            border-top: 1px solid var(--glass-border);
-            margin-top: 5px;
-        }
-
-        .availability-info i {
-            color: var(--neon-blue);
-            font-size: 16px;
-        }
-
-        .member-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .stat-value {
-            font-size: 18px;
-            font-weight: 600;
             color: var(--soft-white);
         }
 
-        .stat-label {
-            font-size: 12px;
-            color: rgba(244, 247, 255, 0.7);
-        }
-
-        .card-tags {
-            padding-top: 15px;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .member-tag {
-            font-size: 12px;
-            padding: 3px 8px;
-            border-radius: 12px;
-            background: rgba(0, 245, 255, 0.1);
-            color: var(--neon-blue);
-        }
-
-        /* Team List View */
-        .team-list {
-            background: rgba(26, 27, 46, 0.8);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--glass-border);
-            overflow: hidden;
-        }
-
-        .team-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .team-table th,
-        .team-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .team-table th {
-            background: rgba(0, 245, 255, 0.1);
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .team-table tbody tr {
-            transition: background 0.3s;
-            cursor: pointer;
-        }
-
-        .team-table tbody tr:hover {
-            background: var(--glass-bg);
-        }
-
-        .team-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .member-cell {
+        .filters {
             display: flex;
-            align-items: center;
             gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        /* CORREÇÃO: Avatar na lista com centralização corrigida */
-        .list-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            line-height: 0;
-        }
-
-        .availability-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 8px;
-            display: inline-block;
-        }
-
-        .available {
-            background-color: var(--cyber-green);
-        }
-
-        .busy {
-            background-color: var(--neon-purple);
-        }
-
-        .unavailable {
-            background-color: #ff5757;
-        }
-
-        .action-cell {
+        .filter-group {
             display: flex;
             gap: 10px;
         }
 
-        .action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+        .filter-btn {
+            background: var(--glass-bg);
+            border: none;
+            color: var(--soft-white);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .filter-btn.active {
+            background: var(--neon-blue);
+            color: var(--deep-space);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--soft-white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 8px 15px;
+            padding-left: 35px;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
         }
 
-        .action-btn:hover {
-            background: rgba(0, 245, 255, 0.1);
-            border-color: var(--neon-blue);
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(244, 247, 255, 0.5);
         }
 
-        /* Member Modal */
-        .modal-overlay {
+        .member-modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 27, 46, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
         }
 
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: var(--deep-space);
+            border: 1px solid var(--glass-border);
             border-radius: var(--border-radius);
+            padding: 25px;
             width: 90%;
             max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--card-shadow);
-            padding: 0;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 20px;
         }
 
         .modal-title {
@@ -979,18 +232,6 @@
             cursor: pointer;
         }
 
-        .modal-body {
-            padding: 20px;
-        }
-
-        .modal-footer {
-            padding: 20px;
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -998,855 +239,70 @@
         .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 14px;
+            color: var(--soft-white);
         }
 
-        .form-control {
+        .form-input {
             width: 100%;
-            background: rgba(26, 27, 46, 0.8);
+            background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--soft-white);
             padding: 10px 15px;
             border-radius: var(--border-radius);
             outline: none;
-            font-size: 14px;
-        }
-
-        .form-control:focus {
-            border-color: var(--neon-blue);
         }
 
         .form-select {
             width: 100%;
-            background: rgba(26, 27, 46, 0.8);
+            background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--soft-white);
             padding: 10px 15px;
             border-radius: var(--border-radius);
             outline: none;
-            font-size: 14px;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23F4F7FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 20px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-        }
-
-        .btn-outline:hover {
-            background: rgba(0, 245, 255, 0.1);
-        }
-
-        .btn-danger {
-            background: rgba(255, 87, 87, 0.2);
-            color: rgb(255, 100, 100);
-            border: 1px solid rgba(255, 87, 87, 0.3);
-        }
-
-        .btn-danger:hover {
-            background: rgba(255, 87, 87, 0.3);
-        }
-
-        /* Member Details */
-        .member-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .detail-header {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .detail-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: 600;
-            color: var(--soft-white);
-            line-height: 0;
-        }
-
-        .detail-info {
-            flex: 1;
-        }
-
-        .detail-name {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .detail-role {
-            color: var(--neon-blue);
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        .detail-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: rgba(244, 247, 255, 0.7);
-        }
-
-        .meta-item i {
-            color: var(--neon-blue);
-            font-size: 18px;
-        }
-
-        .detail-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .section-title i {
-            color: var(--neon-blue);
-            font-size: 20px;
-        }
-
-        .section-content {
-            background: rgba(26, 27, 46, 0.8);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--glass-border);
-            padding: 20px;
-        }
-
-        .skill-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .skill-tag {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 12px;
-            background: rgba(0, 245, 255, 0.1);
-            border-radius: 20px;
-            font-size: 14px;
-            color: var(--neon-blue);
-        }
-
-        .skill-tag i {
-            font-size: 16px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .info-grid .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .info-grid .info-item label {
-            color: rgba(244, 247, 255, 0.7);
-            font-size: 14px;
-        }
-
-        .info-grid .info-item span {
-            font-size: 16px;
-            color: var(--soft-white);
-        }
-
-        @media (max-width: 768px) {
-            .detail-header {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .detail-meta {
-                justify-content: center;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Estilos do Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(26, 27, 46, 0.9);
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background: var(--deep-space);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--glass-border);
-            width: 90%;
-            max-width: 600px;
-            margin: 50px auto;
-            position: relative;
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-body {
-            padding: 20px;
-            max-height: calc(100vh - 150px);
-            overflow-y: auto;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: var(--soft-white);
             cursor: pointer;
-            font-size: 24px;
         }
 
-        /* Estilos do Formulário */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--soft-white);
-        }
-
-        input, select, textarea {
+        .form-textarea {
             width: 100%;
-            padding: 10px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
             color: var(--soft-white);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
             outline: none;
-        }
-
-        textarea {
-            height: 100px;
             resize: vertical;
+            min-height: 100px;
         }
 
-        .upload-area {
-            text-align: center;
-            padding: 20px;
-            background: var(--glass-bg);
-            border-radius: var(--border-radius);
-            border: 2px dashed var(--glass-border);
-        }
-
-        .upload-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: var(--deep-space);
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-        }
-
-        .tags-input {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            padding: 10px;
-        }
-
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        .tag {
-            background: var(--gradient-primary);
-            padding: 5px 10px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .tag i {
-            cursor: pointer;
-        }
-
-        .form-actions {
+        .modal-footer {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 30px;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Status Grid */
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-        }
-
-        .status-item {
-            background: rgba(26, 27, 46, 0.8);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .status-item.active {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 194, 255, 0.1);
-        }
-
-        .status-value {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--neon-blue);
-            margin-bottom: 5px;
-        }
-
-        .status-label {
-            font-size: 14px;
-            color: rgba(244, 247, 255, 0.7);
-        }
-
-        /* Projects List */
-        .projects-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .section-link {
-            margin-left: auto;
-            font-size: 14px;
-            color: var(--neon-blue);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .section-link:hover {
-            color: var(--soft-white);
-        }
-
-        .project-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: rgba(26, 27, 46, 0.8);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: var(--soft-white);
-        }
-
-        .project-item:hover {
-            border-color: var(--neon-blue);
-            transform: translateX(5px);
-            background: rgba(26, 27, 46, 0.9);
-        }
-
-        .project-info {
-            flex: 1;
-        }
-
-        .project-name {
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .project-dates {
-            font-size: 12px;
-            color: rgba(244, 247, 255, 0.7);
-        }
-
-        .project-status {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            text-transform: capitalize;
-        }
-
-        .project-status.em-andamento {
-            background: rgba(0, 245, 255, 0.1);
-            color: var(--neon-blue);
-        }
-
-        .project-status.concluido {
-            background: rgba(0, 255, 178, 0.1);
-            color: var(--cyber-green);
-        }
-
-        .project-status.atrasado {
-            background: rgba(255, 87, 87, 0.1);
-            color: rgb(255, 100, 100);
-        }
-
-        /* Events List */
-        .events-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .event-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: rgba(26, 27, 46, 0.8);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: var(--soft-white);
-        }
-
-        .event-item:hover {
-            border-color: var(--neon-purple);
-            transform: translateX(5px);
-            background: rgba(26, 27, 46, 0.9);
-        }
-
-        .event-info {
-            flex: 1;
-        }
-
-        .event-name {
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .event-type {
-            font-size: 12px;
-            color: var(--neon-purple);
-            text-transform: capitalize;
-        }
-
-        .event-time {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 12px;
-            color: rgba(244, 247, 255, 0.7);
-        }
-
-        .event-time i {
-            color: var(--neon-purple);
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
-            .status-grid {
+            .filters {
+                flex-direction: column;
+            }
+
+            .search-box {
+                order: -1;
+            }
+
+            .filter-group {
+                flex-wrap: wrap;
+            }
+
+            .team-grid {
                 grid-template-columns: 1fr;
             }
 
-            .project-item,
-            .event-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
+            .modal-content {
+                width: 95%;
+                padding: 20px;
             }
-
-            .project-status,
-            .event-time {
-                align-self: flex-start;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .action-bar {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .filters {
-                width: 100%;
-            }
-
-            .filter-select {
-                flex: 1;
-                min-width: 0;
-            }
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .action-bar {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .filters {
-                width: 100%;
-            }
-
-            .action-buttons {
-                width: 100%;
-                justify-content: flex-end;
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .team-stats {
-                display: none;
-            }
-        }
-
-        /* Estilo do Select */
-        .filter-select option {
-            background: var(--deep-space);
-            color: var(--soft-white);
-            padding: 10px;
-        }
-
-        .filter-select:focus option:hover {
-            background: var(--glass-bg);
-        }
-
-        /* Simplificação do Modal de Adicionar Membro */
-        .modal-content {
-            max-width: 500px;
-            margin: 20px auto;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        @media (min-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .upload-area {
-            padding: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .upload-preview {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 10px;
-        }
-
-        .tags-input {
-            margin-top: 5px;
-        }
-
-        /* Estilo dos Selects */
-        select.form-select, select.filter-select {
-            background-color: var(--deep-space);
-            color: var(--soft-white);
-            border: 1px solid var(--glass-border);
-            padding: 8px 15px;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23F4F7FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 20px;
-        }
-
-        select.form-select option, select.filter-select option {
-            background-color: var(--deep-space);
-            color: var(--soft-white);
-            padding: 8px;
-        }
-
-        select.form-select:hover, select.filter-select:hover {
-            border-color: var(--neon-blue);
-        }
-
-        /* Estilo dos Checkboxes de Especialidades */
-        .specialties-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .specialty-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .specialty-checkbox:hover {
-            border-color: var(--neon-blue);
-            background: rgba(0, 245, 255, 0.1);
-        }
-
-        .specialty-checkbox input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--neon-blue);
-        }
-
-        .specialty-checkbox label {
-            cursor: pointer;
-            margin: 0;
-            flex: 1;
-        }
-
-        /* Estilo do Preview de Foto */
-        .photo-upload-section {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
-            background: var(--glass-bg);
-            border-radius: var(--border-radius);
-            border: 2px dashed var(--glass-border);
-        }
-
-        .photo-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            background: var(--deep-space);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 3px solid var(--glass-border);
-        }
-
-        .photo-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .photo-preview i {
-            font-size: 48px;
-            color: var(--soft-white);
-        }
-
-        @keyframes highlightCard {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.4);
-            }
-            50% {
-                transform: scale(1.03);
-                box-shadow: 0 0 20px 10px rgba(0, 245, 255, 0.2);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0);
-            }
-        }
-
-        /* Estilo para o preview da foto */
-        .photo-preview-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .photo-preview-modal.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .photo-preview-content {
-            position: relative;
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--neon-shadow);
-        }
-
-        .photo-preview-content img {
-            display: block;
-            max-width: 100%;
-            max-height: 90vh;
-            object-fit: contain;
-        }
-
-        .photo-preview-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--glass-bg);
-            border: none;
-            color: var(--soft-white);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            transition: all 0.3s ease;
-        }
-
-        .photo-preview-close:hover {
-            background: var(--neon-blue);
-            transform: rotate(90deg);
-        }
-
-        /* Estilo para o botão de fechar */
-        .close-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1px solid var(--glass-border);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--soft-white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(90deg);
-            border-color: var(--neon-blue);
-        }
-
-        .close-btn:hover::before {
-            opacity: 1;
-        }
-
-        .close-btn::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 0;
-            border-radius: 50%;
-        }
-
-        .close-btn i {
-            font-size: 18px;
-            z-index: 1;
-            background: linear-gradient(135deg, var(--soft-white), var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -1867,6 +323,10 @@
                 <i class="menu-icon ri-movie-line"></i>
                 <span class="menu-text">Projetos</span>
             </a>
+            <a href="roteiro.html" class="menu-item">
+                <i class="menu-icon ri-file-text-line"></i>
+                <span class="menu-text">Roteiros</span>
+            </a>
             <a href="equipe.html" class="menu-item active">
                 <i class="menu-icon ri-team-line"></i>
                 <span class="menu-text">Equipe</span>
@@ -1874,6 +334,10 @@
             <a href="equipamentos.html" class="menu-item">
                 <i class="menu-icon ri-camera-line"></i>
                 <span class="menu-text">Equipamentos</span>
+            </a>
+            <a href="analytics.html" class="menu-item">
+                <i class="menu-icon ri-bar-chart-line"></i>
+                <span class="menu-text">Analytics</span>
             </a>
             <a href="agenda.html" class="menu-item">
                 <i class="menu-icon ri-calendar-line"></i>
@@ -1890,1540 +354,258 @@
         </nav>
     </div>
 
-    <!-- Main Content -->
+    <!-- Overlay para mobile -->
+    <div class="mobile-overlay"></div>
+
+    <!-- Conteúdo principal -->
     <div class="main-content">
-        <div class="header">
+        <div class="page-header">
             <h1 class="page-title">Equipe</h1>
-            
-            <div class="team-stats">
-                <div class="stat-card">
-                    <div class="stat-value" id="total-members">0</div>
-                    <div class="stat-label">Total de Membros</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="active-members">0</div>
-                    <div class="stat-label">Membros Disponíveis</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="active-projects">0</div>
-                    <div class="stat-label">Projetos Ativos</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="upcoming-events">0</div>
-                    <div class="stat-label">Eventos Agendados</div>
-                </div>
-            </div>
-            
-            <div class="search-bar">
-                <i class="ri-search-line"></i>
-                <input type="text" placeholder="Buscar membros..." id="search-input">
-            </div>
-            
-            <div class="header-actions">
-                <div class="notification-btn">
-                    <i class="ri-notification-3-line"></i>
-                    <div class="notification-badge">3</div>
-                </div>
-                
-                <div class="user-profile">
-                    <div class="user-avatar" id="user-initial">U</div>
-                    <span class="user-name" id="user-name">Usuário</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Barra de ações -->
-        <div class="action-bar">
-            <div class="action-row">
-                <div class="filters-row-1">
-                    <select class="filter-select" data-filter="role">
-                        <option value="">Todos os Cargos</option>
-                        <option value="diretor">Diretor</option>
-                        <option value="fotografo">Fotógrafo</option>
-                        <option value="editor">Editor</option>
-                        <option value="produtor">Produtor</option>
-                        <option value="som">Técnico de Som</option>
-                        <option value="assistente">Assistente</option>
-                    </select>
-                    
-                    <select class="filter-select" data-filter="availability">
-                        <option value="">Todas as Disponibilidades</option>
-                        <option value="disponivel">Disponível</option>
-                        <option value="ocupado">Ocupado</option>
-                        <option value="indisponivel">Indisponível</option>
-                    </select>
-
-                    <select class="filter-select" data-filter="experience">
-                        <option value="">Todos os Níveis</option>
-                        <option value="junior">Júnior</option>
-                        <option value="pleno">Pleno</option>
-                        <option value="senior">Sênior</option>
-                    </select>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="btn btn-outline" onclick="TeamManager.exportTeamData()">
-                        <i class="ri-download-line"></i>
-                        Exportar Dados
-                    </button>
-                </div>
-            </div>
-            
-            <div class="action-row">
-                <div class="filters-row-2">
-                    <select class="filter-select" data-filter="specialty">
-                        <option value="">Todas as Especialidades</option>
-                        <option value="filmagem">Filmagem</option>
-                        <option value="edicao">Edição</option>
-                        <option value="iluminacao">Iluminação</option>
-                        <option value="som">Som</option>
-                        <option value="producao">Produção</option>
-                    </select>
-
-                    <select class="filter-select" data-filter="projectStatus">
-                        <option value="">Status do Projeto</option>
-                        <option value="em-andamento">Em Andamento</option>
-                        <option value="concluido">Concluído</option>
-                        <option value="atrasado">Atrasado</option>
-                    </select>
-                    
-                    <select class="filter-select" data-filter="sort">
-                        <option value="">Ordenar por</option>
-                        <option value="name">Nome</option>
-                        <option value="role">Cargo</option>
-                        <option value="projects">Projetos Ativos</option>
-                        <option value="events">Eventos Agendados</option>
-                        <option value="recent">Mais Recentes</option>
-                    </select>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="openModal()">
-                        <i class="ri-user-add-line"></i>
-                        Adicionar Membro
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Visualização em Grid -->
-        <div class="team-grid" id="grid-view">
-            <!-- Cards dos membros da equipe serão carregados dinamicamente -->
-        </div>
-        
-        <!-- Visualização em Lista -->
-        <div class="team-list" id="list-view" style="display: none;">
-            <table class="team-table">
-                <thead>
-                    <tr>
-                        <th>Membro</th>
-                        <th>Função</th>
-                        <th>Contato</th>
-                        <th>Disponibilidade</th>
-                        <th>Projetos</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="team-table-body">
-                    <!-- Linhas da tabela serão carregadas dinamicamente -->
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Modal de Membro -->
-        <div class="modal-overlay" id="member-modal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modal-title">Novo Membro</h3>
-                    <button class="close-btn" id="modal-close">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form id="member-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="member-name" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="member-name" placeholder="Nome completo" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="member-role" class="form-label">Função</label>
-                                <select class="form-select" id="member-role" required>
-                                    <option value="">Selecione uma função</option>
-                                    <option value="director">Diretor</option>
-                                    <option value="cinematographer">Cinegrafista</option>
-                                    <option value="editor">Editor</option>
-                                    <option value="producer">Produtor</option>
-                                    <option value="sound">Técnico de Som</option>
-                                    <option value="assistant">Assistente</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="member-email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="member-email" placeholder="email@exemplo.com" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="member-phone" class="form-label">Telefone</label>
-                                <input type="tel" class="form-control" id="member-phone" placeholder="(00) 00000-0000">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="member-skills" class="form-label">Habilidades (separadas por vírgula)</label>
-                            <input type="text" class="form-control" id="member-skills" placeholder="Filmagem, Edição, Iluminação, etc.">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="member-availability" class="form-label">Disponibilidade</label>
-                            <select class="form-select" id="member-availability" required>
-                                <option value="available">Disponível</option>
-                                <option value="busy">Ocupado</option>
-                                <option value="unavailable">Indisponível</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="member-notes" class="form-label">Observações</label>
-                            <textarea class="form-control" id="member-notes" rows="3" placeholder="Informações adicionais sobre o membro"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-danger" id="delete-member-btn" style="display: none; margin-right: auto;">Excluir</button>
-                    <button class="btn btn-outline" id="cancel-btn">Cancelar</button>
-                    <button class="btn btn-primary" id="save-member-btn">Salvar</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Modal de Detalhes do Membro -->
-        <div class="modal-overlay" id="details-modal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">Detalhes do Membro</h3>
-                    <button class="close-btn" id="details-close">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="member-details" id="member-details">
-                        <!-- Detalhes do membro serão carregados dinamicamente -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-outline" id="details-edit-btn">Editar</button>
-                    <button class="btn btn-primary" id="details-close-btn">Fechar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Cadastro de Membro -->
-        <div class="modal" id="addMemberModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Novo Membro</h2>
-                    <button class="close-btn" id="modal-close">
-                        <i class="ri-close-line"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addMemberForm" class="simplified-form">
-                        <div class="photo-upload-section">
-                            <div class="photo-preview">
-                                <i class="ri-user-3-line"></i>
-                            </div>
-                            <input type="file" id="profilePhoto" accept="image/*" hidden>
-                            <button type="button" class="btn btn-outline" onclick="document.getElementById('profilePhoto').click()">
-                                <i class="ri-camera-line"></i>
-                                Adicionar Foto
-                            </button>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Nome</label>
-                                <input type="text" name="name" required placeholder="Nome completo">
-                            </div>
-                            <div class="form-group">
-                                <label>Cargo</label>
-                                <select name="role" class="form-select" required>
-                                    <option value="">Selecione o cargo</option>
-                                    <option value="diretor">Diretor</option>
-                                    <option value="fotografo">Fotógrafo</option>
-                                    <option value="editor">Editor</option>
-                                    <option value="produtor">Produtor</option>
-                                    <option value="som">Técnico de Som</option>
-                                    <option value="assistente">Assistente</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" name="email" required placeholder="email@exemplo.com">
-                            </div>
-                            <div class="form-group">
-                                <label>Telefone</label>
-                                <input type="tel" name="phone" placeholder="(00) 00000-0000">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Disponibilidade</label>
-                                <select name="availability" class="form-select" required>
-                                    <option value="disponivel">Disponível</option>
-                                    <option value="ocupado">Ocupado</option>
-                                    <option value="indisponivel">Indisponível</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Experiência</label>
-                                <select name="experience" class="form-select" required>
-                                    <option value="junior">Júnior</option>
-                                    <option value="pleno">Pleno</option>
-                                    <option value="senior">Sênior</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Especialidades</label>
-                            <div class="specialties-grid">
-                                <div class="specialty-checkbox">
-                                    <input type="checkbox" id="spec-filmagem" value="Filmagem">
-                                    <label for="spec-filmagem">Filmagem</label>
-                                </div>
-                                <div class="specialty-checkbox">
-                                    <input type="checkbox" id="spec-edicao" value="Edição">
-                                    <label for="spec-edicao">Edição</label>
-                                </div>
-                                <div class="specialty-checkbox">
-                                    <input type="checkbox" id="spec-som" value="Som">
-                                    <label for="spec-som">Som</label>
-                                </div>
-                                <div class="specialty-checkbox">
-                                    <input type="checkbox" id="spec-iluminacao" value="Iluminação">
-                                    <label for="spec-iluminacao">Iluminação</label>
-                                </div>
-                                <div class="specialty-checkbox">
-                                    <input type="checkbox" id="spec-direcao" value="Direção">
-                                    <label for="spec-direcao">Direção</label>
-                                </div>
-                                <div class="specialty-checkbox">
-                                    <input type="checkbox" id="spec-producao" value="Produção">
-                                    <label for="spec-producao">Produção</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-outline" onclick="closeModal()">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Salvar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Preview de Foto -->
-    <div class="photo-preview-modal" id="photoPreviewModal">
-        <div class="photo-preview-content">
-            <img id="photoPreviewImage" src="" alt="Preview da foto">
-            <button class="photo-preview-close" onclick="closePhotoPreview()">
-                <i class="ri-close-line"></i>
-            </button>
-        </div>
-    </div>
-
-    <script>
-        // Gerenciamento de Estado e Persistência
-        const TeamManager = {
-            members: [],
-            projects: [],
-            events: [],
-            filters: {
-                role: '',
-                availability: '',
-                searchTerm: '',
-                sort: ''
-            },
-            
-            // Inicializar dados e eventos
-            init() {
-                this.loadFromStorage();
-                this.loadProjects();
-                this.loadEvents();
-                this.setupEventListeners();
-                this.render();
-            },
-
-            // Configurar event listeners
-            setupEventListeners() {
-                // Listener para busca
-                document.getElementById('search-input')?.addEventListener('input', (e) => {
-                    this.filters.searchTerm = e.target.value.toLowerCase();
-                    this.render();
-                });
-
-                // Listeners para filtros
-                document.querySelectorAll('.filter-select').forEach(select => {
-                    select.addEventListener('change', (e) => {
-                        const filterType = e.target.dataset.filter;
-                        this.filters[filterType] = e.target.value;
-                        this.render();
-                    });
-                });
-            },
-
-            // Busca avançada com filtros combinados
-            advancedSearch() {
-                return this.members.filter(member => {
-                    // Filtro por termo de busca em múltiplos campos
-                    const searchMatch = !this.filters.searchTerm || [
-                        member.name,
-                        member.role,
-                        member.email,
-                        member.phone,
-                        member.bio,
-                        ...(member.specialties || [])
-                    ].some(field => field?.toLowerCase().includes(this.filters.searchTerm));
-
-                    // Filtro por cargo
-                    const roleMatch = !this.filters.role || member.role.toLowerCase() === this.filters.role.toLowerCase();
-
-                    // Filtro por disponibilidade
-                    const availabilityMatch = !this.filters.availability || member.availability.toLowerCase() === this.filters.availability.toLowerCase();
-
-                    // Filtro por nível de experiência
-                    const experienceMatch = !this.filters.experience || member.experience === this.filters.experience;
-
-                    // Filtro por especialidades
-                    const specialtiesMatch = !this.filters.specialty || 
-                        (member.specialties && member.specialties.includes(this.filters.specialty));
-
-                    // Filtro por status de projeto
-                    const projectStatusMatch = !this.filters.projectStatus || 
-                        this.getMemberProjects(member.id).some(p => p.status === this.filters.projectStatus);
-
-                    return searchMatch && 
-                           roleMatch && 
-                           availabilityMatch && 
-                           experienceMatch && 
-                           specialtiesMatch && 
-                           projectStatusMatch;
-                });
-            },
-
-            // Atualizar o método filterMembers para usar a busca avançada
-            filterMembers() {
-                const filteredMembers = this.advancedSearch();
-                return this.sortMembers(filteredMembers);
-            },
-
-            // Ordenar membros
-            sortMembers(members) {
-                if (!this.filters.sort) return members;
-
-                return [...members].sort((a, b) => {
-                    switch (this.filters.sort) {
-                        case 'name':
-                            return a.name.localeCompare(b.name);
-                        
-                        case 'role':
-                            return a.role.localeCompare(b.role);
-                        
-                        case 'projects':
-                            const aProjects = this.getMemberProjects(a.id).length;
-                            const bProjects = this.getMemberProjects(b.id).length;
-                            return bProjects - aProjects;
-                        
-                        case 'events':
-                            const aEvents = this.getMemberEvents(a.id).length;
-                            const bEvents = this.getMemberEvents(b.id).length;
-                            return bEvents - aEvents;
-                        
-                        case 'recent':
-                            return new Date(b.createdAt) - new Date(a.createdAt);
-                        
-                        default:
-                            return 0;
-                    }
-                });
-            },
-
-            // Renderizar lista de membros
-            render() {
-                const container = document.querySelector('.team-grid');
-                if (!container) return;
-                
-                // Limpar container
-                container.innerHTML = '';
-                
-                // Filtrar membros
-                let filteredMembers = this.filterMembers();
-                
-                // Ordenar membros
-                filteredMembers = this.sortMembers(filteredMembers);
-                
-                if (filteredMembers.length === 0) {
-                    container.innerHTML = `
-                        <div class="no-results">
-                            <i class="ri-search-line"></i>
-                            <p>Nenhum membro encontrado com os filtros atuais</p>
-                            <button class="btn btn-outline" onclick="TeamManager.clearFilters()">
-                                Limpar Filtros
-                            </button>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Renderizar cada membro
-                filteredMembers.forEach(member => {
-                    const card = this.createMemberCard(member);
-                    container.appendChild(card);
-                });
-            },
-
-            // Limpar todos os filtros
-            clearFilters() {
-                this.filters = {
-                    role: '',
-                    availability: '',
-                    searchTerm: '',
-                    sort: ''
-                };
-                
-                // Resetar elementos do DOM
-                document.getElementById('search-input').value = '';
-                document.querySelectorAll('.filter-select').forEach(select => {
-                    select.value = '';
-                });
-                
-                this.render();
-            },
-            
-            // Carregar dados do localStorage
-            loadFromStorage() {
-                try {
-                    const stored = localStorage.getItem('team_members');
-                    this.members = stored ? JSON.parse(stored) : [];
-                } catch (error) {
-                    console.error('Erro ao carregar dados:', error);
-                    this.members = [];
-                }
-            },
-            
-            // Carregar projetos do localStorage
-            loadProjects() {
-                try {
-                    const stored = localStorage.getItem('projects');
-                    this.projects = stored ? JSON.parse(stored) : [];
-                } catch (error) {
-                    console.error('Erro ao carregar projetos:', error);
-                    this.projects = [];
-                }
-            },
-            
-            // Carregar eventos do localStorage
-            loadEvents() {
-                try {
-                    const stored = localStorage.getItem('calendar_events');
-                    this.events = stored ? JSON.parse(stored) : [];
-                } catch (error) {
-                    console.error('Erro ao carregar eventos:', error);
-                    this.events = [];
-                }
-            },
-            
-            // Obter projetos de um membro
-            getMemberProjects(memberId) {
-                return this.projects.filter(project => 
-                    project.team && project.team.includes(memberId)
-                );
-            },
-            
-            // Obter eventos de um membro
-            getMemberEvents(memberId) {
-                return this.events.filter(event => 
-                    event.team && event.team.includes(memberId)
-                );
-            },
-            
-            // Obter disponibilidade do membro
-            getMemberAvailability(memberId) {
-                const member = this.getMemberById(memberId);
-                if (!member) return null;
-
-                const events = this.getMemberEvents(memberId);
-                const projects = this.getMemberProjects(memberId);
-                
-                // Verificar eventos e projetos atuais
-                const now = new Date();
-                const currentEvent = events.find(event => {
-                    const startDate = new Date(`${event.startDate} ${event.startTime}`);
-                    const endDate = new Date(`${event.endDate} ${event.endTime}`);
-                    return now >= startDate && now <= endDate;
-                });
-                
-                const currentProject = projects.find(project => {
-                    const startDate = new Date(project.startDate);
-                    const endDate = project.endDate ? new Date(project.endDate) : null;
-                    return now >= startDate && (!endDate || now <= endDate);
-                });
-                
-                // Determinar disponibilidade automática baseada em eventos e projetos
-                let autoStatus = 'disponivel';
-                if (currentEvent) {
-                    autoStatus = 'ocupado';
-                } else if (currentProject && currentProject.status === 'em-andamento') {
-                    autoStatus = 'ocupado';
-                }
-                
-                // Se o status manual for diferente de 'disponivel', ele tem precedência
-                const status = member.availability !== 'disponivel' ? member.availability : autoStatus;
-                
-                return {
-                    status,
-                    currentEvent,
-                    currentProject,
-                    manualStatus: member.availability,
-                    autoStatus
-                };
-            },
-            
-            // Salvar dados no localStorage
-            saveToStorage() {
-                try {
-                    localStorage.setItem('team_members', JSON.stringify(this.members));
-                } catch (error) {
-                    console.error('Erro ao salvar dados:', error);
-                }
-            },
-            
-            // Adicionar novo membro
-            addMember(memberData) {
-                const newMember = {
-                    id: Date.now().toString(),
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    ...memberData
-                };
-                
-                this.members.push(newMember);
-                this.saveToStorage();
-                this.render();
-                return newMember;
-            },
-            
-            // Atualizar membro existente
-            updateMember(id, memberData) {
-                const index = this.members.findIndex(m => m.id === id);
-                if (index !== -1) {
-                    this.members[index] = {
-                        ...this.members[index],
-                        ...memberData,
-                        updatedAt: new Date().toISOString()
-                    };
-                    this.saveToStorage();
-                    this.render();
-                    return this.members[index];
-                }
-                return null;
-            },
-            
-            // Remover membro
-            deleteMember(id) {
-                this.members = this.members.filter(m => m.id !== id);
-                this.saveToStorage();
-                this.render();
-            },
-            
-            // Buscar membro por ID
-            getMemberById(id) {
-                return this.members.find(m => m.id === id);
-            },
-            
-            // Criar card de membro
-            createMemberCard(member) {
-                const card = document.createElement('div');
-                card.className = 'team-card';
-                card.dataset.id = member.id;
-                
-                const initials = member.name
-                    .split(' ')
-                    .map(n => n[0])
-                    .join('')
-                    .toUpperCase()
-                    .substring(0, 2);
-                
-                card.innerHTML = `
-                    <button class="delete-member-btn" onclick="deleteMember(event, '${member.id}')" title="Excluir membro">
-                        <i class="ri-delete-bin-line"></i>
-                    </button>
-                    <div class="card-cover">
-                        <div class="member-avatar">
-                            ${member.photo ? 
-                                `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
-                                initials
-                            }
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <h3 class="member-name">${member.name}</h3>
-                            <div class="member-role">${member.role}</div>
-                        </div>
-                        
-                        ${member.specialties?.length ? `
-                        <div class="specialties-grid">
-                            ${member.specialties.map(specialty => `
-                                <div class="specialty-box">${specialty}</div>
-                            `).join('')}
-                        </div>
-                        ` : ''}
-                        
-                        <div class="member-info">
-                            <div class="info-item">
-                                <i class="ri-mail-line"></i>
-                                <span>${member.email}</span>
-                            </div>
-                            ${member.phone ? `
-                            <div class="info-item">
-                                <i class="ri-phone-line"></i>
-                                <span>${member.phone}</span>
-                            </div>
-                            ` : ''}
-                            <div class="info-item" style="position: relative;">
-                                <div class="availability-status ${member.availability}" onclick="toggleAvailabilityMenu(event, '${member.id}')">
-                                    <i class="ri-time-line"></i>
-                                    <span>${member.availability}</span>
-                                </div>
-                                <div class="availability-menu" id="availability-menu-${member.id}">
-                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'disponivel')">
-                                        <i class="ri-checkbox-circle-line" style="color: var(--cyber-green)"></i>
-                                        Disponível
-                                    </div>
-                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'ocupado')">
-                                        <i class="ri-time-line" style="color: var(--neon-purple)"></i>
-                                        Ocupado
-                                    </div>
-                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'indisponivel')">
-                                        <i class="ri-close-circle-line" style="color: #ff5757"></i>
-                                        Indisponível
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Adicionar evento de clique no card
-                card.addEventListener('click', (e) => {
-                    // Se não clicou no menu de disponibilidade
-                    if (!e.target.closest('.availability-status') && !e.target.closest('.availability-menu')) {
-                        this.showMemberDetails(member.id);
-                    }
-                });
-                
-                return card;
-            },
-            
-            // Mostrar detalhes do membro (atualizado com projetos e eventos)
-            showMemberDetails(id) {
-                const member = this.getMemberById(id);
-                if (!member) return;
-                
-                const availability = this.getMemberAvailability(id);
-                const memberProjects = this.getMemberProjects(id);
-                const memberEvents = this.getMemberEvents(id);
-                
-                const detailsModal = document.getElementById('details-modal');
-                const memberDetails = document.getElementById('member-details');
-                
-                memberDetails.innerHTML = `
-                    <div class="detail-header">
-                        <div class="detail-avatar">
-                            ${member.photo ? 
-                                `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` :
-                                member.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)
-                            }
-                        </div>
-                        <div class="detail-info">
-                            <h2 class="detail-name">${member.name}</h2>
-                            <div class="detail-role">${member.role}</div>
-                            
-                            <div class="detail-meta">
-                                <div class="meta-item">
-                                    <i class="ri-mail-line"></i>
-                                    <span>${member.email}</span>
-                                </div>
-                                ${member.phone ? `
-                                <div class="meta-item">
-                                    <i class="ri-phone-line"></i>
-                                    <span>${member.phone}</span>
-                                </div>
-                                ` : ''}
-                                <div class="meta-item">
-                                    <i class="ri-time-line"></i>
-                                    <span>${availability.status}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="detail-section">
-                        <h3 class="section-title">
-                            <i class="ri-dashboard-line"></i>
-                            Status Atual
-                        </h3>
-                        <div class="section-content">
-                            <div class="status-grid">
-                                <div class="status-item ${availability.projects > 0 ? 'active' : ''}">
-                                    <div class="status-value">${availability.projects}</div>
-                                    <div class="status-label">Projetos Ativos</div>
-                                </div>
-                                <div class="status-item ${availability.events > 0 ? 'active' : ''}">
-                                    <div class="status-value">${availability.events}</div>
-                                    <div class="status-label">Eventos Agendados</div>
-                                </div>
-                                <div class="status-item">
-                                    <div class="status-value">${member.experience || '-'}</div>
-                                    <div class="status-label">Nível</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ${member.specialties?.length ? `
-                    <div class="detail-section">
-                        <h3 class="section-title">
-                            <i class="ri-tools-line"></i>
-                            Especialidades
-                        </h3>
-                        <div class="section-content">
-                            <div class="skill-tags">
-                                ${member.specialties.map(specialty => `
-                                    <div class="skill-tag">
-                                        <i class="ri-check-line"></i>
-                                        ${specialty}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                    ` : ''}
-                    
-                    ${memberProjects.length > 0 ? `
-                    <div class="detail-section">
-                        <h3 class="section-title">
-                            <i class="ri-movie-line"></i>
-                            Projetos Ativos
-                            <a href="projetos.html" class="section-link">Ver Todos</a>
-                        </h3>
-                        <div class="section-content">
-                            <div class="projects-list">
-                                ${memberProjects.map(project => `
-                                    <a href="projetos.html?id=${project.id}" class="project-item">
-                                        <div class="project-info">
-                                            <div class="project-name">${project.title}</div>
-                                            <div class="project-dates">
-                                                ${new Date(project.startDate).toLocaleDateString('pt-BR')} - 
-                                                ${project.endDate ? new Date(project.endDate).toLocaleDateString('pt-BR') : 'Em andamento'}
-                                            </div>
-                                        </div>
-                                        <div class="project-status ${project.status}">
-                                            ${project.status}
-                                        </div>
-                                    </a>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                    ` : ''}
-                    
-                    ${memberEvents.length > 0 ? `
-                    <div class="detail-section">
-                        <h3 class="section-title">
-                            <i class="ri-calendar-line"></i>
-                            Próximos Eventos
-                            <a href="agenda.html" class="section-link">Ver Todos</a>
-                        </h3>
-                        <div class="section-content">
-                            <div class="events-list">
-                                ${memberEvents.slice(0, 3).map(event => `
-                                    <a href="agenda.html?id=${event.id}" class="event-item">
-                                        <div class="event-info">
-                                            <div class="event-name">${event.title}</div>
-                                            <div class="event-type">${event.type}</div>
-                                        </div>
-                                        <div class="event-time">
-                                            <i class="ri-time-line"></i>
-                                            ${new Date(event.startDate).toLocaleDateString('pt-BR')} ${event.startTime}
-                                        </div>
-                                    </a>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                    ` : ''}
-                    
-                    ${member.bio ? `
-                    <div class="detail-section">
-                        <h3 class="section-title">
-                            <i class="ri-file-text-line"></i>
-                            Biografia
-                        </h3>
-                        <div class="section-content">
-                            <p>${member.bio}</p>
-                        </div>
-                    </div>
-                    ` : ''}
-                `;
-                
-                detailsModal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            },
-
-            // Exportar dados da equipe
-            exportTeamData(format = 'csv') {
-                const members = this.filterMembers();
-                
-                if (format === 'csv') {
-                    const headers = ['Nome', 'Cargo', 'Email', 'Telefone', 'Disponibilidade', 'Experiência', 'Especialidades', 'Projetos Ativos', 'Eventos Agendados'];
-                    const rows = members.map(member => {
-                        const memberProjects = this.getMemberProjects(member.id);
-                        const memberEvents = this.getMemberEvents(member.id);
-                        
-                        return [
-                            member.name,
-                            member.role,
-                            member.email,
-                            member.phone || '',
-                            member.availability,
-                            member.experience || '',
-                            (member.specialties || []).join('; '),
-                            memberProjects.length,
-                            memberEvents.length
-                        ];
-                    });
-                    
-                    const csvContent = [
-                        headers.join(','),
-                        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-                    ].join('\n');
-                    
-                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = `equipe_${new Date().toISOString().split('T')[0]}.csv`;
-                    link.click();
-                }
-            }
-        };
-
-        // Inicializar gerenciamento de membros
-        document.addEventListener('DOMContentLoaded', () => {
-            TeamManager.init();
-
-            // Event listeners para fechar modais
-            document.getElementById('details-close')?.addEventListener('click', () => {
-                document.getElementById('details-modal').classList.remove('show');
-                document.body.style.overflow = '';
-            });
-
-            document.getElementById('details-modal')?.addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) {
-                    e.target.classList.remove('show');
-                    document.body.style.overflow = '';
-                }
-            });
-
-            // Fechar menus quando clicar fora
-            document.addEventListener('click', (event) => {
-                if (!event.target.closest('.availability-status') && !event.target.closest('.availability-menu')) {
-                    document.querySelectorAll('.availability-menu.show').forEach(menu => {
-                        menu.classList.remove('show');
-                    });
-                }
-            });
-        });
-
-        // Atualizar manipulação do formulário
-        document.getElementById('addMemberForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Coletar dados do formulário
-            const formData = new FormData(this);
-            
-            // Coletar especialidades selecionadas
-            const specialties = Array.from(document.querySelectorAll('.specialty-checkbox input:checked'))
-                .map(checkbox => checkbox.value);
-            
-            const memberData = {
-                name: formData.get('name'),
-                role: formData.get('role'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                experience: formData.get('experience'),
-                availability: formData.get('availability'),
-                specialties: specialties,
-                createdAt: new Date().toISOString()
-            };
-
-            // Verificar se há uma foto
-            const photoFile = document.getElementById('profilePhoto').files[0];
-            if (photoFile) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    memberData.photo = e.target.result;
-                    addMemberAndNotify(memberData);
-                };
-                reader.readAsDataURL(photoFile);
-            } else {
-                addMemberAndNotify(memberData);
-            }
-        });
-
-        function addMemberAndNotify(memberData) {
-            // Adicionar membro
-            const newMember = TeamManager.addMember(memberData);
-            
-            // Fechar modal e resetar formulário
-            closeModal();
-            resetForm();
-            
-            // Destacar o novo cartão
-            setTimeout(() => {
-                const card = document.querySelector(`[data-id="${newMember.id}"]`);
-                if (card) {
-                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    card.style.animation = 'highlightCard 1s ease';
-                }
-            }, 100);
-        }
-
-        function resetForm() {
-            const form = document.getElementById('addMemberForm');
-            if (!form) return;
-            
-            // Limpar campos
-            form.reset();
-            
-            // Limpar checkboxes
-            document.querySelectorAll('.specialty-checkbox input').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            
-            // Resetar preview de foto
-            const photoPreview = document.querySelector('.photo-preview');
-            if (photoPreview) {
-                photoPreview.innerHTML = '<i class="ri-user-3-line"></i>';
-            }
-        }
-
-        // Preview de Imagem
-        document.getElementById('profilePhoto')?.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const photoPreview = document.querySelector('.photo-preview');
-                    if (photoPreview) {
-                        photoPreview.innerHTML = `
-                            <img src="${e.target.result}" alt="Preview">
-                        `;
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Adicionar animação para novo cartão
-        const style = document.createElement('style');
-        style.textContent = `
-        @keyframes highlightCard {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.4);
-            }
-            50% {
-                transform: scale(1.03);
-                box-shadow: 0 0 20px 10px rgba(0, 245, 255, 0.2);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0);
-            }
-        }
-        `;
-        document.head.appendChild(style);
-
-        // Atualizar estatísticas
-        function updateStats() {
-            const totalMembers = TeamManager.members.length;
-            const availableMembers = TeamManager.members.filter(m => m.availability === 'disponivel').length;
-            
-            const activeProjects = new Set(
-                TeamManager.members.flatMap(m => 
-                    TeamManager.getMemberProjects(m.id)
-                        .filter(p => p.status === 'em-andamento')
-                )
-            ).size;
-            
-            const upcomingEvents = new Set(
-                TeamManager.members.flatMap(m => 
-                    TeamManager.getMemberEvents(m.id)
-                        .filter(e => new Date(e.startDate) > new Date())
-                )
-            ).size;
-            
-            document.getElementById('total-members').textContent = totalMembers;
-            document.getElementById('active-members').textContent = availableMembers;
-            document.getElementById('active-projects').textContent = activeProjects;
-            document.getElementById('upcoming-events').textContent = upcomingEvents;
-        }
-        
-        // Atualizar estatísticas quando houver mudanças
-        const originalAddMember = TeamManager.addMember;
-        TeamManager.addMember = function(...args) {
-            const result = originalAddMember.apply(this, args);
-            updateStats();
-            return result;
-        };
-        
-        const originalUpdateMember = TeamManager.updateMember;
-        TeamManager.updateMember = function(...args) {
-            const result = originalUpdateMember.apply(this, args);
-            updateStats();
-            return result;
-        };
-        
-        const originalDeleteMember = TeamManager.deleteMember;
-        TeamManager.deleteMember = function(...args) {
-            const result = originalDeleteMember.apply(this, args);
-            updateStats();
-            return result;
-        };
-        
-        // Inicializar estatísticas
-        document.addEventListener('DOMContentLoaded', () => {
-            updateStats();
-        });
-
-        // Variáveis globais
-        let tags = [];
-        const tagsContainer = document.querySelector('.tags-container');
-
-        // Funções do Modal
-        function openModal() {
-            document.getElementById('addMemberModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('addMemberModal').style.display = 'none';
-            document.body.style.overflow = '';
-        }
-
-        // Melhorar o gerenciamento de tags
-        document.getElementById('tagInput')?.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const tag = this.value.trim();
-                
-                if (tag && !tags.includes(tag)) {
-                    tags.push(tag);
-                    renderTags();
-                }
-                
-                this.value = '';
-            }
-        });
-
-        function renderTags() {
-            const container = document.querySelector('.tags-container');
-            if (!container) return;
-            
-            container.innerHTML = tags.map(tag => `
-                <div class="tag">
-                    ${tag}
-                    <i class="ri-close-line" onclick="removeTag('${tag}')"></i>
-                </div>
-            `).join('');
-        }
-
-        function removeTag(tag) {
-            tags = tags.filter(t => t !== tag);
-            renderTags();
-        }
-
-        // Funções para o preview de foto
-        function showPhotoPreview(event, photoUrl, memberName) {
-            event.stopPropagation();
-            
-            if (!photoUrl) return;
-            
-            const modal = document.getElementById('photoPreviewModal');
-            const img = document.getElementById('photoPreviewImage');
-            
-            img.src = photoUrl;
-            img.alt = `Foto de ${memberName}`;
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closePhotoPreview() {
-            const modal = document.getElementById('photoPreviewModal');
-            modal.classList.remove('show');
-            document.body.style.overflow = '';
-        }
-
-        // Event listeners para o preview de foto
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('photoPreviewModal');
-            
-            if (modal) {
-                const closeBtn = modal.querySelector('.photo-preview-close');
-                
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        closePhotoPreview();
-                    }
-                });
-                
-                closeBtn?.addEventListener('click', closePhotoPreview);
-                
-                // Fechar com a tecla ESC
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') {
-                        closePhotoPreview();
-                    }
-                });
-            }
-            
-            // Atualizar o createMemberCard para incluir o evento de clique na foto
-            TeamManager.createMemberCard = function(member) {
-                const card = document.createElement('div');
-                card.className = 'team-card';
-                card.dataset.id = member.id;
-                
-                const initials = member.name
-                    .split(' ')
-                    .map(n => n[0])
-                    .join('')
-                    .toUpperCase()
-                    .substring(0, 2);
-                
-                card.innerHTML = `
-                    <button class="delete-member-btn" onclick="deleteMember(event, '${member.id}')" title="Excluir membro">
-                        <i class="ri-delete-bin-line"></i>
-                    </button>
-                    <div class="card-cover">
-                        <div class="member-avatar">
-                            ${member.photo ? 
-                                `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
-                                initials
-                            }
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <h3 class="member-name">${member.name}</h3>
-                            <div class="member-role">${member.role}</div>
-                        </div>
-                        
-                        ${member.specialties?.length ? `
-                        <div class="specialties-grid">
-                            ${member.specialties.map(specialty => `
-                                <div class="specialty-box">${specialty}</div>
-                            `).join('')}
-                        </div>
-                        ` : ''}
-                        
-                        <div class="member-info">
-                            <div class="info-item">
-                                <i class="ri-mail-line"></i>
-                                <span>${member.email}</span>
-                            </div>
-                            ${member.phone ? `
-                            <div class="info-item">
-                                <i class="ri-phone-line"></i>
-                                <span>${member.phone}</span>
-                            </div>
-                            ` : ''}
-                            <div class="info-item" style="position: relative;">
-                                <div class="availability-status ${member.availability}" onclick="toggleAvailabilityMenu(event, '${member.id}')">
-                                    <i class="ri-time-line"></i>
-                                    <span>${member.availability}</span>
-                                </div>
-                                <div class="availability-menu" id="availability-menu-${member.id}">
-                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'disponivel')">
-                                        <i class="ri-checkbox-circle-line" style="color: var(--cyber-green)"></i>
-                                        Disponível
-                                    </div>
-                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'ocupado')">
-                                        <i class="ri-time-line" style="color: var(--neon-purple)"></i>
-                                        Ocupado
-                                    </div>
-                                    <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'indisponivel')">
-                                        <i class="ri-close-circle-line" style="color: #ff5757"></i>
-                                        Indisponível
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Adicionar evento de clique no card
-                card.addEventListener('click', (e) => {
-                    // Se não clicou no menu de disponibilidade
-                    if (!e.target.closest('.availability-status') && !e.target.closest('.availability-menu')) {
-                        this.showMemberDetails(member.id);
-                    }
-                });
-                
-                return card;
-            };
-        });
-
-        // Adicionar ao final do arquivo:
-
-        // Funções para gerenciar disponibilidade
-        function toggleAvailabilityMenu(event, memberId) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            const member = TeamManager.getMemberById(memberId);
-            if (!member) return;
-            
-            const availability = TeamManager.getMemberAvailability(memberId);
-            const menu = document.getElementById(`availability-menu-${memberId}`);
-            if (!menu) return;
-            
-            // Atualizar o menu com informações do status atual
-            menu.innerHTML = `
-                <div class="availability-option" onclick="updateAvailability(event, '${memberId}', 'disponivel')">
-                    <i class="ri-checkbox-circle-line" style="color: var(--cyber-green)"></i>
-                    Disponível
-                </div>
-                <div class="availability-option" onclick="updateAvailability(event, '${memberId}', 'ocupado')">
-                    <i class="ri-time-line" style="color: var(--neon-purple)"></i>
-                    Ocupado
-                </div>
-                <div class="availability-option" onclick="updateAvailability(event, '${memberId}', 'indisponivel')">
-                    <i class="ri-close-circle-line" style="color: #ff5757"></i>
-                    Indisponível
-                </div>
-                ${availability.currentEvent ? `
-                <div class="availability-info">
-                    <i class="ri-calendar-event-line"></i>
-                    Em evento: ${availability.currentEvent.title}
-                </div>
-                ` : ''}
-                ${availability.currentProject ? `
-                <div class="availability-info">
-                    <i class="ri-movie-line"></i>
-                    No projeto: ${availability.currentProject.title}
-                </div>
-                ` : ''}
-            `;
-            
-            // Fechar outros menus e abrir este
-            document.querySelectorAll('.availability-menu.show').forEach(m => {
-                if (m !== menu) m.classList.remove('show');
-            });
-            
-            menu.classList.toggle('show');
-        }
-
-        function updateAvailability(event, memberId, newStatus) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            // Atualizar o membro
-            TeamManager.updateMember(memberId, { availability: newStatus });
-            
-            // Atualizar UI
-            const statusElement = event.target.closest('.availability-menu').previousElementSibling;
-            if (statusElement) {
-                statusElement.classList.remove('disponivel', 'ocupado', 'indisponivel');
-                statusElement.classList.add(newStatus);
-                statusElement.querySelector('span').textContent = newStatus;
-            }
-            
-            // Fechar menu
-            event.target.closest('.availability-menu').classList.remove('show');
-        }
-
-        // Fechar menus ao clicar fora
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.availability-status') && !e.target.closest('.availability-menu')) {
-                document.querySelectorAll('.availability-menu.show').forEach(menu => menu.classList.remove('show'));
-            }
-        });
-
-        // Prevenir propagação de cliques no menu
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.availability-menu').forEach(menu => {
-                menu.addEventListener('click', e => e.stopPropagation());
-            });
-        });
-
-        // Atualizar o método createMemberCard do TeamManager
-        TeamManager.createMemberCard = function(member) {
-            const card = document.createElement('div');
-            card.className = 'team-card';
-            card.dataset.id = member.id;
-            
-            const initials = member.name
-                .split(' ')
-                .map(n => n[0])
-                .join('')
-                .toUpperCase()
-                .substring(0, 2);
-            
-            card.innerHTML = `
-                <button class="delete-member-btn" onclick="deleteMember(event, '${member.id}')" title="Excluir membro">
-                    <i class="ri-delete-bin-line"></i>
+            <div class="page-actions">
+                <button class="btn btn-primary" onclick="openMemberModal()">
+                    <i class="ri-user-add-line"></i>
+                    Novo Membro
                 </button>
-                <div class="card-cover">
-                    <div class="member-avatar">
-                        ${member.photo ? 
-                            `<img src="${member.photo}" alt="${member.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
-                            initials
-                        }
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div>
-                        <h3 class="member-name">${member.name}</h3>
-                        <div class="member-role">${member.role}</div>
-                    </div>
-                    
-                    ${member.specialties?.length ? `
-                    <div class="specialties-grid">
-                        ${member.specialties.map(specialty => `
-                            <div class="specialty-box">${specialty}</div>
-                        `).join('')}
-                    </div>
-                    ` : ''}
-                    
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="search-box">
+                <i class="ri-search-line search-icon"></i>
+                <input type="text" class="search-input" placeholder="Buscar membros...">
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn active">Todos</button>
+                <button class="filter-btn">Direção</button>
+                <button class="filter-btn">Produção</button>
+                <button class="filter-btn">Fotografia</button>
+                <button class="filter-btn">Som</button>
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn">Ativos</button>
+                <button class="filter-btn">Ocupados</button>
+                <button class="filter-btn">Offline</button>
+            </div>
+        </div>
+
+        <div class="team-grid">
+            <!-- Membro 1 -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">JS</div>
                     <div class="member-info">
-                        <div class="info-item">
-                            <i class="ri-mail-line"></i>
-                            <span>${member.email}</span>
-                        </div>
-                        ${member.phone ? `
-                        <div class="info-item">
-                            <i class="ri-phone-line"></i>
-                            <span>${member.phone}</span>
-                        </div>
-                        ` : ''}
-                        <div class="info-item" style="position: relative;">
-                            <div class="availability-status ${member.availability}" onclick="toggleAvailabilityMenu(event, '${member.id}')">
-                                <i class="ri-time-line"></i>
-                                <span>${member.availability}</span>
-                            </div>
-                            <div class="availability-menu" id="availability-menu-${member.id}">
-                                <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'disponivel')">
-                                    <i class="ri-checkbox-circle-line" style="color: var(--cyber-green)"></i>
-                                    Disponível
-                                </div>
-                                <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'ocupado')">
-                                    <i class="ri-time-line" style="color: var(--neon-purple)"></i>
-                                    Ocupado
-                                </div>
-                                <div class="availability-option" onclick="updateAvailability(event, '${member.id}', 'indisponivel')">
-                                    <i class="ri-close-circle-line" style="color: #ff5757"></i>
-                                    Indisponível
-                                </div>
-                            </div>
-                        </div>
+                        <h3 class="member-name">João Silva</h3>
+                        <div class="member-role">Diretor de Fotografia</div>
+                        <span class="member-status status-active">Ativo</span>
                     </div>
                 </div>
-            `;
-            
-            // Adicionar evento de clique no card
-            card.addEventListener('click', (e) => {
-                // Se não clicou no menu de disponibilidade ou no botão de deletar
-                if (!e.target.closest('.availability-status') && 
-                    !e.target.closest('.availability-menu') && 
-                    !e.target.closest('.delete-member-btn')) {
-                    this.showMemberDetails(member.id);
-                }
+                <div class="member-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">joao.silva@filmorg.com</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Telefone</span>
+                        <span class="detail-value">(11) 98765-4321</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Projetos Ativos</span>
+                        <span class="detail-value">2</span>
+                    </div>
+                </div>
+                <div class="member-projects">
+                    <div class="projects-title">Projetos Atuais</div>
+                    <div class="project-tags">
+                        <span class="project-tag">Documentário Amazônia</span>
+                        <span class="project-tag">Curta-metragem Y</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membro 2 -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">MO</div>
+                    <div class="member-info">
+                        <h3 class="member-name">Maria Oliveira</h3>
+                        <div class="member-role">Diretora</div>
+                        <span class="member-status status-busy">Ocupada</span>
+                    </div>
+                </div>
+                <div class="member-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">maria.oliveira@filmorg.com</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Telefone</span>
+                        <span class="detail-value">(11) 98765-4322</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Projetos Ativos</span>
+                        <span class="detail-value">1</span>
+                    </div>
+                </div>
+                <div class="member-projects">
+                    <div class="projects-title">Projetos Atuais</div>
+                    <div class="project-tags">
+                        <span class="project-tag">Documentário Amazônia</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membro 3 -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">CS</div>
+                    <div class="member-info">
+                        <h3 class="member-name">Carlos Santos</h3>
+                        <div class="member-role">Técnico de Som</div>
+                        <span class="member-status status-offline">Offline</span>
+                    </div>
+                </div>
+                <div class="member-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">carlos.santos@filmorg.com</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Telefone</span>
+                        <span class="detail-value">(11) 98765-4323</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Projetos Ativos</span>
+                        <span class="detail-value">0</span>
+                    </div>
+                </div>
+                <div class="member-projects">
+                    <div class="projects-title">Projetos Atuais</div>
+                    <div class="project-tags">
+                        <span class="project-tag">Nenhum projeto ativo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membro 4 -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="member-avatar">AS</div>
+                    <div class="member-info">
+                        <h3 class="member-name">Ana Souza</h3>
+                        <div class="member-role">Produtora</div>
+                        <span class="member-status status-active">Ativa</span>
+                    </div>
+                </div>
+                <div class="member-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">ana.souza@filmorg.com</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Telefone</span>
+                        <span class="detail-value">(11) 98765-4324</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Projetos Ativos</span>
+                        <span class="detail-value">3</span>
+                    </div>
+                </div>
+                <div class="member-projects">
+                    <div class="projects-title">Projetos Atuais</div>
+                    <div class="project-tags">
+                        <span class="project-tag">Documentário Amazônia</span>
+                        <span class="project-tag">Curta-metragem Y</span>
+                        <span class="project-tag">Série Web Z</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Membro -->
+    <div class="member-modal" id="memberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Novo Membro</h2>
+                <button class="modal-close" onclick="closeMemberModal()">&times;</button>
+            </div>
+            <form id="memberForm">
+                <div class="form-group">
+                    <label class="form-label">Nome Completo</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Função</label>
+                    <select class="form-select" required>
+                        <option value="">Selecione uma função</option>
+                        <option value="diretor">Diretor(a)</option>
+                        <option value="produtor">Produtor(a)</option>
+                        <option value="fotografo">Diretor(a) de Fotografia</option>
+                        <option value="som">Técnico(a) de Som</option>
+                        <option value="editor">Editor(a)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefone</label>
+                    <input type="tel" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Observações</label>
+                    <textarea class="form-textarea"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeMemberModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filtros de função e status
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from siblings
+                    const siblings = btn.parentElement.querySelectorAll('.filter-btn');
+                    siblings.forEach(sibling => sibling.classList.remove('active'));
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    
+                    // Aqui você pode adicionar a lógica para filtrar os membros
+                });
             });
-            
-            return card;
-        };
 
-        // Atualizar o método updateMember do TeamManager
-        TeamManager.updateMember = function(id, memberData) {
-            const index = this.members.findIndex(m => m.id === id);
-            if (index !== -1) {
-                this.members[index] = {
-                    ...this.members[index],
-                    ...memberData,
-                    updatedAt: new Date().toISOString()
-                };
-                this.saveToStorage();
-                this.render();
-                return this.members[index];
-            }
-            return null;
-        };
+            // Busca de membros
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                // Aqui você pode adicionar a lógica para buscar membros
+            });
 
-        // Adicionar listener para fechar menus quando clicar fora
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.availability-status') && !event.target.closest('.availability-menu')) {
-                document.querySelectorAll('.availability-menu.show').forEach(menu => {
-                    menu.classList.remove('show');
-                });
-            }
+            // Form submit
+            const memberForm = document.getElementById('memberForm');
+            memberForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Aqui você pode adicionar a lógica para salvar o membro
+                closeMemberModal();
+            });
         });
 
-        // Fechar menus de disponibilidade quando clicar fora
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.availability-status') && !e.target.closest('.availability-menu')) {
-                document.querySelectorAll('.availability-menu.show').forEach(menu => {
-                    menu.classList.remove('show');
-                });
-            }
-        });
-
-        // Função para deletar membro
-        function deleteMember(event, memberId) {
-            event.stopPropagation(); // Impede que o card abra ao clicar no botão de deletar
-            
-            if (confirm('Tem certeza que deseja excluir este membro da equipe?')) {
-                TeamManager.deleteMember(memberId);
-            }
+        function openMemberModal() {
+            document.getElementById('memberModal').style.display = 'block';
         }
 
-        // Adicionar ao final do arquivo JavaScript:
-        // Fechar menus de disponibilidade quando clicar em qualquer lugar
-        document.addEventListener('click', function(event) {
-            const isAvailabilityMenu = event.target.closest('.availability-menu');
-            const isAvailabilityStatus = event.target.closest('.availability-status');
-            
-            if (!isAvailabilityMenu && !isAvailabilityStatus) {
-                document.querySelectorAll('.availability-menu.show').forEach(menu => {
-                    menu.classList.remove('show');
-                });
-            }
-        });
-
-        // Prevenir que o clique no menu propague para o documento
-        document.querySelectorAll('.availability-menu').forEach(menu => {
-            menu.addEventListener('click', function(event) {
-                event.stopPropagation();
-            });
-        });
+        function closeMemberModal() {
+            document.getElementById('memberModal').style.display = 'none';
+        }
     </script>
 </body>
 </html>

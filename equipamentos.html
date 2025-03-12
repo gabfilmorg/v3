@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Ícones modernos -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="base.css">
     
     <style>
         :root {
@@ -599,6 +600,292 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .equipment-card {
+            background: rgba(26, 27, 46, 0.95);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .equipment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .equipment-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--soft-white);
+        }
+
+        .equipment-status {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .status-available {
+            background: rgba(0, 255, 157, 0.2);
+            color: #00FF9D;
+        }
+
+        .status-in-use {
+            background: rgba(255, 184, 0, 0.2);
+            color: #FFB800;
+        }
+
+        .status-maintenance {
+            background: rgba(255, 94, 94, 0.2);
+            color: #FF5E5E;
+        }
+
+        .equipment-info {
+            margin-bottom: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .info-value {
+            color: var(--soft-white);
+            font-weight: 500;
+        }
+
+        .equipment-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .equipment-project {
+            font-size: 14px;
+            color: rgba(244, 247, 255, 0.7);
+        }
+
+        .equipment-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: var(--glass-bg);
+            border: none;
+            color: var(--soft-white);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--neon-blue);
+            color: var(--deep-space);
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            background: var(--glass-bg);
+            border: none;
+            color: var(--soft-white);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .filter-btn.active {
+            background: var(--neon-blue);
+            color: var(--deep-space);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            padding: 8px 15px;
+            padding-left: 35px;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(244, 247, 255, 0.5);
+        }
+
+        .equipment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 27, 46, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--deep-space);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--soft-white);
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            outline: none;
+        }
+
+        .form-select {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .form-textarea {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--soft-white);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+            }
+
+            .search-box {
+                order: -1;
+            }
+
+            .filter-group {
+                flex-wrap: wrap;
+            }
+
+            .equipment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -618,6 +905,10 @@
                 <i class="menu-icon ri-movie-line"></i>
                 <span class="menu-text">Projetos</span>
             </a>
+            <a href="roteiro.html" class="menu-item">
+                <i class="menu-icon ri-file-text-line"></i>
+                <span class="menu-text">Roteiros</span>
+            </a>
             <a href="equipe.html" class="menu-item">
                 <i class="menu-icon ri-team-line"></i>
                 <span class="menu-text">Equipe</span>
@@ -625,10 +916,6 @@
             <a href="equipamentos.html" class="menu-item active">
                 <i class="menu-icon ri-camera-line"></i>
                 <span class="menu-text">Equipamentos</span>
-            </a>
-            <a href="ai-assist.html" class="menu-item">
-                <i class="menu-icon ri-robot-line"></i>
-                <span class="menu-text">AI Assist</span>
             </a>
             <a href="analytics.html" class="menu-item">
                 <i class="menu-icon ri-bar-chart-line"></i>
@@ -649,154 +936,265 @@
         </nav>
     </div>
 
-    <!-- Main Content -->
+    <!-- Overlay para mobile -->
+    <div class="mobile-overlay"></div>
+
+    <!-- Conteúdo principal -->
     <div class="main-content">
-        <div class="header">
+        <div class="page-header">
             <h1 class="page-title">Equipamentos</h1>
-            
-            <div class="search-bar">
-                <i class="ri-search-line"></i>
-                <input type="text" placeholder="Buscar equipamentos..." id="search-input">
-            </div>
-            
-            <div class="header-actions">
-                <div class="notification-btn">
-                    <i class="ri-notification-3-line"></i>
-                    <div class="notification-badge">3</div>
-                </div>
-                <div class="user-profile">
-                    <div class="user-avatar">U</div>
-                    <span class="user-name">Usuário</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Estatísticas -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Total de Equipamentos</h3>
-                    <div class="value" id="total-equipment">0</div>
-                </div>
-                <div class="stat-icon" style="background: rgba(0, 245, 255, 0.2); color: var(--neon-blue);">
-                    <i class="ri-camera-line"></i>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Disponíveis</h3>
-                    <div class="value" id="available-equipment">0</div>
-                </div>
-                <div class="stat-icon" style="background: rgba(0, 255, 178, 0.2); color: var(--cyber-green);">
-                    <i class="ri-check-line"></i>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Em Uso</h3>
-                    <div class="value" id="in-use-equipment">0</div>
-                </div>
-                <div class="stat-icon" style="background: rgba(177, 94, 255, 0.2); color: var(--neon-purple);">
-                    <i class="ri-film-line"></i>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>Em Manutenção</h3>
-                    <div class="value" id="maintenance-equipment">0</div>
-                </div>
-                <div class="stat-icon" style="background: rgba(255, 100, 100, 0.2); color: rgb(255, 100, 100);">
-                    <i class="ri-tools-line"></i>
-                </div>
-            </div>
-        </div>
-        
-        <div class="action-bar">
-            <div class="filters">
-                <select class="filter-select" id="type-filter">
-                    <option value="all">Todas as Categorias</option>
-                    <option value="camera">Câmeras</option>
-                    <option value="lens">Lentes</option>
-                    <option value="light">Iluminação</option>
-                    <option value="audio">Áudio</option>
-                    <option value="accessory">Acessórios</option>
-                </select>
-                
-                <select class="filter-select" id="status-filter">
-                    <option value="all">Todos os Status</option>
-                    <option value="available">Disponível</option>
-                    <option value="in-use">Em Uso</option>
-                    <option value="maintenance">Em Manutenção</option>
-                    <option value="unavailable">Indisponível</option>
-                </select>
-            </div>
-            
-            <button class="btn btn-primary" id="new-equipment-btn">
-                <i class="ri-add-line"></i> Novo Equipamento
-            </button>
-        </div>
-        
-        <div class="equipment-table-container">
-            <table class="equipment-table" id="equipment-table">
-                <thead>
-                    <tr>
-                        <th style="width: 60px;"></th>
-                        <th>Nome</th>
-                        <th>Categoria</th>
-                        <th>Código</th>
-                        <th>Status</th>
-                        <th>Projeto Atual</th>
-                        <th>Última Manutenção</th>
-                        <th style="width: 100px;">Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="equipment-table-body">
-                    <!-- Equipamentos serão carregados aqui dinamicamente via JS -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <!-- Modal de Equipamento -->
-    <div class="modal-overlay" id="equipment-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Novo Equipamento</h3>
-                <button class="close-btn" id="modal-close">
-                    <i class="ri-close-line"></i>
+            <div class="page-actions">
+                <button class="btn btn-primary" onclick="openEquipmentModal()">
+                    <i class="ri-add-line"></i>
+                    Novo Equipamento
                 </button>
             </div>
-            <div class="modal-body">
-                <form id="equipment-form">
-                    <div class="form-group">
-                        <label class="form-label">Nome do Equipamento</label>
-                        <input type="text" class="form-control" id="equipment-name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Categoria</label>
-                        <select class="form-control" id="equipment-type" required>
-                            <option value="camera">Câmera</option>
-                            <option value="lens">Lente</option>
-                            <option value="light">Iluminação</option>
-                            <option value="audio">Áudio</option>
-                            <option value="accessory">Acessório</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Código/Serial</label>
-                        <input type="text" class="form-control" id="equipment-code" required>
-                    </div>
-                </form>
+        </div>
+
+        <div class="filters">
+            <div class="search-box">
+                <i class="ri-search-line search-icon"></i>
+                <input type="text" class="search-input" placeholder="Buscar equipamentos...">
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="save-equipment-btn">Salvar</button>
+            <div class="filter-group">
+                <button class="filter-btn active">Todos</button>
+                <button class="filter-btn">Câmeras</button>
+                <button class="filter-btn">Lentes</button>
+                <button class="filter-btn">Iluminação</button>
+                <button class="filter-btn">Áudio</button>
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn">Disponível</button>
+                <button class="filter-btn">Em Uso</button>
+                <button class="filter-btn">Manutenção</button>
+            </div>
+        </div>
+
+        <div class="equipment-grid">
+            <!-- Câmera -->
+            <div class="equipment-card">
+                <div class="equipment-header">
+                    <h3 class="equipment-title">Sony FX6</h3>
+                    <span class="equipment-status status-in-use">Em Uso</span>
+                </div>
+                <div class="equipment-info">
+                    <div class="info-row">
+                        <span class="info-label">Categoria</span>
+                        <span class="info-value">Câmera</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Código</span>
+                        <span class="info-value">CAM-001</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Última Manutenção</span>
+                        <span class="info-value">15/03/2024</span>
+                    </div>
+                </div>
+                <div class="equipment-footer">
+                    <div class="equipment-project">Projeto: Documentário Amazônia</div>
+                    <div class="equipment-actions">
+                        <button class="action-btn" title="Editar">
+                            <i class="ri-edit-line"></i>
+                        </button>
+                        <button class="action-btn" title="Histórico">
+                            <i class="ri-history-line"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lente -->
+            <div class="equipment-card">
+                <div class="equipment-header">
+                    <h3 class="equipment-title">Canon 24-70mm f/2.8</h3>
+                    <span class="equipment-status status-available">Disponível</span>
+                </div>
+                <div class="equipment-info">
+                    <div class="info-row">
+                        <span class="info-label">Categoria</span>
+                        <span class="info-value">Lente</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Código</span>
+                        <span class="info-value">LEN-003</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Última Manutenção</span>
+                        <span class="info-value">02/02/2024</span>
+                    </div>
+                </div>
+                <div class="equipment-footer">
+                    <div class="equipment-project">Disponível para uso</div>
+                    <div class="equipment-actions">
+                        <button class="action-btn" title="Editar">
+                            <i class="ri-edit-line"></i>
+                        </button>
+                        <button class="action-btn" title="Histórico">
+                            <i class="ri-history-line"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kit de Iluminação -->
+            <div class="equipment-card">
+                <div class="equipment-header">
+                    <h3 class="equipment-title">Kit Aputure 300d III</h3>
+                    <span class="equipment-status status-maintenance">Manutenção</span>
+                </div>
+                <div class="equipment-info">
+                    <div class="info-row">
+                        <span class="info-label">Categoria</span>
+                        <span class="info-value">Iluminação</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Código</span>
+                        <span class="info-value">LIG-005</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Previsão de Retorno</span>
+                        <span class="info-value">25/03/2024</span>
+                    </div>
+                </div>
+                <div class="equipment-footer">
+                    <div class="equipment-project">Em manutenção preventiva</div>
+                    <div class="equipment-actions">
+                        <button class="action-btn" title="Editar">
+                            <i class="ri-edit-line"></i>
+                        </button>
+                        <button class="action-btn" title="Histórico">
+                            <i class="ri-history-line"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Microfone -->
+            <div class="equipment-card">
+                <div class="equipment-header">
+                    <h3 class="equipment-title">Rode NTG5</h3>
+                    <span class="equipment-status status-in-use">Em Uso</span>
+                </div>
+                <div class="equipment-info">
+                    <div class="info-row">
+                        <span class="info-label">Categoria</span>
+                        <span class="info-value">Áudio</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Código</span>
+                        <span class="info-value">MIC-002</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Última Manutenção</span>
+                        <span class="info-value">10/01/2024</span>
+                    </div>
+                </div>
+                <div class="equipment-footer">
+                    <div class="equipment-project">Projeto: Curta-metragem Y</div>
+                    <div class="equipment-actions">
+                        <button class="action-btn" title="Editar">
+                            <i class="ri-edit-line"></i>
+                        </button>
+                        <button class="action-btn" title="Histórico">
+                            <i class="ri-history-line"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal de Equipamento -->
+    <div class="equipment-modal" id="equipmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Novo Equipamento</h2>
+                <button class="modal-close" onclick="closeEquipmentModal()">&times;</button>
+            </div>
+            <form id="equipmentForm">
+                <div class="form-group">
+                    <label class="form-label">Nome do Equipamento</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Categoria</label>
+                    <select class="form-select" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="camera">Câmera</option>
+                        <option value="lente">Lente</option>
+                        <option value="iluminacao">Iluminação</option>
+                        <option value="audio">Áudio</option>
+                        <option value="estabilizador">Estabilizador</option>
+                        <option value="acessorio">Acessório</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Código</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" required>
+                        <option value="">Selecione um status</option>
+                        <option value="available">Disponível</option>
+                        <option value="in-use">Em Uso</option>
+                        <option value="maintenance">Manutenção</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descrição</label>
+                    <textarea class="form-textarea"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeEquipmentModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filtros de categoria e status
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from siblings
+                    const siblings = btn.parentElement.querySelectorAll('.filter-btn');
+                    siblings.forEach(sibling => sibling.classList.remove('active'));
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    
+                    // Aqui você pode adicionar a lógica para filtrar os equipamentos
+                });
+            });
+
+            // Busca de equipamentos
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                // Aqui você pode adicionar a lógica para buscar equipamentos
+            });
+
+            // Form submit
+            const equipmentForm = document.getElementById('equipmentForm');
+            equipmentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Aqui você pode adicionar a lógica para salvar o equipamento
+                closeEquipmentModal();
+            });
+        });
+
+        function openEquipmentModal() {
+            document.getElementById('equipmentModal').style.display = 'block';
+        }
+
+        function closeEquipmentModal() {
+            document.getElementById('equipmentModal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
