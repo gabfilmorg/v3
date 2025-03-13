@@ -18,7 +18,7 @@ function initSidebar() {
                 <i class="menu-icon ri-dashboard-line"></i>
                 <span class="menu-text">Dashboard</span>
             </a>
-            <a href="projetos.html" class="menu-item ${pageName === 'projetos.html' ? 'active' : ''}">
+            <a href="projetos.html" class="menu-item ${pageName === 'projetos.html' || pageName === 'projeto-detalhes.html' ? 'active' : ''}">
                 <i class="menu-icon ri-movie-line"></i>
                 <span class="menu-text">Projetos</span>
             </a>
@@ -33,10 +33,6 @@ function initSidebar() {
             <a href="equipamentos.html" class="menu-item ${pageName === 'equipamentos.html' ? 'active' : ''}">
                 <i class="menu-icon ri-camera-line"></i>
                 <span class="menu-text">Equipamentos</span>
-            </a>
-            <a href="ai-assist.html" class="menu-item ${pageName === 'ai-assist.html' ? 'active' : ''}">
-                <i class="menu-icon ri-robot-line"></i>
-                <span class="menu-text">AI Assist</span>
             </a>
             <a href="analytics.html" class="menu-item ${pageName === 'analytics.html' ? 'active' : ''}">
                 <i class="menu-icon ri-bar-chart-line"></i>
@@ -78,45 +74,49 @@ function initSidebar() {
     // Adicionar a nova sidebar padronizada
     document.body.insertBefore(sidebarContainer, document.body.firstChild);
     
-    // Garantir que o conteúdo principal tenha a classe correta
-    const mainContent = document.querySelector('.main-content');
-    if (!mainContent) {
-        const newMainContent = document.createElement('div');
-        newMainContent.className = 'main-content';
-        
-        // Mover todo o conteúdo do body (exceto a sidebar) para dentro do main-content
-        Array.from(document.body.children).forEach(child => {
-            if (child.id !== 'sidebar-container' && !child.classList.contains('sidebar-overlay')) {
-                newMainContent.appendChild(child);
+    // Configurar eventos para mobile
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    
+    function toggleSidebar() {
+        sidebar.classList.toggle('show');
+        if (overlay) {
+            overlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+        }
+    }
+    
+    function closeSidebar() {
+        sidebar.classList.remove('show');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+    
+    if (menuToggle) {
+        menuToggle.addEventListener('click', toggleSidebar);
+    }
+    
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
+    
+    // Fechar sidebar ao clicar em um link do menu em mobile
+    const menuLinks = document.querySelectorAll('.menu-item');
+    menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                closeSidebar();
             }
         });
-        
-        document.body.appendChild(newMainContent);
-    }
+    });
     
-    // Criar botão de menu para mobile se não existir
-    createMobileMenuToggle();
-    
-    // Adicionar eventos para dispositivos móveis
-    const sidebarOverlay = document.querySelector('.sidebar-overlay');
-    const sidebar = document.querySelector('.sidebar');
-    const menuToggle = document.querySelector('.menu-toggle');
-    
-    // Toggle da sidebar em dispositivos móveis
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('show');
-            sidebarOverlay.classList.toggle('show');
-        });
-    }
-    
-    // Fechar a sidebar ao clicar no overlay
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', function() {
-            sidebar.classList.remove('show');
-            sidebarOverlay.classList.remove('show');
-        });
-    }
+    // Ajustar sidebar ao redimensionar a janela
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            closeSidebar();
+        }
+    });
 }
 
 // Função para criar botão de menu móvel
