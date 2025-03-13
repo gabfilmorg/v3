@@ -163,7 +163,7 @@
             border-bottom: 1px solid var(--glass-border);
             padding-bottom: 10px;
         }
-
+        
         .tab-btn {
             padding: 8px 16px;
             background: none;
@@ -173,17 +173,17 @@
             opacity: 0.7;
             transition: all 0.3s ease;
         }
-
+        
         .tab-btn.active {
             opacity: 1;
             color: var(--neon-blue);
             border-bottom: 2px solid var(--neon-blue);
         }
-
+        
         .tab-content {
             display: none;
         }
-
+        
         .tab-content.active {
             display: block;
         }
@@ -249,76 +249,76 @@
                 Novo Projeto
             </button>
         </div>
-
+        
         <div class="projects-grid" id="projects-grid">
             <!-- Projetos serão carregados aqui -->
-        </div>
-
+    </div>
+    
         <!-- Modal de Novo Projeto -->
         <div class="modal" id="project-modal">
             <div class="modal-content">
-                <div class="modal-header">
+            <div class="modal-header">
                     <h2 class="modal-title">Novo Projeto</h2>
                     <button class="close-btn" onclick="closeModal()">
                         <i class="ri-close-line"></i>
                     </button>
-                </div>
-
+            </div>
+            
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="info">Informações</button>
                     <button class="tab-btn" data-tab="team">Equipe</button>
                     <button class="tab-btn" data-tab="equipment">Equipamentos</button>
                     <button class="tab-btn" data-tab="scripts">Roteiros</button>
                 </div>
-
+                
                 <div id="info" class="tab-content active">
-                    <div class="form-group">
+                        <div class="form-group">
                         <label class="form-label">Título do Projeto</label>
                         <input type="text" class="form-control" id="project-title">
-                    </div>
-
+                        </div>
+                        
                     <div class="form-group">
                         <label class="form-label">Descrição</label>
                         <textarea class="form-control" id="project-description" rows="4"></textarea>
-                    </div>
-
+                            </div>
+                            
                     <div class="form-group">
-                        <label class="form-label">Status</label>
+                                <label class="form-label">Status</label>
                         <select class="form-control" id="project-status">
                             <option value="pre">Pré-Produção</option>
                             <option value="prod">Produção</option>
                             <option value="post">Pós-Produção</option>
-                            <option value="completed">Concluído</option>
-                        </select>
-                    </div>
-                </div>
-
+                                    <option value="completed">Concluído</option>
+                                </select>
+                            </div>
+                        </div>
+                        
                 <div id="team" class="tab-content">
-                    <div class="form-group">
+                        <div class="form-group">
                         <label class="form-label">Adicionar Membro</label>
-                        <select class="form-control" id="team-member">
+                                <select class="form-control" id="team-member">
                             <!-- Membros serão carregados aqui -->
-                        </select>
-                    </div>
+                                </select>
+                            </div>
                     <div id="team-list">
                         <!-- Lista de membros adicionados -->
-                    </div>
-                </div>
-
+                            </div>
+                        </div>
+                        
                 <div id="equipment" class="tab-content">
-                    <div class="form-group">
+                        <div class="form-group">
                         <label class="form-label">Adicionar Equipamento</label>
                         <select class="form-control" id="equipment-select">
                             <!-- Equipamentos serão carregados aqui -->
-                        </select>
-                    </div>
+                                </select>
+                            </div>
                     <div id="equipment-list">
                         <!-- Lista de equipamentos adicionados -->
-                    </div>
-                </div>
-
+                            </div>
+                        </div>
+                        
                 <div id="scripts" class="tab-content">
-                    <div class="form-group">
+                        <div class="form-group">
                         <button class="btn btn-outline" id="add-script-btn">
                             <i class="ri-add-line"></i>
                             Selecionar Roteiro
@@ -326,21 +326,21 @@
                         <button class="btn btn-primary" id="create-script-btn">
                             <i class="ri-draft-line"></i>
                             Criar Novo Roteiro
-                        </button>
-                    </div>
+                            </button>
+                        </div>
                     <div id="scripts-list">
                         <!-- Lista de roteiros vinculados -->
                     </div>
-                </div>
-
+                                </div>
+                                
                 <div class="modal-footer">
                     <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
                     <button class="btn btn-primary" onclick="saveProject()">Salvar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+                                </div>
+                            </div>
+                                </div>
+                                </div>
+                                
     <!-- Scripts -->
     <script src="layout.js"></script>
     <script>
@@ -358,8 +358,8 @@
             
             tabButtons.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    formSections.forEach(section => section.classList.remove('active'));
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                formSections.forEach(section => section.classList.remove('active'));
                     
                     tab.classList.add('active');
                     const tabId = tab.dataset.tab;
@@ -430,11 +430,11 @@
                         <div class="info-item">
                             <i class="ri-team-line"></i>
                             <span>${project.team} membros</span>
-                        </div>
+                    </div>
                         <div class="info-item">
                             <i class="ri-camera-line"></i>
                             <span>${project.equipment} equipamentos</span>
-                        </div>
+                    </div>
                     </div>
                     <div class="project-actions">
                         <button class="btn btn-outline" onclick="editProject(${project.id})">
@@ -464,8 +464,8 @@
             loadProjects();
 
             // Fechar o modal
-            closeModal();
-        }
+                    closeModal();
+                }
 
         function editProject(projectId) {
             // Implementar edição de projeto
